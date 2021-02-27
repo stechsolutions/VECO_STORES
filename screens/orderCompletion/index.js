@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, TextInput, TouchableOpacity, Text, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, TextInput, TouchableOpacity, Text, Image, Alert } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Screen from '../../Components/Screen';
@@ -52,67 +52,98 @@ export default function OrderCompletion({ navigation, route, setCartCount }) {
             setCartCount(0);
         }
     }
-    const sendOrder = () => {
-        AsyncStorage.removeItem('storeCart').then(()=>{
-            setModal(true);
-            setCartCount(0);
-        })
-
+    const sendOrder = async () => {
+        var cart = JSON.parse(await AsyncStorage.getItem('storeCart'));
+        var store = JSON.parse(await AsyncStorage.getItem('store'));
+        console.log(cart, store, 'cart and store')
+        var promises = [];
+        for (var i = 0; i < cart.length; i++) {
+            var cartItem = cart[i];
+            var itemStore = cartItem.storeDetails;
+            var order = {
+                storeId: itemStore.id,
+                orderCreator: store.storeId,
+                name: itemStore.storeName,
+                status: 'pending',
+                createdBy: 'vendor',
+                products: cartItem.products,
+            }
+            var promise = await firestore().collection('purchaseOrder').add(order);
+            promises.push(promise);
+        }
+        Promise.all(promises)
+            .then(res => {
+                console.log(res, 'order created');
+                AsyncStorage.removeItem('storeCart').then(() => {
+                    // setModal(true);
+                    setCartCount(0);
+                    Alert.alert(
+                        "Order Created",
+                        "Your order has been created successfully.",
+                        [
+                            { text: "OK", onPress: () => navigation.navigate('SearchProductStack') }
+                        ],
+                        { cancelable: false }
+                    );
+                })
+            })
+            .catch(er => {
+                console.log(er, 'errrrr');
+            })
     }
     const getChatRooms = async () => {
-        console.log("user chatrooms")
         const user = JSON.parse(await AsyncStorage.getItem('user'));
         var cart = JSON.parse(await AsyncStorage.getItem('storeCart'));
         var myuid = user.userId;
         console.log(myuid, 'myuid');
         var temp = [];
         cart && firestore()
-          .collection('mails')
-          .where(`users.${myuid}`, '==', true)
-          .where(`users.${cart[0].storeDetails.id}`,'==',true)
-          .onSnapshot((data) => {
-            console.log(data, 'empty');
-            if (data.empty) {
-              setEmpty(true);
-            }
-            data.forEach((each) => {
-              var data = each.data();
-              var userId = '';
-              Object.keys(data.users).map((e) => {
-                if (e !== myuid) userId = e;
-              });
-              firestore()
-                .collection('distributer')
-                .doc(userId)
-                .get()
-                .then((res) => {
-                  var user = { ...res.data(), uid: userId };
-                  firestore()
-                    .collection('mails')
-                    .doc(each.ref.id)
-                    .collection('messages')
-                    .limit(1)
-                    .orderBy('timestamp', 'desc')
-                    .onSnapshot((messages) => {
-                      temp = [];
-                      messages.forEach((e) => {
-                        var lastMessage = e.data();
-                        lastMessage = lastMessage.message;
-                        var obj = {
-                          ...each.data(),
-                          chatId: each.ref.id,
-                          user,
-                          lastMessage,
-                          myuid,
-                        };
-                        temp.push(obj);
-                        setChats(temp);
-                      });
+            .collection('mails')
+            .where(`users.${myuid}`, '==', true)
+            .where(`users.${cart[0].storeDetails.id}`, '==', true)
+            .onSnapshot((data) => {
+                console.log(data, 'empty');
+                if (data.empty) {
+                    setEmpty(true);
+                }
+                data.forEach((each) => {
+                    var data = each.data();
+                    var userId = '';
+                    Object.keys(data.users).map((e) => {
+                        if (e !== myuid) userId = e;
                     });
+                    firestore()
+                        .collection('distributer')
+                        .doc(userId)
+                        .get()
+                        .then((res) => {
+                            var user = { ...res.data(), uid: userId };
+                            firestore()
+                                .collection('mails')
+                                .doc(each.ref.id)
+                                .collection('messages')
+                                .limit(1)
+                                .orderBy('timestamp', 'desc')
+                                .onSnapshot((messages) => {
+                                    temp = [];
+                                    messages.forEach((e) => {
+                                        var lastMessage = e.data();
+                                        lastMessage = lastMessage.message;
+                                        var obj = {
+                                            ...each.data(),
+                                            chatId: each.ref.id,
+                                            user,
+                                            lastMessage,
+                                            myuid,
+                                        };
+                                        temp.push(obj);
+                                        setChats(temp);
+                                    });
+                                });
+                        });
                 });
             });
-          });
-      };
+    };
     return (
         <Screen style={{ backgroundColor: colors.light }}>
             <ScrollView style={{ flex: 1, }}>
@@ -229,7 +260,7 @@ export default function OrderCompletion({ navigation, route, setCartCount }) {
                     <AppButton
                         onPress={() => {
                             setModal(false);
-                           !empty && navigation.navigate('MailStack', { screen: 'Mail Open', params:{chatData:chats&&chats[0]} })
+                            !empty && navigation.navigate('MailStack', { screen: 'Mail Open', params: { chatData: chats && chats[0] } })
                         }}
                         color={colors.primary}
                         title="Do you want to chat with the dealer?"

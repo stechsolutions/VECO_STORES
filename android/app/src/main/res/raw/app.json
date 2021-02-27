@@ -1,4 +1,9 @@
 {
   "name": "app",
-  "displayName": "app"
+  "displayName": "app",
+  "platforms":[
+    "ios",
+    "android",
+    "web"
+  ]
 }

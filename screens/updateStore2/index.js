@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useState, useRef } from 'react';
 import {
   View,
   ScrollView,
@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   PermissionsAndroid,
+  Alert
 } from 'react-native';
 import Screen from '../../Components/Screen';
 import AppTextInput from '../../Components/AppTextInput';
@@ -25,31 +26,41 @@ import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import storage from '@react-native-firebase/storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AppPicker from '../../Components/AppPicker'
+import SignatureCapture from 'react-native-signature-capture';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export default function UpdateStore2({ navigation, route, changeFirstTime }) {
-  const [storeName, setStoreName] = useState('');
-  const [location, setLocation] = useState('');
-  const [docImage, setDocImage] = useState('');
-  const [image, setImage] = useState();
-  const [documentImage, setDocumentImage] = useState();
-  const [imageUrl, setImageUrl] = useState();
-  const [documentImageUrl, setDocumentImageUrl] = useState();
+
+  const [administrativeContact, setAdministrativeContact] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [markerCoordinate, setMarkerCoordinate] = useState({
-    latitude: 24.860966,
-    longitude: 66.990501,
-    latitudeDelta: 0.04,
-    longitudeDelta: 0.05,
-  });
-  const [tempCoordinate, setTempCoordinate] = useState();
-  const [locationToEdit, setLocationToEdit] = useState();
-  const [locationDetailsArray, setLocationDetailsArray] = useState([]);
-  const [RUC, setRUC] = useState('');
-  const [DV, setDV] = useState('');
+  const [administrativePhone, setAdministrativePhone] = useState('');
+  const [technicalContact, setTechnicalContact] = useState('');
+  const [technicalPhone, setTechnicalPhone] = useState('');
+  const [whatsappLine, setWhatsappLine] = useState('');
+  const [photoOfOperationNotice, setPhotoOfOperationNotice] = useState();
+  const [
+    photoIDLegalRepresentative,
+    setPhotoIDLegalRepresentative,
+  ] = useState();
+  const [photoBusiness, setPhotoBusiness] = useState();
+  const [photoDigitalSignature, setPhotoDigitalSignature] = useState();
+  const [photoOfOperationNoticeUrl, setPhotoOfOperationNoticeUrl] = useState();
+  const [
+    photoIDLegalRepresentativeUrl,
+    setPhotoIDLegalRepresentativeUrl,
+  ] = useState();
+  const [photoBusinessUrl, setPhotoBusinessUrl] = useState();
+  const [photoDigitalSignatureUrl, setPhotoDigitalSignatureUrl] = useState();
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const sign = useRef();
+
+  useEffect(() => {
+    getData();
+  }, [])
+
   const createStoreFunc = async () => {
-    // changeFirstTime();
+    changeFirstTime();
     // setLoading(true);
     // var user = JSON.parse(await AsyncStorage.getItem('user'));
     // console.log(user, 'userr');
@@ -121,168 +132,292 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
     //   );
   };
 
-  useEffect(() => {
-    console.log('USE EFFECT >>>>');
-    getCurrentLocation();
-  }, []);
+  const getData = async () => {
+    var store = JSON.parse(await AsyncStorage.getItem('store'));
+    // console.log(route.params.update1Data, 'update1Data');
+    // console.log(store, 'store');
+    const {
+      administrativeContact, administrativePhone,
+      technicalContact, technicalPhone, whatsappLine,
+      photoDigitalSignatureUrl,
+      photoOfOperationNoticeUrl,
+      photoIDLegalRepresentativeUrl,
+      photoBusinessUrl
+    } = store;
+    setAdministrativeContact(administrativeContact);
+    setAdministrativePhone(administrativePhone);
+    setTechnicalContact(technicalContact);
+    setTechnicalPhone(technicalPhone);
+    setWhatsappLine(whatsappLine);
+    setPhotoOfOperationNotice({ uri: photoOfOperationNoticeUrl });
+    setPhotoBusiness({ uri: photoBusinessUrl });
+    setPhotoIDLegalRepresentative({ uri: photoIDLegalRepresentativeUrl });
+    setPhotoDigitalSignature({ uri: photoDigitalSignatureUrl });
+  };
 
-  const getCurrentLocation = () => {
-    RNLocation.requestPermission({
-      ios: 'whenInUse',
-      android: {
-        detail: 'coarse',
-        rationale: {
-          title: 'We need to access your location',
-          message: 'We use your location to show where you are on the map',
-          buttonPositive: 'OK',
-          buttonNegative: 'Cancel',
-        },
-      },
-    }).then((granted) => {
-      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-        interval: 10000,
-        fastInterval: 5000,
-      })
-        .then((data) => {
-          const getLoc = RNLocation.getLatestLocation();
-          getLoc.then(({ latitude, longitude }) => {
-            console.log('Lat Long >>', latitude, longitude);
-            setMarkerCoordinate({
-              latitude,
-              longitude,
-              latitudeDelta: 0.04,
-              longitudeDelta: 0.05,
-            });
-          });
+  const updateStore = async () => {
+    const store = JSON.parse(await AsyncStorage.getItem('store'));
+    console.log(store, 'store in update Sotre');
+    setLoading(true);
+    var update1Data = route.params.update1Data;
+
+    const photos = [
+      photoOfOperationNotice.uri.slice(0, 5) !== 'https' && photoOfOperationNotice,
+      photoIDLegalRepresentative.uri.slice(0, 5) !== 'https' && photoIDLegalRepresentative,
+      photoBusiness.uri.slice(0, 5) !== 'https' && photoBusiness
+    ];
+    const unUpdatedPhotos = [
+      photoOfOperationNotice.uri.slice(0, 5) === 'https' && photoOfOperationNotice,
+      photoIDLegalRepresentative.uri.slice(0, 5) === 'https' && photoIDLegalRepresentative,
+      photoBusiness.uri.slice(0, 5) === 'https' && photoBusiness
+    ]
+    // console.log('photos,', photos);
+    var user = JSON.parse(await AsyncStorage.getItem('user'));
+    console.log(user, 'userF');
+    var names = [
+      'photoOfOperationNoticeUrl',
+      'photoIDLegalRepresentativeUrl',
+      'photoBusinessUrl',
+    ];
+    var nameArray = [];
+    var promises = [];
+    for (var i = 0; i < photos.length; i++) {
+      if (photos[i]) {
+        nameArray.push(names[i]);
+        var uri = photos[i].uri;
+        // var name = nameArray[i];
+        var response = await fetch(uri);
+        var blob = await response.blob();
+        var promise = new Promise((resolve, reject) => {
+          storage().ref(`documents/${user.userId}/${Date.now()}`).put(blob)
+            .on('state_changed',
+              () => { },
+              () => { },
+              (imgRes) => {
+                imgRes.ref.getDownloadURL()
+                  .then((url) => {
+                    resolve(url);
+                  }).catch(err => {
+                    reject(err);
+                  })
+              }
+            )
         })
-        .catch((e) => console.log(e));
+        promises.push(promise);
+      }
+    }
+    Promise.all(promises)
+      .then(async urls => {
+        // console.log(urls, 'urls');
+        console.log(nameArray, 'nameArray');
+        // var obj = {
+        //   administrativeContact, administrativePhone, userId: user.userId, open: true,
+        //   technicalContact, technicalPhone, whatsappLine, ...store1Data
+        // };
+        var obj = {
+          administrativeContact, administrativePhone,
+          technicalContact, technicalPhone, whatsappLine,
+          ...update1Data
+        };
+        for (var i = 0; i < urls.length; i++) {
+          obj = { ...obj, [nameArray[i]]: urls[i] };
+        };
+        for (var i = 0; i < unUpdatedPhotos.length; i++) {
+          if (unUpdatedPhotos[i])
+            obj = { ...obj, [names[i]]: unUpdatedPhotos[i].uri };
+        }
+        obj.open = store.open;
+        var result = photoDigitalSignature;
+        if (result.uri.slice(0, 5) !== 'https') {
+          await RNFetchBlob.fs.writeFile(result.pathName, result.uri, 'base64');
+          storage()
+            .ref(`documents/${user.uerId}/${Date.now()}`).putFile(result.pathName)
+            .on('state_changed',
+              () => { },
+              () => { },
+              async (imgRes) => {
+                imgRes.ref.getDownloadURL()
+                  .then(async url => {
+                    setLoading(false);
+                    obj.photoDigitalSignatureUrl = url;
+                    console.log(obj, 'final Obj');
+                    await firestore().collection('vendorStores').doc(store.storeId).update({ ...obj });
+                    var newStore = await firestore().collection('vendorStores').doc(store.storeId).get();
+                    console.log(newStore, 'newStore')
+                    await AsyncStorage.setItem(
+                      'store',
+                      await JSON.stringify({ id: newStore.id, ...newStore.data() }),
+                    )
+                    setLoading(false);
+                    Alert.alert(
+                      "Store Updated",
+                      "Your store has been updated successfully.",
+                      [
+                        { text: "OK" }
+                      ],
+                      { cancelable: false }
+                    );
+                  })
+                  .catch(e => {
+                    setLoading(false);
+                    Alert.alert(
+                      "Error",
+                      e.message,
+                      [
+                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                      ],
+                      { cancelable: false }
+                    )
+                  }
+                  )
+              }
+            );
+        }
+        else {
+          obj.photoDigitalSignatureUrl = photoDigitalSignature.uri;
+          console.log(obj, 'final Obj');
+          await firestore().collection('vendorStores').doc(store.storeId).update(obj);
+          var newStore = await firestore().collection('vendorStores').doc(store.storeId).get()
+          await AsyncStorage.setItem(
+            'store',
+            await JSON.stringify({ storeId: newStore.id, ...newStore.data() }),
+          )
+          setLoading(false);
+          Alert.alert(
+            "Store Updated",
+            "Your store has been updated successfully.",
+            [
+              { text: "OK" }
+            ],
+            { cancelable: false }
+          );
+
+          // catch (e) {
+          //   console.log(e, 'e');
+          //   setLoading(false);
+          //   Alert.alert(
+          //     "Something Went Wrong",
+          //     "",
+          //     [
+          //       { text: "OK" }
+          //     ],
+          //     { cancelable: false }
+          //   );
+          // }
+        }
+      })
+      .catch(e => {
+        setLoading(false);
+        console.log(e, 'err')
+        Alert.alert(
+          "Error",
+          e.message,
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        )
+      }
+      )
+  }
+
+  const handleImageUpload = (type) => {
+    try {
+      ImagePicker.launchImageLibrary(
+        {
+          noData: true,
+        },
+        (response) => {
+          if (response.uri) {
+            console.log(response.data, 'response . data');
+            switch (type) {
+              case 'ON':
+                setPhotoOfOperationNotice(response);
+                break;
+              case 'LR':
+                console.log('LR case chala');
+                setPhotoIDLegalRepresentative(response);
+                break;
+              case 'LP':
+                setPhotoLogo(response);
+                break;
+              case 'BP':
+                setPhotoBusiness(response);
+                break;
+              case 'DS':
+                setPhotoDigitalSignature(response);
+                break;
+              default:
+                break;
+            }
+          }
+          // response && setImage(response);
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const saveSign = () => {
+    sign.current.saveImage();
+  };
+
+  const resetSign = () => {
+    sign.current.resetImage();
+  };
+
+  const saveSignEvent = (result) => {
+    console.log(result, 'sign result');
+    // setPhotoDigitalSignature({ uri: `data:image/png;base64,${result.encoded}`,pathName:result.pathName});
+    setShowModal(false);
+    setPhotoDigitalSignature({
+      uri: `${result.encoded}`,
+      pathName: result.pathName,
     });
+    // setPhotoDigitalSignature({ uri:result.pathName});
   };
-
-  const handleImageUpload = () => {
-    try {
-      ImagePicker.launchImageLibrary(
-        {
-          noData: true,
-        },
-        (response) => {
-          console.log(response);
-          response && setImage(response.uri);
-        },
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleDocumentImageUpload = () => {
-    try {
-      ImagePicker.launchImageLibrary(
-        {
-          noData: true,
-        },
-        (response) => {
-          console.log(response);
-          response && setDocumentImage(response.uri);
-        },
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const checkPermission = async () => {
-    const granted = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-    // console.log(granted);
-    if (granted) {
-    } else {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Access location?',
-          message:
-            'To get a store location, you need to provide the location access',
-        },
-      );
-    }
-    // console.log(granted);
-    if (!locationToEdit) getCurrentLocation();
-    setShowModal(true);
-    setTempCoordinate(markerCoordinate);
-  };
-
-  const handleCoordinateSet = () => {
-    setShowModal(false);
-    const temp = { location, coordinate: tempCoordinate };
-    const arr = [...locationDetailsArray];
-    arr.push(temp);
-    setLocation('');
-    setLocationDetailsArray(arr);
-  };
-
-  const handleUpdateLocation = () => {
-    console.log('BEFORE UPDATE >>>', locationDetailsArray);
-    let arr = [...locationDetailsArray];
-    arr[locationToEdit.index] = {
-      coordinate: tempCoordinate,
-      location: location ? location : locationToEdit.item.location,
-    };
-    setLocationDetailsArray(arr);
-    setLocationToEdit(null);
-    setLocation('');
-    setShowModal(false);
-    console.log('AFTER UPDATE >>>', locationDetailsArray);
-  };
-
-  const handleRemoveLocation = (index) => {
-    console.log(index);
-    const arr = [...locationDetailsArray];
-    arr.splice(index, 1);
-    setLocationDetailsArray(arr);
-  };
-
   return (
     <Screen style={{ backgroundColor: colors.light }}>
       <ScrollView style={{ flex: 1, padding: 10 }}>
         <AppTextInput
-          value={storeName}
+          value={administrativeContact}
           onChangeText={(txt) => {
-            setStoreName(txt);
+            setAdministrativeContact(txt);
           }}
           style={styles.mVertical}
           placeHolder="Administrative Contact"
         />
         <AppTextInput
-          value={location}
+          value={administrativePhone}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setAdministrativePhone(txt);
           }}
           style={styles.mVertical}
           placeHolder="Administrative Phone"
         />
 
         <AppTextInput
-          value={location}
+          value={technicalContact}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setTechnicalContact(txt);
           }}
           style={styles.mVertical}
           placeHolder="Technical Contact"
         />
 
         <AppTextInput
-          value={location}
+          value={technicalPhone}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setTechnicalPhone(txt);
           }}
           style={styles.mVertical}
           placeHolder="Technical Phone"
         />
         <AppTextInput
-          value={location}
+          value={whatsappLine}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setWhatsappLine(txt);
           }}
           style={styles.mVertical}
           placeHolder="Whatsapp line"
@@ -291,61 +426,66 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           style={styles.mVertical}
           placeHolder="Photo of the Operation"
           onPress={() => {
-            handleImageUpload();
+            handleImageUpload('ON');
           }}
         />
         <AppPhotoInput
           style={styles.mVertical}
           placeHolder="Photo of the ID of the Legal Representative"
           onPress={() => {
-            handleImageUpload();
+            handleImageUpload('LR');
           }}
         />
         <AppPhotoInput
           style={styles.mVertical}
           placeHolder="Business Photo"
           onPress={() => {
-            handleImageUpload();
+            handleImageUpload('BP');
           }}
         />
         <AppPhotoInput
           style={styles.mVertical}
           placeHolder="Digial Signature"
           onPress={() => {
-            handleImageUpload();
+            setShowModal(true);
           }}
         />
-        {/* <AppPhotoInput
-          onPress={handleDocumentImageUpload}
-          style={styles.mVertical}
-          placeHolder="Document Image"
-        /> */}
-        {/* {documentImage && (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingVertical: 10,
-            }}>
-            <Image source={{ uri: documentImage }} style={styles.image} />
-            <Text>Document Image</Text>
-          </View>
-        )}
-        {image ? (
-          <TouchableOpacity
-            onPress={handleImageUpload}
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Image source={{ uri: image }} style={styles.image} />
-          </TouchableOpacity>
-        ) : (
-            <AppImageUploadButton
-              style={styles.imageButton}
-              onPress={handleImageUpload}
-              title="Add Store Logo"
-            />
-          )} */}
         <View>
+          <View style={styles.imageContainer}>
+            {photoDigitalSignature && (
+              <Image
+                source={{
+                  uri: photoDigitalSignature.uri.slice(0, 5) === 'https' ? photoDigitalSignature.uri :
+                    `data:image/png;base64,${photoDigitalSignature.uri}`,
+                }}
+                style={styles.image}
+              />
+            )}
+            {photoBusiness && (
+              <Image
+                source={{
+                  uri: photoBusiness.uri,
+                }}
+                style={styles.image}
+              />
+            )}
+            {photoOfOperationNotice && (
+              <Image
+                source={{
+                  uri: photoOfOperationNotice.uri,
+                }}
+                style={styles.image}
+              />
+            )}
+            {photoIDLegalRepresentative && (
+              <Image
+                source={{
+                  uri: photoIDLegalRepresentative.uri,
+                }}
+                style={styles.image}
+              />
+            )}
+          </View>
           <Text style={styles.termsHead}>Terms and Conditions</Text>
           <Text style={styles.termsText}>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
@@ -398,32 +538,22 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
             // }
             loading={loading}
             style={[styles.btn, styles.mVertical]}
-            title="Update Store"
-            onPress={createStoreFunc}
+            title="Update"
+            onPress={updateStore}
           />
         </View>
       </ScrollView>
-      <Modal style={{ flex: 1 }} visible={showModal} animationType="slide">
-        <MapView
-          style={{ ...StyleSheet.absoluteFillObject }}
-          showsMyLocationButton
-          showsUserLocation
-          // initialRegion={{
-          // latitude: 24.860966,
-          // longitude: 66.990501,
-          // latitudeDelta: 0.04,
-          // longitudeDelta: 0.05,
-          // }}
-          initialRegion={markerCoordinate}>
-          <Marker
-            draggable={true}
-            onDragEnd={(e) => {
-              console.log(e.nativeEvent.coordinate, 'coordinates');
-              setTempCoordinate(e.nativeEvent.coordinate);
-            }}
-            coordinate={markerCoordinate}
-          />
-        </MapView>
+      <Modal visible={showModal} animationType="slide">
+        <SignatureCapture
+          style={styles.signature}
+          ref={sign}
+          onSaveEvent={saveSignEvent}
+          // onDragEvent={this._onDragEvent}
+          saveImageFileInExtStorage={false}
+          showNativeButtons={false}
+          showTitleLabel={false}
+          viewMode={'portrait'}
+        />
         <View style={styles.modalBtnContainer}>
           <AppButton
             style={[styles.modalBtn, { backgroundColor: colors.white }]}
@@ -434,9 +564,7 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
             style={styles.modalBtn}
             color={colors.primary}
             title="Done"
-            onPress={
-              locationToEdit ? handleUpdateLocation : handleCoordinateSet
-            }
+            onPress={saveSign}
           />
         </View>
       </Modal>
@@ -502,5 +630,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingBottom: 20,
     fontSize: 12
-  }
+  },
+  signature: {
+    flex: 1,
+  },
+  imageContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
+    marginVertical: 10,
+  },
 });

@@ -52,15 +52,15 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
   const [locationDetailsArray, setLocationDetailsArray] = useState([]);
 
   const next = async () => {
-    const store1 = {tradeName,location,businessName,RUC,DV,nameOfTheLegalRepresentative,
-      IDOfTheLegalRepresentative,province:province.label,district:district.label,corregimiento:corregimiento.label,
-      fullAddress,noOfBranches,name:tradeName,
+    const store1 = {
+      tradeName, location: locationDetailsArray, businessName, RUC, DV, nameOfTheLegalRepresentative,
+      IDOfTheLegalRepresentative, province: province.label, district: district.label, corregimiento: corregimiento.label,
+      fullAddress, noOfBranches, name: tradeName,
     }
-    navigation.navigate('createStore2',{store1Data:store1})
+    navigation.navigate('createStore2', { store1Data: store1 })
   };
 
   useEffect(() => {
-    console.log('USE EFFECT >>>>');
     getCurrentLocation();
   }, []);
 
@@ -250,14 +250,65 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
           style={styles.mVertical}
           title="Corregimiento" />
 
+        {/* distributor code */}
+        <AppTextInput
+          value={location}
+          onChangeText={(txt) => {
+            setLocation(txt);
+          }}
+          style={styles.mVertical}
+          placeHolder="Location"
+        />
         <AppPhotoInput
+          style={styles.mVertical}
+          add
+          placeHolder="Latitude Longitude"
+          onPress={() => {
+            checkPermission();
+          }}
+        />
+        {locationDetailsArray.length > 0 && (
+          <Text style={styles.title}>
+            {locationDetailsArray.length} Location
+            {locationDetailsArray.length > 1 && 's'} Added
+          </Text>
+        )}
+        <View style={styles.locationDetailContainer}>
+          {locationDetailsArray.map((item, index) => {
+            console.log(item, 'ccord');
+            return (
+              <LocationDetail
+                title={`${item.location
+                  ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.latitude}`
+                  : `${item.coordinate.latitude} ${item.coordinate.latitude}`
+                  }`}
+                onPress={() => {
+                  setShowModal(true);
+                  setMarkerCoordinate({
+                    latitude: item.coordinate.latitude,
+                    longitude: item.coordinate.longitude,
+                    latitudeDelta: 0.04,
+                    longitudeDelta: 0.05,
+                  });
+                  setLocationToEdit({ item, index });
+                }}
+                onClose={() => handleRemoveLocation(index)}
+                key={index}
+              />
+            );
+          })}
+        </View>
+
+        {/* distributor code */}
+
+        {/* <AppPhotoInput
           style={styles.mVertical}
           map
           placeHolder={location ? `${location.latitude}, ${location.longitude}` : "Latitude Longitude"}
           onPress={() => {
             checkPermission();
           }}
-        />
+        /> */}
         <AppTextInput
           value={fullAddress}
           onChangeText={(txt) => {
@@ -316,11 +367,11 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
             color={colors.primary}
             title="Done"
             onPress={
-              // locationToEdit ? handleUpdateLocation : handleCoordinateSet
-              ()=>{
-              setLocation(tempCoordinate ? tempCoordinate : markerCoordinate); 
-              setShowModal(false);
-              }
+              locationToEdit ? handleUpdateLocation : handleCoordinateSet
+              // () => {
+              //   setLocation(tempCoordinate ? tempCoordinate : markerCoordinate);
+              //   setShowModal(false);
+              // }
             }
           />
         </View>

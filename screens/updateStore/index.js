@@ -24,10 +24,19 @@ import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import storage from '@react-native-firebase/storage';
 import AppPicker from '../../Components/AppPicker'
+import { corregimientos, provinces, districts } from '../../config/data';
 
-export default function UpdateStore({ navigation, route, changeFirstTime }) {
+export default function UpdateStore({ navigation, }) {
   const [storeName, setStoreName] = useState('');
+  const [businessName, setBusinessName] = useState('');
   const [location, setLocation] = useState('');
+  const [nameOfTheLegalRepresentative, setNameOfTheLegalRepresentative] = useState('');
+  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] = useState('');
+  const [province, setProvince] = useState('');
+  const [district, setDistrict] = useState('');
+  const [corregimiento, setCorregimiento] = useState('');
+  const [fullAddress, setFullAddress] = useState('');
+  const [noOfBranches, setNoOfBranches] = useState('');
   const [docImage, setDocImage] = useState('');
   const [image, setImage] = useState();
   const [documentImage, setDocumentImage] = useState();
@@ -46,13 +55,18 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
   const [locationDetailsArray, setLocationDetailsArray] = useState([]);
   const [RUC, setRUC] = useState('');
   const [DV, setDV] = useState('');
+
   const next = async () => {
-    navigation.navigate('UpdateStore2')
+    const data = {
+      tradeName: storeName, DV, IDOfTheLegalRepresentative, RUC, businessName,
+      location: locationDetailsArray, district, corregimiento, fullAddress, nameOfTheLegalRepresentative, province, noOfBranches,
+    };
+    navigation.navigate('UpdateStore2', { update1Data: data });
   };
 
   useEffect(() => {
-    console.log('USE EFFECT >>>>');
     getCurrentLocation();
+    getData();
   }, []);
 
   const getCurrentLocation = () => {
@@ -144,7 +158,9 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
   const handleCoordinateSet = () => {
     setShowModal(false);
     const temp = { location, coordinate: tempCoordinate };
-    const arr = [...locationDetailsArray];
+    var arr = [];
+    if (locationDetailsArray.length)
+      arr = [...locationDetailsArray];
     arr.push(temp);
     setLocation('');
     setLocationDetailsArray(arr);
@@ -152,7 +168,9 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
 
   const handleUpdateLocation = () => {
     console.log('BEFORE UPDATE >>>', locationDetailsArray);
-    let arr = [...locationDetailsArray];
+    let arr = [];
+    if (locationDetailsArray.length)
+      arr = [...locationDetailsArray];
     arr[locationToEdit.index] = {
       coordinate: tempCoordinate,
       location: location ? location : locationToEdit.item.location,
@@ -170,7 +188,25 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
     arr.splice(index, 1);
     setLocationDetailsArray(arr);
   };
-
+  const getData = async () => {
+    var store = JSON.parse(await AsyncStorage.getItem('store'));
+    const {
+      tradeName, DV, IDOfTheLegalRepresentative, RUC, administrativeContact, businessName,
+      location, district, corregimiento, fullAddress, name, nameOfTheLegalRepresentative, province, noOfBranches,
+    } = store;
+    setStoreName(tradeName);
+    setBusinessName(businessName);
+    setDV(DV);
+    setIDOfTheLegalRepresentative(IDOfTheLegalRepresentative);
+    setRUC(RUC);
+    setNameOfTheLegalRepresentative(nameOfTheLegalRepresentative);
+    setProvince(province);
+    setDistrict(district);
+    setCorregimiento(corregimiento);
+    setFullAddress(fullAddress);
+    setNoOfBranches(noOfBranches);
+    setLocationDetailsArray(location);
+  }
   return (
     <Screen style={{ backgroundColor: colors.light }}>
       <ScrollView style={{ flex: 1, padding: 10 }}>
@@ -183,9 +219,9 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
           placeHolder="Trade Name"
         />
         <AppTextInput
-          value={location}
+          value={businessName}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setBusinessName(txt);
           }}
           style={styles.mVertical}
           placeHolder="Business Name"
@@ -209,45 +245,101 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
           />
         </View>
         <AppTextInput
-          value={location}
+          value={nameOfTheLegalRepresentative}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setNameOfTheLegalRepresentative(txt);
           }}
           style={styles.mVertical}
           placeHolder="Name of the legal Representative"
         />
         <AppTextInput
+          value={IDOfTheLegalRepresentative}
+          onChangeText={(txt) => {
+            setIDOfTheLegalRepresentative(txt);
+          }}
+          style={styles.mVertical}
+          placeHolder="ID of the legal Representative"
+        />
+
+        <AppPicker
+          items={provinces}
+          onSelectItem={(item) => item && setProvince(item.label)}
+          style={styles.mVertical}
+          title={province ? province : "Province"} />
+        <AppPicker
+          items={districts}
+          onSelectItem={item => item && setDistrict(item.label)}
+          style={styles.mVertical}
+          title={district ? district : "District"} />
+
+        <AppPicker
+          items={corregimientos}
+          onSelectItem={item => item && setCorregimiento(item.label)}
+          style={styles.mVertical}
+          title={corregimiento ? corregimiento : "Corregimiento"} />
+
+        {/* distributor code */}
+        <AppTextInput
           value={location}
           onChangeText={(txt) => {
             setLocation(txt);
           }}
           style={styles.mVertical}
-          placeHolder="ID of the legal Representative"
+          placeHolder="Location"
         />
-        <AppPicker style={styles.mVertical} title="Province" />
-        <AppPicker style={styles.mVertical} title="District" />
-        <AppPicker style={styles.mVertical} title="Corregimiento" />
-
         <AppPhotoInput
           style={styles.mVertical}
-          map
+          add
           placeHolder="Latitude Longitude"
           onPress={() => {
             checkPermission();
           }}
         />
+        {locationDetailsArray.length > 0 && (
+          <Text style={styles.title}>
+            {locationDetailsArray.length} Location
+            {locationDetailsArray.length > 1 && 's'} Added
+          </Text>
+        )}
+        <View style={styles.locationDetailContainer}>
+          {!!locationDetailsArray.length && locationDetailsArray.map((item, index) => {
+            console.log(item, 'ccord');
+            return (
+              item.location ? <LocationDetail
+                title={`${item.location
+                  ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.latitude}`
+                  : `${item.coordinate.latitude} ${item.coordinate.latitude}`
+                  }`}
+                onPress={() => {
+                  setShowModal(true);
+                  setMarkerCoordinate({
+                    latitude: item.coordinate.latitude,
+                    longitude: item.coordinate.longitude,
+                    latitudeDelta: 0.04,
+                    longitudeDelta: 0.05,
+                  });
+                  setLocationToEdit({ item, index });
+                }}
+                onClose={() => handleRemoveLocation(index)}
+                key={index}
+              /> : <View key={index} />
+            );
+          })}
+        </View>
+
+        {/* distributor code */}
         <AppTextInput
-          value={location}
+          value={fullAddress}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setFullAddress(txt);
           }}
           style={styles.mVertical}
           placeHolder="Full Address"
         />
         <AppTextInput
-          value={location}
+          value={noOfBranches}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setNoOfBranches(txt);
           }}
           style={styles.mVertical}
           placeHolder="Number of Branches"
@@ -292,7 +384,7 @@ export default function UpdateStore({ navigation, route, changeFirstTime }) {
             //   !image
             // }
             loading={loading}
-            style={[styles.btn, styles.mVertical,{width:'30%'}]}
+            style={[styles.btn, styles.mVertical, { width: '30%' }]}
             title="NEXT"
             onPress={next}
           />
@@ -384,7 +476,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  createBtnView:{
-    alignItems:'flex-end'
+  createBtnView: {
+    alignItems: 'flex-end'
   }
 });
