@@ -1,33 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { color } from 'react-native-reanimated';
+import React, {useState, useEffect} from 'react';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {color} from 'react-native-reanimated';
 import HomeCard from '../../Components/HomeCard';
 import HomeCardMain from '../../Components/HomeCardMain';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import ToggleBtn from '../../Components/ToggleBtn'
-const index = ({ navigation }) => {
+import ToggleBtn from '../../Components/ToggleBtn';
+const index = ({navigation}) => {
   const [store, setStore] = useState(null);
   const [toggle, setToggle] = useState(false);
 
   const toggleBtn = async () => {
     setToggle(!toggle);
-    await firestore().collection('vendorStores').doc(store.storeId).update({ open: !toggle });
-  }
+    await firestore()
+      .collection('vendorStores')
+      .doc(store.storeId)
+      .update({open: !toggle});
+
+    AsyncStorage.setItem('open', !toggle === false ? 'false' : 'true');
+  };
+
+  useEffect(() => {
+    AsyncStorage.getItem('open').then((open) =>
+      open === 'true'
+        ? setToggle(true)
+        : open === 'false'
+        ? setToggle(false)
+        : '',
+    );
+  }, []);
+
   useEffect(() => {
     AsyncStorage.getItem('store').then((store) => {
       if (store) {
         var storeParsed = JSON.parse(store);
         setStore(JSON.parse(store));
-        setToggle(storeParsed.open);
+
         console.log(JSON.parse(store), 'store');
       } else {
         getStore();
       }
     });
   }, []);
+
   const getStore = async () => {
     const user = JSON.parse(await AsyncStorage.getItem('user'));
     firestore()
@@ -37,11 +54,13 @@ const index = ({ navigation }) => {
       .get()
       .then((res) => {
         res.forEach((e) => {
-          setStore({ storeId: e.ref.id, ...e.data() });
+          setStore({storeId: e.ref.id, ...e.data()});
           console.log(e.data(), 'store');
+          setToggle(e.data().open);
+          console.log('OPEN', e.data().open);
           AsyncStorage.setItem(
             'store',
-            JSON.stringify({ storeId: e.ref.id, ...e.data() }),
+            JSON.stringify({storeId: e.ref.id, ...e.data()}),
           );
         });
       });
@@ -53,18 +72,19 @@ const index = ({ navigation }) => {
       <ScrollView style={styles.container}>
         <View>
           <ToggleBtn onPress={toggleBtn} toggle={toggle} />
-          {
-            toggle ?
-              <View style={styles.storeInfo}>
-                <Text style={styles.storeInfoHead}>Your Store is Open</Text>
-                <Text style={styles.storeInfoText}>you are connected now</Text>
-              </View>
-              : <View style={styles.storeInfo}>
-                <Text style={styles.storeInfoHead}>Your Store is Closed</Text>
-                <Text style={styles.storeInfoText}>Active now so that you can get connected</Text>
-              </View>
-
-          }
+          {toggle ? (
+            <View style={styles.storeInfo}>
+              <Text style={styles.storeInfoHead}>Your Store is Open</Text>
+              <Text style={styles.storeInfoText}>you are connected now</Text>
+            </View>
+          ) : (
+            <View style={styles.storeInfo}>
+              <Text style={styles.storeInfoHead}>Your Store is Closed</Text>
+              <Text style={styles.storeInfoText}>
+                Active now so that you can get connected
+              </Text>
+            </View>
+          )}
         </View>
         <View>
           <HomeCardMain
@@ -74,7 +94,7 @@ const index = ({ navigation }) => {
             subtitle="You can customize your store"
             buttonTitle="Customize"
             onPress={() =>
-              navigation.navigate('UpdateStoreStack', { updateStore: getStore })
+              navigation.navigate('UpdateStoreStack', {updateStore: getStore})
             }
           />
         </View>
@@ -96,7 +116,6 @@ const index = ({ navigation }) => {
             title="Create Purchase Orders"
             onPress={() => navigation.navigate('PurchaseOrdersStack')}
           />
-
         </View>
         <View style={styles.cardContainer}>
           <HomeCard
@@ -193,8 +212,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   storeInfo: {
-    flex: 0.1, flexDirection: 'column',
-    justifyContent: 'center', alignItems: 'center'
+    flex: 0.1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   storeInfoHead: {
     fontSize: 20,
@@ -202,5 +223,5 @@ const styles = StyleSheet.create({
   storeInfoText: {
     fontSize: 16,
     textAlign: 'center',
-  }
+  },
 });

@@ -18,7 +18,6 @@ import AppAttachFileButton from '../../Components/AppAttachFileButton';
 import AppButton from '../../Components/AppButton';
 import AppMultiLineInput from '../../Components/AppMultiLineInput';
 import AppPhotoInput from '../../Components/AppPhotoInput';
-import AppPicker from '../../Components/AppPicker';
 import AppTextInput from '../../Components/AppTextInput';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';

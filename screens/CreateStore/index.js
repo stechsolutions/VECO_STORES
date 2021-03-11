@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -19,21 +19,26 @@ import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-picker';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import storage from '@react-native-firebase/storage';
 import AppPicker from '../../Components/AppPicker';
-import { provinces, districts, corregimientos } from '../../config/data';
+import {provinces, districts, corregimientos} from '../../config/data';
 
-export default function CreateStore({ navigation, route, changeFirstTime }) {
+export default function CreateStore({navigation, route, changeFirstTime}) {
   const [tradeName, setTradeName] = useState('');
   const [location, setLocation] = useState({});
   const [businessName, setBusinessName] = useState('');
   const [RUC, setRUC] = useState('');
   const [DV, setDV] = useState('');
-  const [nameOfTheLegalRepresentative, setNameOfTheLegalRepresentative] = useState('');
-  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] = useState('');
+  const [
+    nameOfTheLegalRepresentative,
+    setNameOfTheLegalRepresentative,
+  ] = useState('');
+  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] = useState(
+    '',
+  );
   const [province, setProvince] = useState('');
   const [district, setDistrict] = useState('');
   const [corregimiento, setCorregimiento] = useState('');
@@ -53,11 +58,21 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
 
   const next = async () => {
     const store1 = {
-      tradeName, location: locationDetailsArray, businessName, RUC, DV, nameOfTheLegalRepresentative,
-      IDOfTheLegalRepresentative, province: province.label, district: district.label, corregimiento: corregimiento.label,
-      fullAddress, noOfBranches, name: tradeName,
-    }
-    navigation.navigate('createStore2', { store1Data: store1 })
+      tradeName,
+      location: locationDetailsArray,
+      businessName,
+      RUC,
+      DV,
+      nameOfTheLegalRepresentative,
+      IDOfTheLegalRepresentative,
+      province: province.label,
+      district: district.label,
+      corregimiento: corregimiento.label,
+      fullAddress,
+      noOfBranches,
+      name: tradeName,
+    };
+    navigation.navigate('createStore2', {store1Data: store1});
   };
 
   useEffect(() => {
@@ -83,7 +98,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
       })
         .then((data) => {
           const getLoc = RNLocation.getLatestLocation();
-          getLoc.then(({ latitude, longitude }) => {
+          getLoc.then(({latitude, longitude}) => {
             console.log('Lat Long >>', latitude, longitude);
             setMarkerCoordinate({
               latitude,
@@ -114,7 +129,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
   };
   const handleDocumentImageUpload = () => {
     try {
-      ImagePicker.launchImageLibrary(
+      ImagePicker.showImagePicker(
         {
           noData: true,
         },
@@ -141,7 +156,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
             'To get a store location, you need to provide the location access',
         },
       );
-    };
+    }
     if (!locationToEdit) getCurrentLocation();
     setShowModal(true);
     setTempCoordinate(markerCoordinate);
@@ -149,7 +164,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
 
   const handleCoordinateSet = () => {
     setShowModal(false);
-    const temp = { location, coordinate: tempCoordinate };
+    const temp = {location, coordinate: tempCoordinate};
     const arr = [...locationDetailsArray];
     arr.push(temp);
     setLocation('');
@@ -178,8 +193,8 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
   };
 
   return (
-    <Screen style={{ backgroundColor: colors.light }}>
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+    <Screen style={{backgroundColor: colors.light}}>
+      <ScrollView style={{flex: 1, padding: 10}}>
         <AppTextInput
           value={tradeName}
           onChangeText={(txt) => {
@@ -235,20 +250,26 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
           selectedItem={province}
           onSelectItem={(item) => setProvince(item)}
           style={styles.mVertical}
-          title="Province" />
+          color={province ? colors.black : colors.dark}
+          title="Province"
+        />
         <AppPicker
           items={districts}
           selectedItem={district}
           onSelectItem={(item) => setDistrict(item)}
           style={styles.mVertical}
-          title="District" />
+          color={district ? colors.black : colors.dark}
+          title="District"
+        />
 
         <AppPicker
           items={corregimientos}
           selectedItem={corregimiento}
           onSelectItem={(item) => setCorregimiento(item)}
+          color={corregimiento ? colors.black : colors.dark}
           style={styles.mVertical}
-          title="Corregimiento" />
+          title="Corregimiento"
+        />
 
         {/* distributor code */}
         <AppTextInput
@@ -278,10 +299,11 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
             console.log(item, 'ccord');
             return (
               <LocationDetail
-                title={`${item.location
-                  ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.latitude}`
-                  : `${item.coordinate.latitude} ${item.coordinate.latitude}`
-                  }`}
+                title={`${
+                  item.location
+                    ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.latitude}`
+                    : `${item.coordinate.latitude} ${item.coordinate.latitude}`
+                }`}
                 onPress={() => {
                   setShowModal(true);
                   setMarkerCoordinate({
@@ -290,7 +312,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
                     latitudeDelta: 0.04,
                     longitudeDelta: 0.05,
                   });
-                  setLocationToEdit({ item, index });
+                  setLocationToEdit({item, index});
                 }}
                 onClose={() => handleRemoveLocation(index)}
                 key={index}
@@ -323,8 +345,10 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
             setNoOfBranches(txt);
           }}
           style={styles.mVertical}
+          keyboardType="number-pad"
           placeHolder="Number of Branches"
         />
+
         <View style={styles.createBtnView}>
           <AppButton
             // disabled={
@@ -335,15 +359,16 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
             //   !image
             // }
             loading={loading}
-            style={[styles.btn, styles.mVertical, { width: '30%' }]}
+            style={[styles.btn, styles.mVertical, {width: '30%'}]}
             title="NEXT"
+            color={colors.primary}
             onPress={next}
           />
         </View>
       </ScrollView>
-      <Modal style={{ flex: 1 }} visible={showModal} animationType="slide">
+      <Modal style={{flex: 1}} visible={showModal} animationType="slide">
         <MapView
-          style={{ ...StyleSheet.absoluteFillObject }}
+          style={{...StyleSheet.absoluteFillObject}}
           showsMyLocationButton
           showsUserLocation
           initialRegion={markerCoordinate}>
@@ -358,7 +383,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
         </MapView>
         <View style={styles.modalBtnContainer}>
           <AppButton
-            style={[styles.modalBtn, { backgroundColor: colors.white }]}
+            style={[styles.modalBtn, {backgroundColor: colors.white}]}
             title="CLose"
             onPress={() => setShowModal(false)}
           />
@@ -426,6 +451,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   createBtnView: {
-    alignItems: 'flex-end'
-  }
+    alignItems: 'flex-end',
+  },
 });

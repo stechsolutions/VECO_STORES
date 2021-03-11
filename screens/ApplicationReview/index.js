@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,18 +18,33 @@ import AppTextInput from '../../Components/AppTextInput';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 
 const {width: WIDTH} = Dimensions.get('window');
 const LoginPage = ({navigation}) => {
-  useEffect(()=>{
-    AsyncStorage.getItem('user').then(user=>{
-      console.log(user,'userrr');
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    AsyncStorage.getItem('user').then((user) => {
+      console.log(user, 'userrr');
       var convUser = JSON.parse(user);
-      if(convUser.approved){
-        navigation.navigate('welcome');
+      console.log('ID', convUser.userId);
+      try {
+        firestore()
+          .collection('vendors')
+          .doc(convUser.userId)
+          .onSnapshot((querySnapshot) => {
+            // Approved | Pending approval | blocked | Disapproved
+            console.log('SNAPSHOT IN REVIEW', querySnapshot?.data());
+            if (querySnapshot?.data()?.approved === 'Approved') {
+              navigation.navigate('welcome');
+            }
+            setIsLoading(false);
+          });
+      } catch (error) {
+        setIsLoading(false);
       }
-    })
-  })
+    });
+  });
   return (
     <Screen style={{flex: 1, backgroundColor: colors.light}}>
       <ScrollView>
@@ -47,10 +62,10 @@ const LoginPage = ({navigation}) => {
           />
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <View style={{width: 200, marginVertical: 150}}>
+          <View style={{width: '100%', marginVertical: 150}}>
             <Text style={styles.title}>Hello Dealer!</Text>
             <Text style={styles.subTitle}>
-              Your Information is being reviewed, you will be notify soon when
+              Your Information is being reviewed, you will be notified soon when
               it is approved!
             </Text>
           </View>
@@ -67,8 +82,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignSelf: 'center',
     fontSize: 30,
+    textAlign: 'center',
   },
   subTitle: {
     textAlign: 'center',
+    paddingHorizontal: '20%',
   },
 });

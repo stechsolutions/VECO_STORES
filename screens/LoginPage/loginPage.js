@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   TextInput,
   View,
@@ -19,8 +19,8 @@ import AppTextButton from '../../Components/AppTextButton';
 import AppButton from '../../Components/AppButton';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-const { width: WIDTH } = Dimensions.get('window');
-const LoginPage = ({ route }) => {
+const {width: WIDTH} = Dimensions.get('window');
+const LoginPage = ({route}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordHideShow, setPasswordHideShow] = useState(true);
@@ -32,54 +32,71 @@ const LoginPage = ({ route }) => {
       auth()
         .signInWithEmailAndPassword(email, password)
         .then((res) => {
-          return firestore().collection('vendors').doc(res.user.uid).get()
+          return firestore().collection('vendors').doc(res.user.uid).get();
         })
         .then(async (user) => {
           if (user.exists) {
             await AsyncStorage.setItem(
               'user',
-              JSON.stringify({ userId: user.ref.id, ...user.data() }),
+              JSON.stringify({userId: user.ref.id, ...user.data()}),
             );
             setLoading(false);
             route.params.onPress(user.data().firstTime);
-          }
-          else {
+          } else {
             return Alert.alert(
-              "User Not Found",
-              "This user is not found in Database",
-              [
-                { text: "OK" }
-              ],
-              { cancelable: false }
+              'User Not Found',
+              'User with this email was not found.',
+              [{text: 'OK'}],
+              {cancelable: false},
             );
           }
         })
         .catch((e) => {
+          if (
+            e.message ===
+            '[auth/wrong-password] The password is invalid or the user does not have a password.'
+          ) {
+            Alert.alert(
+              `Wrong Password`,
+              `You've entered a wrong password.`,
+              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+              {cancelable: false},
+            );
+          } else if (
+            e.message ===
+            '[auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.'
+          ) {
+            Alert.alert(
+              `User Not Found`,
+              `User with this email was not found.`,
+              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert(
+              `Something Went Wrong`,
+              'Something went wrong. Please try again later.',
+              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+              {cancelable: false},
+            );
+          }
           setLoading(false);
-          Alert.alert(
-            "User Not Found",
-            e.message,
-            [
-              { text: "OK" }
-            ],
-            { cancelable: false }
-          );
         });
     } else {
       Alert.alert(
         'Fill out all field',
         'Please, Fill out all the required fields',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-        { cancelable: false },
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        {cancelable: false},
       );
     }
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <ScrollView>
         <Image
           source={require('./background.png')}
-          style={{ width: '100%', position: 'relative' }}
+          style={{width: '100%', position: 'relative'}}
           resizeMode="cover"
         />
         <View
@@ -102,15 +119,15 @@ const LoginPage = ({ route }) => {
             padding: 10,
           }}>
           <AppTextInput
-            style={{ marginVertical: 10 }}
+            style={{marginVertical: 10}}
             value={email}
             onChangeText={(txt) => setEmail(txt)}
             placeholder={'Email'}
             textContentType="emailAddress"
           />
-          <View style={{ width: '100%' }}>
+          <View style={{width: '100%'}}>
             <AppTextInput
-              style={{ marginVertical: 10 }}
+              style={{marginVertical: 10}}
               value={password}
               onChangeText={(txt) => setPassword(txt)}
               placeholder={'Password'}
@@ -122,7 +139,7 @@ const LoginPage = ({ route }) => {
                 position: 'absolute',
                 right: 20,
                 top: '50%',
-                transform: [{ translateY: -10 }],
+                transform: [{translateY: -10}],
               }}
               name={passwordHideShow ? 'eye-with-line' : 'eye'}
               size={20}
@@ -131,7 +148,7 @@ const LoginPage = ({ route }) => {
             />
           </View>
 
-          <Text style={{ paddingLeft: 200, fontSize: 12 }}>Forgot Password?</Text>
+          <Text style={{paddingLeft: 200, fontSize: 12}}>Forgot Password?</Text>
 
           <AppButton
             loading={loading}

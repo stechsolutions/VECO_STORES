@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState, useRef } from 'react';
+import React, {Component, useEffect, useState, useRef} from 'react';
 import {
   View,
   ScrollView,
@@ -8,7 +8,7 @@ import {
   Image,
   Modal,
   PermissionsAndroid,
-  Alert
+  Alert,
 } from 'react-native';
 import Screen from '../../Components/Screen';
 import AppTextInput from '../../Components/AppTextInput';
@@ -20,17 +20,16 @@ import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-picker';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import storage from '@react-native-firebase/storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import AppPicker from '../../Components/AppPicker'
+import AppPicker from '../../Components/AppPicker';
 import SignatureCapture from 'react-native-signature-capture';
 import RNFetchBlob from 'rn-fetch-blob';
 
-export default function CreateStore2({ navigation, route, changeFirstTime }) {
-
+export default function CreateStore2({navigation, route, changeFirstTime}) {
   const [administrativeContact, setAdministrativeContact] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [administrativePhone, setAdministrativePhone] = useState('');
@@ -131,7 +130,11 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
   const createStore = async () => {
     setLoading(true);
     var store1Data = route.params.store1Data;
-    const photos = [photoOfOperationNotice, photoIDLegalRepresentative, photoBusiness];
+    const photos = [
+      photoOfOperationNotice,
+      photoIDLegalRepresentative,
+      photoBusiness,
+    ];
     var user = JSON.parse(await AsyncStorage.getItem('user'));
     var nameArray = [
       'photoOfOperationNoticeUrl',
@@ -145,97 +148,106 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
       var response = await fetch(uri);
       var blob = await response.blob();
       var promise = new Promise((resolve, reject) => {
-        storage().ref(`documents/${user.userId}/${Date.now()}`).put(blob)
-          .on('state_changed',
-            () => { },
-            () => { },
+        storage()
+          .ref(`documents/${user.userId}/${Date.now()}`)
+          .put(blob)
+          .on(
+            'state_changed',
+            () => {},
+            () => {},
             (imgRes) => {
-              imgRes.ref.getDownloadURL()
+              imgRes.ref
+                .getDownloadURL()
                 .then((url) => {
                   resolve(url);
-                }).catch(err => {
-                  reject(err);
                 })
-            }
-          )
-      })
+                .catch((err) => {
+                  reject(err);
+                });
+            },
+          );
+      });
       promises.push(promise);
     }
     Promise.all(promises)
-      .then(async urls => {
+      .then(async (urls) => {
         var obj = {
-          administrativeContact, administrativePhone, userId: user.userId,open:true,
-          technicalContact, technicalPhone, whatsappLine, ...store1Data
+          administrativeContact,
+          administrativePhone,
+          userId: user.userId,
+          open: true,
+          technicalContact,
+          technicalPhone,
+          whatsappLine,
+          ...store1Data,
         };
         for (var i = 0; i < urls.length; i++) {
-          obj = { ...obj, [nameArray[i]]: urls[i] };
-        };
+          obj = {...obj, [nameArray[i]]: urls[i]};
+        }
         var result = photoDigitalSignature;
         await RNFetchBlob.fs.writeFile(result.pathName, result.uri, 'base64');
         storage()
-          .ref(`documents/${user.uerId}/${Date.now()}`).putFile(result.pathName)
-          .on('state_changed',
-            () => { },
-            () => { },
+          .ref(`documents/${user.uerId}/${Date.now()}`)
+          .putFile(result.pathName)
+          .on(
+            'state_changed',
+            () => {},
+            () => {},
             async (imgRes) => {
-              imgRes.ref.getDownloadURL()
-                .then(async url => {
+              imgRes.ref
+                .getDownloadURL()
+                .then(async (url) => {
                   console.log(url, 'url');
                   setLoading(false);
                   obj.photoDigitalSignatureUrl = url;
                   await firestore().collection('vendorStores').add(obj);
-                  await firestore().collection('vendors').doc(user.userId).update({ firstTime: false });
+                  await firestore()
+                    .collection('vendors')
+                    .doc(user.userId)
+                    .update({firstTime: false});
                   user.firstTime = false;
                   await AsyncStorage.setItem(
                     'user',
                     await JSON.stringify(user),
-                  )
+                  );
                   Alert.alert(
-                    "Store Created",
-                    "Your store has been created successfully.",
-                    [
-                      { text: "OK", onPress: () => changeFirstTime() }
-                    ],
-                    { cancelable: false }
+                    'Store Created',
+                    'Your store has been created successfully.',
+                    [{text: 'OK', onPress: () => changeFirstTime()}],
+                    {cancelable: false},
                   );
                 })
-                .catch(e => {
+                .catch((e) => {
                   setLoading(false);
                   Alert.alert(
-                    "Error",
+                    'Error',
                     e.message,
-                    [
-                      { text: "OK", onPress: () => console.log("OK Pressed") }
-                    ],
-                    { cancelable: false }
-                  )
-                }
-                )
-            }
+                    [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                    {cancelable: false},
+                  );
+                });
+            },
           );
       })
-      .catch(e => {
+      .catch((e) => {
         setLoading(false);
         Alert.alert(
-          "Error",
+          'Error',
           e.message,
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ],
-          { cancelable: false }
-        )
-      }
-      )
-  }
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+          {cancelable: false},
+        );
+      });
+  };
 
   const handleImageUpload = (type) => {
     try {
-      ImagePicker.launchImageLibrary(
+      ImagePicker.showImagePicker(
         {
           noData: true,
         },
         (response) => {
-          if (response) {
+          if (!response.didCancel) {
             console.log(response.data, 'response . data');
             switch (type) {
               case 'ON':
@@ -285,8 +297,8 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
     // setPhotoDigitalSignature({ uri:result.pathName});
   };
   return (
-    <Screen style={{ backgroundColor: colors.light }}>
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+    <Screen style={{backgroundColor: colors.light}}>
+      <ScrollView style={{flex: 1, padding: 10}}>
         <AppTextInput
           value={administrativeContact}
           onChangeText={(txt) => {
@@ -335,6 +347,7 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             handleImageUpload('ON');
           }}
+          choosen={photoOfOperationNotice && true}
         />
         <AppPhotoInput
           style={styles.mVertical}
@@ -342,6 +355,7 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             handleImageUpload('LR');
           }}
+          choosen={photoIDLegalRepresentative && true}
         />
         <AppPhotoInput
           style={styles.mVertical}
@@ -349,6 +363,7 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             handleImageUpload('BP');
           }}
+          choosen={photoBusiness && true}
         />
         <AppPhotoInput
           style={styles.mVertical}
@@ -356,6 +371,7 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             setShowModal(true);
           }}
+          choosen={photoDigitalSignature && true}
         />
         <View>
           <View style={styles.imageContainer}>
@@ -394,8 +410,10 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
           </View>
           <Text style={styles.termsHead}>Terms and Conditions</Text>
           <Text style={styles.termsText}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-            </Text>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s.
+          </Text>
           <View
             style={{
               flexDirection: 'row',
@@ -411,26 +429,28 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
                 color={colors.primary}
                 size={20}
                 name="checkcircle"
-                style={{ paddingRight: 5 }}
+                style={{paddingRight: 5}}
               />
             ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    setTermsAccepted(true);
-                  }}>
-                  <View
-                    style={{
-                      width: 21,
-                      height: 21,
-                      backgroundColor: colors.white,
-                      borderWidth: 2,
-                      borderColor: colors.primary,
-                      borderRadius: 20,
-                      marginRight: 5,
-                    }}></View>
-                </TouchableOpacity>
-              )}
-            <Text style={styles}>I have read and accept the terms and conditions </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setTermsAccepted(true);
+                }}>
+                <View
+                  style={{
+                    width: 21,
+                    height: 21,
+                    backgroundColor: colors.white,
+                    borderWidth: 2,
+                    borderColor: colors.primary,
+                    borderRadius: 20,
+                    marginRight: 5,
+                  }}></View>
+              </TouchableOpacity>
+            )}
+            <Text style={styles}>
+              I have read and accept the terms and conditions{' '}
+            </Text>
           </View>
         </View>
         <View style={styles.createBtnView}>
@@ -445,6 +465,7 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
             loading={loading}
             style={[styles.btn, styles.mVertical]}
             title="Create"
+            color={colors.primary}
             onPress={createStore}
           />
         </View>
@@ -462,7 +483,7 @@ export default function CreateStore2({ navigation, route, changeFirstTime }) {
         />
         <View style={styles.modalBtnContainer}>
           <AppButton
-            style={[styles.modalBtn, { backgroundColor: colors.white }]}
+            style={[styles.modalBtn, {backgroundColor: colors.white}]}
             title="CLose"
             onPress={() => setShowModal(false)}
           />
@@ -525,7 +546,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   createBtnView: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   termsHead: {
     fontSize: 16,
@@ -535,7 +556,7 @@ const styles = StyleSheet.create({
   termsText: {
     marginHorizontal: 10,
     paddingBottom: 20,
-    fontSize: 12
+    fontSize: 12,
   },
   signature: {
     flex: 1,

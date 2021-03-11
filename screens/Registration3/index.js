@@ -22,7 +22,6 @@ import AppButton from '../../Components/AppButton';
 import AppMultiLineInput from '../../Components/AppMultiLineInput';
 import AppPhotoInput from '../../Components/AppPhotoInput';
 import ImagePicker from 'react-native-image-picker';
-import AppPicker from '../../Components/AppPicker';
 import AppTextInput from '../../Components/AppTextInput';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';

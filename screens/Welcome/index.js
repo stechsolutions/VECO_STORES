@@ -18,13 +18,13 @@ import AppTextInput from '../../Components/AppTextInput';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 
-const { width: WIDTH } = Dimensions.get('window');
-const LoginPage = ({ navigation, changeFirstTime }) => {
-  const goToCreateStore=()=>{
-  navigation.navigate('createStore');
-  }
+const {width: WIDTH} = Dimensions.get('window');
+const LoginPage = ({navigation, changeFirstTime}) => {
+  const goToCreateStore = () => {
+    navigation.navigate('createStore');
+  };
   return (
-    <Screen style={{ flex: 1, backgroundColor: colors.light }}>
+    <Screen style={{flex: 1, backgroundColor: colors.light}}>
       <ScrollView>
         <View
           style={{
@@ -39,19 +39,12 @@ const LoginPage = ({ navigation, changeFirstTime }) => {
             resizeMode="cover"
           />
         </View>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <View style={{ width: 200, marginVertical: 150 }}>
-            <Text style={styles.title}>Welcome! to the VECO family</Text>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{marginVertical: 150}}>
+            <Text style={styles.title}>Welcome!</Text>
+            <Text style={styles.title}>to the VECO family</Text>
             <Text style={styles.subTitle}>Create your dealer store now</Text>
             <AppButton
-              // disabled={
-              //   !storeName ||
-              //   !location ||
-              //   !locationDetailsArray.length ||
-              //   !documentImage ||
-              //   !image
-              // }
-              // loading={loading}
               style={[styles.btn, styles.mVertical]}
               title="Create Online Store"
               onPress={goToCreateStore}
@@ -67,11 +60,7 @@ export default LoginPage;
 
 const styles = StyleSheet.create({
   btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
     padding: 20,
-    backgroundColor: colors.secondary,
-    width: '100%',
   },
   title: {
     alignSelf: 'center',

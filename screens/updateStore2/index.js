@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState, useRef } from 'react';
+import React, {Component, useEffect, useState, useRef} from 'react';
 import {
   View,
   ScrollView,
@@ -8,7 +8,7 @@ import {
   Image,
   Modal,
   PermissionsAndroid,
-  Alert
+  Alert,
 } from 'react-native';
 import Screen from '../../Components/Screen';
 import AppTextInput from '../../Components/AppTextInput';
@@ -20,17 +20,16 @@ import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-picker';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import storage from '@react-native-firebase/storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import AppPicker from '../../Components/AppPicker'
+import AppPicker from '../../Components/AppPicker';
 import SignatureCapture from 'react-native-signature-capture';
 import RNFetchBlob from 'rn-fetch-blob';
 
-export default function UpdateStore2({ navigation, route, changeFirstTime }) {
-
+export default function UpdateStore2({navigation, route, changeFirstTime}) {
   const [administrativeContact, setAdministrativeContact] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [administrativePhone, setAdministrativePhone] = useState('');
@@ -57,7 +56,7 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
 
   useEffect(() => {
     getData();
-  }, [])
+  }, []);
 
   const createStoreFunc = async () => {
     changeFirstTime();
@@ -137,22 +136,25 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
     // console.log(route.params.update1Data, 'update1Data');
     // console.log(store, 'store');
     const {
-      administrativeContact, administrativePhone,
-      technicalContact, technicalPhone, whatsappLine,
+      administrativeContact,
+      administrativePhone,
+      technicalContact,
+      technicalPhone,
+      whatsappLine,
       photoDigitalSignatureUrl,
       photoOfOperationNoticeUrl,
       photoIDLegalRepresentativeUrl,
-      photoBusinessUrl
+      photoBusinessUrl,
     } = store;
     setAdministrativeContact(administrativeContact);
     setAdministrativePhone(administrativePhone);
     setTechnicalContact(technicalContact);
     setTechnicalPhone(technicalPhone);
     setWhatsappLine(whatsappLine);
-    setPhotoOfOperationNotice({ uri: photoOfOperationNoticeUrl });
-    setPhotoBusiness({ uri: photoBusinessUrl });
-    setPhotoIDLegalRepresentative({ uri: photoIDLegalRepresentativeUrl });
-    setPhotoDigitalSignature({ uri: photoDigitalSignatureUrl });
+    setPhotoOfOperationNotice({uri: photoOfOperationNoticeUrl});
+    setPhotoBusiness({uri: photoBusinessUrl});
+    setPhotoIDLegalRepresentative({uri: photoIDLegalRepresentativeUrl});
+    setPhotoDigitalSignature({uri: photoDigitalSignatureUrl});
   };
 
   const updateStore = async () => {
@@ -162,15 +164,19 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
     var update1Data = route.params.update1Data;
 
     const photos = [
-      photoOfOperationNotice.uri.slice(0, 5) !== 'https' && photoOfOperationNotice,
-      photoIDLegalRepresentative.uri.slice(0, 5) !== 'https' && photoIDLegalRepresentative,
-      photoBusiness.uri.slice(0, 5) !== 'https' && photoBusiness
+      photoOfOperationNotice.uri.slice(0, 5) !== 'https' &&
+        photoOfOperationNotice,
+      photoIDLegalRepresentative.uri.slice(0, 5) !== 'https' &&
+        photoIDLegalRepresentative,
+      photoBusiness.uri.slice(0, 5) !== 'https' && photoBusiness,
     ];
     const unUpdatedPhotos = [
-      photoOfOperationNotice.uri.slice(0, 5) === 'https' && photoOfOperationNotice,
-      photoIDLegalRepresentative.uri.slice(0, 5) === 'https' && photoIDLegalRepresentative,
-      photoBusiness.uri.slice(0, 5) === 'https' && photoBusiness
-    ]
+      photoOfOperationNotice.uri.slice(0, 5) === 'https' &&
+        photoOfOperationNotice,
+      photoIDLegalRepresentative.uri.slice(0, 5) === 'https' &&
+        photoIDLegalRepresentative,
+      photoBusiness.uri.slice(0, 5) === 'https' && photoBusiness,
+    ];
     // console.log('photos,', photos);
     var user = JSON.parse(await AsyncStorage.getItem('user'));
     console.log(user, 'userF');
@@ -189,25 +195,30 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
         var response = await fetch(uri);
         var blob = await response.blob();
         var promise = new Promise((resolve, reject) => {
-          storage().ref(`documents/${user.userId}/${Date.now()}`).put(blob)
-            .on('state_changed',
-              () => { },
-              () => { },
+          storage()
+            .ref(`documents/${user.userId}/${Date.now()}`)
+            .put(blob)
+            .on(
+              'state_changed',
+              () => {},
+              () => {},
               (imgRes) => {
-                imgRes.ref.getDownloadURL()
+                imgRes.ref
+                  .getDownloadURL()
                   .then((url) => {
                     resolve(url);
-                  }).catch(err => {
-                    reject(err);
                   })
-              }
-            )
-        })
+                  .catch((err) => {
+                    reject(err);
+                  });
+              },
+            );
+        });
         promises.push(promise);
       }
     }
     Promise.all(promises)
-      .then(async urls => {
+      .then(async (urls) => {
         // console.log(urls, 'urls');
         console.log(nameArray, 'nameArray');
         // var obj = {
@@ -215,81 +226,94 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
         //   technicalContact, technicalPhone, whatsappLine, ...store1Data
         // };
         var obj = {
-          administrativeContact, administrativePhone,
-          technicalContact, technicalPhone, whatsappLine,
-          ...update1Data
+          administrativeContact,
+          administrativePhone,
+          technicalContact,
+          technicalPhone,
+          whatsappLine,
+          ...update1Data,
         };
         for (var i = 0; i < urls.length; i++) {
-          obj = { ...obj, [nameArray[i]]: urls[i] };
-        };
+          obj = {...obj, [nameArray[i]]: urls[i]};
+        }
         for (var i = 0; i < unUpdatedPhotos.length; i++) {
           if (unUpdatedPhotos[i])
-            obj = { ...obj, [names[i]]: unUpdatedPhotos[i].uri };
+            obj = {...obj, [names[i]]: unUpdatedPhotos[i].uri};
         }
         obj.open = store.open;
         var result = photoDigitalSignature;
         if (result.uri.slice(0, 5) !== 'https') {
           await RNFetchBlob.fs.writeFile(result.pathName, result.uri, 'base64');
           storage()
-            .ref(`documents/${user.uerId}/${Date.now()}`).putFile(result.pathName)
-            .on('state_changed',
-              () => { },
-              () => { },
+            .ref(`documents/${user.uerId}/${Date.now()}`)
+            .putFile(result.pathName)
+            .on(
+              'state_changed',
+              () => {},
+              () => {},
               async (imgRes) => {
-                imgRes.ref.getDownloadURL()
-                  .then(async url => {
+                imgRes.ref
+                  .getDownloadURL()
+                  .then(async (url) => {
                     setLoading(false);
                     obj.photoDigitalSignatureUrl = url;
                     console.log(obj, 'final Obj');
-                    await firestore().collection('vendorStores').doc(store.storeId).update({ ...obj });
-                    var newStore = await firestore().collection('vendorStores').doc(store.storeId).get();
-                    console.log(newStore, 'newStore')
+                    await firestore()
+                      .collection('vendorStores')
+                      .doc(store.storeId)
+                      .update({...obj});
+                    var newStore = await firestore()
+                      .collection('vendorStores')
+                      .doc(store.storeId)
+                      .get();
+                    console.log(newStore, 'newStore');
                     await AsyncStorage.setItem(
                       'store',
-                      await JSON.stringify({ id: newStore.id, ...newStore.data() }),
-                    )
+                      await JSON.stringify({
+                        id: newStore.id,
+                        ...newStore.data(),
+                      }),
+                    );
                     setLoading(false);
                     Alert.alert(
-                      "Store Updated",
-                      "Your store has been updated successfully.",
-                      [
-                        { text: "OK" }
-                      ],
-                      { cancelable: false }
+                      'Store Updated',
+                      'Your store has been updated successfully.',
+                      [{text: 'OK'}],
+                      {cancelable: false},
                     );
                   })
-                  .catch(e => {
+                  .catch((e) => {
                     setLoading(false);
                     Alert.alert(
-                      "Error",
+                      'Error',
                       e.message,
-                      [
-                        { text: "OK", onPress: () => console.log("OK Pressed") }
-                      ],
-                      { cancelable: false }
-                    )
-                  }
-                  )
-              }
+                      [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                      {cancelable: false},
+                    );
+                  });
+              },
             );
-        }
-        else {
+        } else {
           obj.photoDigitalSignatureUrl = photoDigitalSignature.uri;
           console.log(obj, 'final Obj');
-          await firestore().collection('vendorStores').doc(store.storeId).update(obj);
-          var newStore = await firestore().collection('vendorStores').doc(store.storeId).get()
+          await firestore()
+            .collection('vendorStores')
+            .doc(store.storeId)
+            .update(obj);
+          var newStore = await firestore()
+            .collection('vendorStores')
+            .doc(store.storeId)
+            .get();
           await AsyncStorage.setItem(
             'store',
-            await JSON.stringify({ storeId: newStore.id, ...newStore.data() }),
-          )
+            await JSON.stringify({storeId: newStore.id, ...newStore.data()}),
+          );
           setLoading(false);
           Alert.alert(
-            "Store Updated",
-            "Your store has been updated successfully.",
-            [
-              { text: "OK" }
-            ],
-            { cancelable: false }
+            'Store Updated',
+            'Your store has been updated successfully.',
+            [{text: 'OK'}],
+            {cancelable: false},
           );
 
           // catch (e) {
@@ -306,20 +330,17 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           // }
         }
       })
-      .catch(e => {
+      .catch((e) => {
         setLoading(false);
-        console.log(e, 'err')
+        console.log(e, 'err');
         Alert.alert(
-          "Error",
+          'Error',
           e.message,
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ],
-          { cancelable: false }
-        )
-      }
-      )
-  }
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+          {cancelable: false},
+        );
+      });
+  };
 
   const handleImageUpload = (type) => {
     try {
@@ -378,8 +399,8 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
     // setPhotoDigitalSignature({ uri:result.pathName});
   };
   return (
-    <Screen style={{ backgroundColor: colors.light }}>
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+    <Screen style={{backgroundColor: colors.light}}>
+      <ScrollView style={{flex: 1, padding: 10}}>
         <AppTextInput
           value={administrativeContact}
           onChangeText={(txt) => {
@@ -428,6 +449,7 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             handleImageUpload('ON');
           }}
+          choosen={photoOfOperationNotice && true}
         />
         <AppPhotoInput
           style={styles.mVertical}
@@ -435,6 +457,7 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             handleImageUpload('LR');
           }}
+          choosen={photoIDLegalRepresentative && true}
         />
         <AppPhotoInput
           style={styles.mVertical}
@@ -442,6 +465,7 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             handleImageUpload('BP');
           }}
+          choosen={photoBusiness && true}
         />
         <AppPhotoInput
           style={styles.mVertical}
@@ -449,14 +473,17 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           onPress={() => {
             setShowModal(true);
           }}
+          choosen={photoDigitalSignature && true}
         />
         <View>
           <View style={styles.imageContainer}>
             {photoDigitalSignature && (
               <Image
                 source={{
-                  uri: photoDigitalSignature.uri.slice(0, 5) === 'https' ? photoDigitalSignature.uri :
-                    `data:image/png;base64,${photoDigitalSignature.uri}`,
+                  uri:
+                    photoDigitalSignature.uri.slice(0, 5) === 'https'
+                      ? photoDigitalSignature.uri
+                      : `data:image/png;base64,${photoDigitalSignature.uri}`,
                 }}
                 style={styles.image}
               />
@@ -488,8 +515,10 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
           </View>
           <Text style={styles.termsHead}>Terms and Conditions</Text>
           <Text style={styles.termsText}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-            </Text>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s.
+          </Text>
           <View
             style={{
               flexDirection: 'row',
@@ -505,26 +534,28 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
                 color={colors.primary}
                 size={20}
                 name="checkcircle"
-                style={{ paddingRight: 5 }}
+                style={{paddingRight: 5}}
               />
             ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    setTermsAccepted(true);
-                  }}>
-                  <View
-                    style={{
-                      width: 21,
-                      height: 21,
-                      backgroundColor: colors.white,
-                      borderWidth: 2,
-                      borderColor: colors.primary,
-                      borderRadius: 20,
-                      marginRight: 5,
-                    }}></View>
-                </TouchableOpacity>
-              )}
-            <Text style={styles}>I have read and accept the terms and conditions </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setTermsAccepted(true);
+                }}>
+                <View
+                  style={{
+                    width: 21,
+                    height: 21,
+                    backgroundColor: colors.white,
+                    borderWidth: 2,
+                    borderColor: colors.primary,
+                    borderRadius: 20,
+                    marginRight: 5,
+                  }}></View>
+              </TouchableOpacity>
+            )}
+            <Text style={styles}>
+              I have read and accept the terms and conditions{' '}
+            </Text>
           </View>
         </View>
         <View style={styles.createBtnView}>
@@ -556,7 +587,7 @@ export default function UpdateStore2({ navigation, route, changeFirstTime }) {
         />
         <View style={styles.modalBtnContainer}>
           <AppButton
-            style={[styles.modalBtn, { backgroundColor: colors.white }]}
+            style={[styles.modalBtn, {backgroundColor: colors.white}]}
             title="CLose"
             onPress={() => setShowModal(false)}
           />
@@ -619,7 +650,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   createBtnView: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   termsHead: {
     fontSize: 16,
@@ -629,7 +660,7 @@ const styles = StyleSheet.create({
   termsText: {
     marginHorizontal: 10,
     paddingBottom: 20,
-    fontSize: 12
+    fontSize: 12,
   },
   signature: {
     flex: 1,

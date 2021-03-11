@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   ScrollView,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   Modal,
-  Alert
+  Alert,
 } from 'react-native';
 import Screen from '../../Components/Screen';
 import AppTextInput from '../../Components/AppTextInput';
@@ -18,11 +18,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import storage from '@react-native-firebase/storage';
 import AppPicker from '../../Components/AppPicker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { corregimientos, districts, provinces } from '../../config/data';
+import {corregimientos, districts, provinces} from '../../config/data';
 
-export default function CreateStore({ navigation, route, changeFirstTime }) {
+export default function CreateStore({navigation, route, changeFirstTime}) {
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [showTermsAndConditionModal, setShowTermsAndConditionModal] = useState(false);
+  const [showTermsAndConditionModal, setShowTermsAndConditionModal] = useState(
+    false,
+  );
   const [fullName, setFullName] = useState('');
   const [cellNum, setCellNum] = useState('');
   const [province, setProvince] = useState('');
@@ -32,7 +34,6 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-
 
   const createStoreFunc = async () => {
     setLoading(true);
@@ -48,8 +49,8 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
       .put(profileBlob)
       .on(
         'state_changed',
-        () => { },
-        () => { },
+        () => {},
+        () => {},
         (imgResponse) =>
           imgResponse.ref.getDownloadURL().then((url) => {
             imageUrl = url;
@@ -58,8 +59,8 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
               .put(documentBlob)
               .on(
                 'state_changed',
-                () => { },
-                () => { },
+                () => {},
+                () => {},
                 (imgResponse) =>
                   imgResponse.ref.getDownloadURL().then((url) => {
                     documentUrl = url;
@@ -79,12 +80,12 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
                         console.log('store Created');
                         await AsyncStorage.setItem(
                           'store',
-                          JSON.stringify({ storeId: storeData.id, ...store }),
+                          JSON.stringify({storeId: storeData.id, ...store}),
                         );
                         await firestore()
                           .collection('distributer')
                           .doc(user.userId)
-                          .update({ firstTime: false });
+                          .update({firstTime: false});
                         changeFirstTime();
                         user.firstTime = false;
                         AsyncStorage.setItem(
@@ -108,42 +109,42 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
 
   const signUp = () => {
     setLoading(true);
-    var user = { fullName, cellNum, province:province.label, 
-      district:district.label, corregimiento:corregimiento.label, 
-      email, firstTime:true };
+    var user = {
+      fullName,
+      cellNum,
+      province: province.label,
+      district: district.label,
+      corregimiento: corregimiento.label,
+      email,
+      firstTime: true,
+    };
     var authRes = auth().createUserWithEmailAndPassword(email, password);
-    authRes.then(res => {
-      var userId = res.user.uid;
-      return firestore().collection('vendors').doc(userId).set(user);
-    })
+    authRes
+      .then((res) => {
+        var userId = res.user.uid;
+        return firestore()
+          .collection('vendors')
+          .doc(userId)
+          .set({...user, approved: 'Disapproved'});
+      })
       .then(() => {
         setLoading(false);
         Alert.alert(
-          "Registered Sucessfully",
-          "Your account has been created.",
-          [
-            { text: "OK", onPress: () => navigation.navigate('Login page') }
-          ],
-          { cancelable: false }
+          'Registered Sucessfully',
+          'Your account has been created.',
+          [{text: 'OK', onPress: () => navigation.navigate('Login page')}],
+          {cancelable: false},
         );
-
       })
-      .catch(e => {
+      .catch((e) => {
         setLoading(false);
-        Alert.alert(
-          "Error",
-          e.message,
-          [
-            { text: "OK" }
-          ],
-          { cancelable: false }
-        );
+        Alert.alert('Error', e.message, [{text: 'OK'}], {cancelable: false});
       });
-  }
+  };
 
   return (
-    <Screen style={{ backgroundColor: colors.light }}>
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+    <Screen style={{backgroundColor: colors.light}}>
+      <ScrollView style={{flex: 1, padding: 10}}>
         <AppTextInput
           value={fullName}
           onChangeText={(txt) => {
@@ -163,18 +164,27 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
         <AppPicker
           selectedItem={province}
           onSelectItem={(item) => item && setProvince(item)}
-          items={provinces} style={styles.mVertical}
-          title="Province" />
+          color={province ? colors.black : colors.dark}
+          items={provinces}
+          style={styles.mVertical}
+          title="Province"
+        />
         <AppPicker
           selectedItem={district}
-          onSelectItem={item => item && setDistrict(item)}
-          items={districts} style={styles.mVertical}
-          title="District" />
+          onSelectItem={(item) => item && setDistrict(item)}
+          color={district ? colors.black : colors.dark}
+          items={districts}
+          style={styles.mVertical}
+          title="District"
+        />
         <AppPicker
           selectedItem={corregimiento}
-          onSelectItem={item => item && setCorregimiento(item)}
-          items={corregimientos} style={styles.mVertical}
-          title="Corregimiento" />
+          onSelectItem={(item) => item && setCorregimiento(item)}
+          items={corregimientos}
+          color={corregimiento ? colors.black : colors.dark}
+          style={styles.mVertical}
+          title="Corregimiento"
+        />
         <AppTextInput
           value={fullAddress}
           onChangeText={(txt) => {
@@ -214,25 +224,25 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
               color={colors.primary}
               size={20}
               name="checkcircle"
-              style={{ paddingRight: 5 }}
+              style={{paddingRight: 5}}
             />
           ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  setTermsAccepted(true);
-                }}>
-                <View
-                  style={{
-                    width: 21,
-                    height: 21,
-                    backgroundColor: colors.white,
-                    borderWidth: 2,
-                    borderColor: colors.primary,
-                    borderRadius: 20,
-                    marginRight: 5,
-                  }}></View>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              onPress={() => {
+                setTermsAccepted(true);
+              }}>
+              <View
+                style={{
+                  width: 21,
+                  height: 21,
+                  backgroundColor: colors.white,
+                  borderWidth: 2,
+                  borderColor: colors.primary,
+                  borderRadius: 20,
+                  marginRight: 5,
+                }}></View>
+            </TouchableOpacity>
+          )}
           <Text>I have read and accept the </Text>
           <TouchableOpacity
             onPress={() => {
@@ -245,7 +255,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
                 borderBottomWidth: 1,
               }}>
               terms and conditions
-                </Text>
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.createBtnView}>
@@ -257,8 +267,9 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
               !province ||
               !district ||
               !corregimiento ||
-              !email || !password
-              || !termsAccepted
+              !email ||
+              !password ||
+              !termsAccepted
             }
             loading={loading}
             style={[styles.btn, styles.mVertical]}
@@ -268,8 +279,8 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
         </View>
       </ScrollView>
       <Modal visible={showTermsAndConditionModal} animationType="slide">
-        <View style={{ flex: 1 }}>
-          <ScrollView style={{ padding: 10 }}>
+        <View style={{flex: 1}}>
+          <ScrollView style={{padding: 10}}>
             <Text
               style={{
                 color: colors.primary,
@@ -615,7 +626,7 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
               <AppButton
                 style={[
                   styles.modalTermsBtn,
-                  { backgroundColor: colors.white, borderWidth: 1 },
+                  {backgroundColor: colors.white, borderWidth: 1},
                 ]}
                 title="Reject"
                 onPress={() => {
@@ -635,7 +646,6 @@ export default function CreateStore({ navigation, route, changeFirstTime }) {
             </View>
           </ScrollView>
         </View>
-
       </Modal>
     </Screen>
   );
@@ -694,6 +704,5 @@ const styles = StyleSheet.create({
   createBtnView: {
     marginVertical: 15,
     alignItems: 'flex-end',
-
-  }
+  },
 });
