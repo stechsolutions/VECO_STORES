@@ -26,7 +26,7 @@ import colors from '../../config/colors';
 import AppPicker from '../../Components/AppPicker';
 import AppPhotoInput from '../../Components/AppPhotoInput';
 import AppButton from '../../Components/AppButton';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 
 export default function CreateDelivery2({navigation}) {
   const [vehicleRegistryPhoto, setVehicleRegistryPhoto] = useState();

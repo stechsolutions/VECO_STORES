@@ -1,9 +1,14 @@
-package com.marketplace;
+package com.vecomarketplace;
+
+// com.myapp should be your package name
+import com.vecomarketplace.generated.BasePackageList;
 
 import android.app.Application;
+import androidx.multidex.MultiDexApplication;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -12,11 +17,22 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
-import com.airbnb.android.react.maps.MapsPackage;
+
+import java.util.Arrays;
 import java.util.List;
+ 
+import org.unimodules.adapters.react.ModuleRegistryAdapter;
+import org.unimodules.adapters.react.ReactModuleRegistryProvider;
+import org.unimodules.core.interfaces.SingletonModule;
+
+import co.apptailor.googlesignin.RNGoogleSigninPackage;  // <--- import
+
 // import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends MultiDexApplication implements ReactApplication  {
+
+
+  private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(new BasePackageList().getPackageList(), null);
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
@@ -32,8 +48,23 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MapsPackage());
           //  packages.add(new ReactNativePushNotificationPackage())
+          // Add unimodules
+          List<ReactPackage> unimodules = Arrays.<ReactPackage>asList(
+            new ModuleRegistryAdapter(mModuleRegistryProvider)
+          );
+          packages.addAll(unimodules);
+          
           return packages;
         }
+
+    //     @Override
+    // protected List<ReactPackage> getPackages() {
+    //   return Arrays.<ReactPackage>asList(
+    //     new MainReactPackage(), // <---- add comma
+    //     new RNFSPackage() // <---------- add package
+    //     new PackageList(this).getPackages()
+    //   );
+    // }
 
         @Override
         protected String getJSMainModuleName() {
@@ -53,6 +84,8 @@ public class MainApplication extends Application implements ReactApplication {
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
+  
+  
   /**
    * Loads Flipper in React Native templates. Call this in the onCreate method with something like
    * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());

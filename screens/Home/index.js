@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import {color} from 'react-native-reanimated';
 import HomeCard from '../../Components/HomeCard';
 import HomeCardMain from '../../Components/HomeCardMain';
@@ -8,9 +15,16 @@ import colors from '../../config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import ToggleBtn from '../../Components/ToggleBtn';
+import AppButton from '../../Components/AppButton';
+import {PushNotification} from '../../Components/PushNotifications';
 const index = ({navigation}) => {
   const [store, setStore] = useState(null);
   const [toggle, setToggle] = useState(false);
+
+  const [showBuyOptions, setShowBuyOptions] = useState(false);
+  const [showSellOptions, setShowSellOptions] = useState(false);
+
+  const [loading, setLoading] = useState(true);
 
   const toggleBtn = async () => {
     setToggle(!toggle);
@@ -22,6 +36,10 @@ const index = ({navigation}) => {
     AsyncStorage.setItem('open', !toggle === false ? 'false' : 'true');
   };
 
+  const getUser = async () => JSON.parse(await AsyncStorage.getItem('user'));
+
+  PushNotification();
+
   useEffect(() => {
     AsyncStorage.getItem('open').then((open) =>
       open === 'true'
@@ -30,29 +48,41 @@ const index = ({navigation}) => {
         ? setToggle(false)
         : '',
     );
+    // AsyncStorage.getItem('store').then((store) => {
+    //   if (store) {
+    //     var storeParsed = JSON.parse(store);
+    //     setStore(JSON.parse(store));
+    //     setLoading(false);
+    //     console.log(JSON.parse(store), 'store');
+    //   } else {
+    //   }
+    // });
+    getStore();
   }, []);
 
-  useEffect(() => {
-    AsyncStorage.getItem('store').then((store) => {
-      if (store) {
-        var storeParsed = JSON.parse(store);
-        setStore(JSON.parse(store));
+  // useEffect(() => {
+  //   AsyncStorage.getItem('store').then((store) => {
+  //     if (store) {
+  //       var storeParsed = JSON.parse(store);
+  //       setStore(JSON.parse(store));
 
-        console.log(JSON.parse(store), 'store');
-      } else {
-        getStore();
-      }
-    });
-  }, []);
+  //       console.log(JSON.parse(store), 'store');
+  //     } else {
+  //       getStore();
+  //     }
+  //   });
+  // }, []);
 
   const getStore = async () => {
-    const user = JSON.parse(await AsyncStorage.getItem('user'));
+    const user = await getUser();
+
     firestore()
       .collection('vendorStores')
       .where('userId', '==', user.userId)
       .limit(1)
       .get()
       .then((res) => {
+        let count = 1;
         res.forEach((e) => {
           setStore({storeId: e.ref.id, ...e.data()});
           console.log(e.data(), 'store');
@@ -62,9 +92,22 @@ const index = ({navigation}) => {
             'store',
             JSON.stringify({storeId: e.ref.id, ...e.data()}),
           );
+
+          if (count === res.size) {
+            setLoading(false);
+          }
+          count++;
         });
       });
   };
+
+  if (loading)
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+
   return (
     <Screen>
       {/* Card Prop >>> name=IconName, title, subtitle, buttonTitle="Button's Title" */}
@@ -98,26 +141,98 @@ const index = ({navigation}) => {
             }
           />
         </View>
-        <View style={styles.cardContainer}>
-          <HomeCard
-            fa5
-            name="shopping-cart"
-            title="Search Product"
-            onPress={() => navigation.navigate('searchProductStack')}
+
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <AppButton
+            title={'Buy Options'}
+            style={{
+              margin: 5,
+              width: 200,
+              padding: 15,
+              backgroundColor: colors.white,
+              shadow: {width: 10, height: 0},
+            }}
+            onPress={() => setShowBuyOptions(!showBuyOptions)}
           />
-          {/* <HomeCard
+        </View>
+
+        {showBuyOptions && (
+          <View style={styles.cardContainer}>
+            <HomeCard
+              fa5
+              name="shopping-cart"
+              title="Search Product"
+              onPress={() =>
+                navigation.navigate('PurchaseOrdersStack', {
+                  screen: 'searchProducts',
+                })
+              }
+            />
+            {/* <HomeCard
             ii
             name="ios-stats-chart-sharp"
             title="Statistics"
             onPress={() => navigation.navigate('StatStack')}
           /> */}
-          <HomeCard
-            order
-            title="Create Purchase Orders"
-            onPress={() => navigation.navigate('PurchaseOrdersStack')}
+            <HomeCard
+              order
+              title="Create Purchase Orders"
+              onPress={() => navigation.navigate('PurchaseOrdersStack')}
+            />
+          </View>
+        )}
+
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <AppButton
+            title={'Sell Options'}
+            style={{
+              margin: 5,
+              width: 200,
+              padding: 15,
+              backgroundColor: colors.white,
+              shadow: {width: 10, height: 0},
+            }}
+            onPress={() => setShowSellOptions(!showSellOptions)}
           />
         </View>
+
+        {showSellOptions && (
+          <View style={styles.cardContainer}>
+            <HomeCard
+              mci
+              name="face"
+              title="Create"
+              // subtitle="Salesman - Dispatcher - SubAdmin"
+              onPress={() => navigation.navigate('CreateStack')}
+            />
+          </View>
+        )}
+        {showSellOptions && (
+          <View style={styles.cardContainer}>
+            <HomeCard
+              fa
+              name="product-hunt"
+              title="Create Product"
+              onPress={() => navigation.navigate('ProductServicesStack')}
+            />
+            <HomeCard
+              mi
+              name="show-chart"
+              title="Create Promotion"
+              onPress={() => navigation.navigate('Promotion and Offer')}
+            />
+          </View>
+        )}
+
         <View style={styles.cardContainer}>
+          {/* <HomeCard
+            mi
+            name="settings"
+            title="Edit / Update Store"
+            onPress={() =>
+              navigation.navigate('CreateStore', {updateStore: getStore})
+            }
+          /> */}
           <HomeCard
             ii
             name="grid"
@@ -125,27 +240,19 @@ const index = ({navigation}) => {
             onPress={() => navigation.navigate('DashboardStack')}
           />
           <HomeCard
-            mci
-            name="face"
-            title="Create"
-            subtitle="Salesman - Dispatcher - SubAdmin"
-            onPress={() => navigation.navigate('CreateStack')}
-          />
-        </View>
-        <View style={styles.cardContainer}>
-          <HomeCard
-            fa
-            name="product-hunt"
-            title="Create Product"
-            onPress={() => navigation.navigate('ProductServicesStack')}
+            ii
+            name="ios-stats-chart-sharp"
+            title="Statistics"
+            onPress={() => navigation.navigate('StatStack')}
           />
           <HomeCard
-            mi
-            name="show-chart"
-            title="Create Promotion"
-            onPress={() => navigation.navigate('Promotion and Offer')}
+            entypo
+            name="mail"
+            title="Mailbox"
+            onPress={() => navigation.navigate('MailStack')}
           />
         </View>
+
         {/* <View style={styles.cardContainer}>
           <HomeCard
             mci
@@ -172,28 +279,6 @@ const index = ({navigation}) => {
             onPress={() => navigation.navigate('PurchaseOrdersStack')}
           />
         </View> */}
-        <View style={styles.cardContainer}>
-          {/* <HomeCard
-            mi
-            name="settings"
-            title="Edit / Update Store"
-            onPress={() =>
-              navigation.navigate('CreateStore', {updateStore: getStore})
-            }
-          /> */}
-          <HomeCard
-            ii
-            name="ios-stats-chart-sharp"
-            title="Statistics"
-            onPress={() => navigation.navigate('StatStack')}
-          />
-          <HomeCard
-            entypo
-            name="mail"
-            title="Mailbox"
-            onPress={() => navigation.navigate('MailStack')}
-          />
-        </View>
       </ScrollView>
     </Screen>
   );

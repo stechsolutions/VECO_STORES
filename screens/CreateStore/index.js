@@ -18,7 +18,7 @@ import LocationDetail from '../../Components/LocationDetail';
 import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -28,17 +28,14 @@ import {provinces, districts, corregimientos} from '../../config/data';
 
 export default function CreateStore({navigation, route, changeFirstTime}) {
   const [tradeName, setTradeName] = useState('');
-  const [location, setLocation] = useState({});
+  const [location, setLocation] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [RUC, setRUC] = useState('');
   const [DV, setDV] = useState('');
-  const [
-    nameOfTheLegalRepresentative,
-    setNameOfTheLegalRepresentative,
-  ] = useState('');
-  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] = useState(
-    '',
-  );
+  const [nameOfTheLegalRepresentative, setNameOfTheLegalRepresentative] =
+    useState('');
+  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] =
+    useState('');
   const [province, setProvince] = useState('');
   const [district, setDistrict] = useState('');
   const [corregimiento, setCorregimiento] = useState('');
@@ -117,6 +114,8 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
       ImagePicker.launchImageLibrary(
         {
           noData: true,
+          mediaType: 'photo',
+          maxWidth: 500,
         },
         (response) => {
           console.log(response);
@@ -129,9 +128,11 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
   };
   const handleDocumentImageUpload = () => {
     try {
-      ImagePicker.showImagePicker(
+      ImagePicker.launchImageLibrary(
         {
           noData: true,
+          mediaType: 'photo',
+          maxWidth: 500,
         },
         (response) => {
           console.log(response);
@@ -167,7 +168,7 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
     const temp = {location, coordinate: tempCoordinate};
     const arr = [...locationDetailsArray];
     arr.push(temp);
-    setLocation('');
+    // setLocation('');
     setLocationDetailsArray(arr);
   };
 
@@ -180,7 +181,7 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
     };
     setLocationDetailsArray(arr);
     setLocationToEdit(null);
-    setLocation('');
+    // setLocation('');
     setShowModal(false);
     console.log('AFTER UPDATE >>>', locationDetailsArray);
   };
@@ -189,7 +190,30 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
     console.log(index);
     const arr = [...locationDetailsArray];
     arr.splice(index, 1);
+
+    try {
+      arr.length >= 0
+        ? setLocation(arr[arr.length - 1]['location'])
+        : setLocation('');
+    } catch (e) {
+      console.log(e);
+      setLocation('');
+    }
     setLocationDetailsArray(arr);
+  };
+
+  const getLocationCordinates = () => {
+    try {
+      return `${
+        locationDetailsArray[locationDetailsArray.length - 1]?.coordinate
+          .latitude
+      } ${
+        locationDetailsArray[locationDetailsArray.length - 1]?.coordinate
+          .longitude
+      }`;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -283,7 +307,11 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
         <AppPhotoInput
           style={styles.mVertical}
           add
-          placeHolder="Latitude Longitude"
+          placeHolder={
+            locationDetailsArray.length > 0
+              ? getLocationCordinates()
+              : 'Latitude Longitude'
+          }
           onPress={() => {
             checkPermission();
           }}
@@ -301,8 +329,8 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
               <LocationDetail
                 title={`${
                   item.location
-                    ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.latitude}`
-                    : `${item.coordinate.latitude} ${item.coordinate.latitude}`
+                    ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.longitude}`
+                    : `${item.coordinate.latitude} ${item.coordinate.longitude}`
                 }`}
                 onPress={() => {
                   setShowModal(true);
@@ -384,8 +412,17 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
         <View style={styles.modalBtnContainer}>
           <AppButton
             style={[styles.modalBtn, {backgroundColor: colors.white}]}
-            title="CLose"
+            title="Close"
             onPress={() => setShowModal(false)}
+          />
+          <AppButton
+            style={[
+              styles.modalBtn,
+              {backgroundColor: colors.medium, color: colors.white},
+            ]}
+            // color={colors.white}
+            title="Refresh"
+            onPress={() => getCurrentLocation()}
           />
           <AppButton
             style={styles.modalBtn}

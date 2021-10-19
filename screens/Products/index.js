@@ -1,143 +1,42 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import AppMessage from '../../Components/AppMessage';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 
-const moreMessages = [
-  {
-    id: 1,
-    title: 'Product Name',
-    subTitle: 'Approved',
-
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 3,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 4,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 5,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 6,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 7,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 8,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 9,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 10,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 11,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 12,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 13,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-];
-
-const lessMessages = [
-  {
-    id: 1,
-    title: 'Product Name',
-    subTitle: 'Approved',
-
-    image: require('../../assets/dress.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/dress.jpg'),
-  },
-  {
-    id: 3,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/dress.jpg'),
-  },
-  {
-    id: 4,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/dress.jpg'),
-  },
-  {
-    id: 5,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/dress.jpg'),
-  },
-  {
-    id: 6,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/dress.jpg'),
-  },
-  {
-    id: 7,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/dress.jpg'),
-  },
-];
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const index = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [moreMessage, setMoreMessage] = useState(moreMessages);
-  const [lessMessage, setLessMessage] = useState(lessMessages);
+  const [moreMessage, setMoreMessage] = useState([]);
+  const [lessMessage, setLessMessage] = useState([]);
   const [tab, setTab] = useState('more');
+
+  useEffect(() => {
+    getMyStoreProducts();
+  }, []);
+
+  const getMyStoreProducts = async () => {
+    setRefreshing(true);
+    const user = JSON.parse(await AsyncStorage.getItem('user'));
+    const myProducts = await firestore()
+      .collection('vendorStores')
+      .doc(user.userId)
+      .collection('products')
+      .get();
+
+    const productsArray = [];
+    if (myProducts.size > 0) {
+      for (const product of myProducts.docs) {
+        productsArray.push({id: product.id, ...product.data()});
+      }
+      setMoreMessage(productsArray);
+      setLessMessage(productsArray);
+    }
+    setRefreshing(false);
+  };
 
   return (
     <Screen style={styles.container}>
@@ -158,12 +57,16 @@ const index = () => {
       </View>
       {tab === 'more' && (
         <FlatList
-          data={moreMessages}
+          data={moreMessage}
           keyExtractor={(message) => message.id.toString()}
           renderItem={({item}) => (
             <AppChat
-              title={item.title}
-              image={item.image}
+              title={item.productName}
+              image={
+                item.image !== undefined
+                  ? {uri: item.image}
+                  : require('../../assets/images/placeholder.png')
+              }
               btnText="View"
               btnPress={() => console.log('See Products >>> Button Text Press')}
               onPress={() => console.log('Message selected', item)}
@@ -181,8 +84,12 @@ const index = () => {
           keyExtractor={(message) => message.id.toString()}
           renderItem={({item}) => (
             <AppChat
-              title={item.title}
-              image={item.image}
+              title={item.productName}
+              image={
+                item.image !== undefined
+                  ? {uri: item.image}
+                  : require('../../assets/images/placeholder.png')
+              }
               btnText="View"
               btnPress={() => console.log('See Products >>> Button Text Press')}
               onPress={() => console.log('Message selected', item)}

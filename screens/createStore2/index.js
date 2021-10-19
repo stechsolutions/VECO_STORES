@@ -15,11 +15,12 @@ import AppTextInput from '../../Components/AppTextInput';
 import colors from '../../config/colors';
 import AppPhotoInput from '../../Components/AppPhotoInput';
 import AppButton from '../../Components/AppButton';
+import Icon from 'react-native-vector-icons/Ionicons';
 import LocationDetail from '../../Components/LocationDetail';
 import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -28,6 +29,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import AppPicker from '../../Components/AppPicker';
 import SignatureCapture from 'react-native-signature-capture';
 import RNFetchBlob from 'rn-fetch-blob';
+import AppPhotoPicker from '../../Components/AppPhotoPicker';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {countryCodes} from '../../config/data';
 
 export default function CreateStore2({navigation, route, changeFirstTime}) {
   const [administrativeContact, setAdministrativeContact] = useState('');
@@ -35,27 +41,29 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
   const [administrativePhone, setAdministrativePhone] = useState('');
   const [technicalContact, setTechnicalContact] = useState('');
   const [technicalPhone, setTechnicalPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('');
   const [whatsappLine, setWhatsappLine] = useState('');
   const [photoOfOperationNotice, setPhotoOfOperationNotice] = useState();
-  const [
-    photoIDLegalRepresentative,
-    setPhotoIDLegalRepresentative,
-  ] = useState();
+  const [photoIDLegalRepresentative, setPhotoIDLegalRepresentative] =
+    useState();
   const [photoBusiness, setPhotoBusiness] = useState();
   const [photoDigitalSignature, setPhotoDigitalSignature] = useState();
   const [photoOfOperationNoticeUrl, setPhotoOfOperationNoticeUrl] = useState();
-  const [
-    photoIDLegalRepresentativeUrl,
-    setPhotoIDLegalRepresentativeUrl,
-  ] = useState();
+  const [photoIDLegalRepresentativeUrl, setPhotoIDLegalRepresentativeUrl] =
+    useState();
   const [photoBusinessUrl, setPhotoBusinessUrl] = useState();
   const [photoDigitalSignatureUrl, setPhotoDigitalSignatureUrl] = useState();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [showCameraGalleryModal, setShowCameraGalleryModal] = useState(false);
+  const [selectType, setSelectType] = useState(false);
+
   const sign = useRef();
 
   const createStoreFunc = async () => {
     changeFirstTime();
+
     // setLoading(true);
     // var user = JSON.parse(await AsyncStorage.getItem('user'));
     // console.log(user, 'userr');
@@ -130,6 +138,18 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
   const createStore = async () => {
     setLoading(true);
     var store1Data = route.params.store1Data;
+
+    if (
+      !Number.isInteger(Number(administrativePhone)) &&
+      !Number.isInteger(Number(technicalPhone)) &&
+      !Number.isInteger(Number(whatsappLine))
+    ) {
+      Alert.alert('Error', 'Some field have incorrect data', [{text: 'OK'}], {
+        cancelable: false,
+      });
+      return;
+    }
+
     const photos = [
       photoOfOperationNotice,
       photoIDLegalRepresentative,
@@ -178,7 +198,8 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
           open: true,
           technicalContact,
           technicalPhone,
-          whatsappLine,
+          whatsappLine: countryCode.value + whatsappLine,
+          createdAt: Date.now(),
           ...store1Data,
         };
         for (var i = 0; i < urls.length; i++) {
@@ -200,7 +221,11 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
                   console.log(url, 'url');
                   setLoading(false);
                   obj.photoDigitalSignatureUrl = url;
-                  await firestore().collection('vendorStores').add(obj);
+                  await firestore()
+                    .collection('vendorStores')
+                    .doc(user.userId)
+                    .set(obj);
+                  // await firestore().collection('vendorStores').add(obj);
                   await firestore()
                     .collection('vendors')
                     .doc(user.userId)
@@ -240,41 +265,138 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
       });
   };
 
+  // const handleImageUpload = (type) => {
+  //   try {
+  //     ImagePicker.showImagePicker(
+  //       {
+  //         noData: true,
+  //       },
+  //       (response) => {
+  //         if (!response.didCancel) {
+  //           console.log(response.data, 'response . data');
+  //           switch (type) {
+  //             case 'ON':
+  //               setPhotoOfOperationNotice(response);
+  //               break;
+  //             case 'LR':
+  //               console.log('LR case chala');
+  //               setPhotoIDLegalRepresentative(response);
+  //               break;
+  //             case 'LP':
+  //               setPhotoLogo(response);
+  //               break;
+  //             case 'BP':
+  //               setPhotoBusiness(response);
+  //               break;
+  //             case 'DS':
+  //               setPhotoDigitalSignature(response);
+  //               break;
+  //             default:
+  //               break;
+  //           }
+  //         }
+  //         // response && setImage(response);
+  //       },
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleImageUpload = (type) => {
+    setShowCameraGalleryModal(true);
+    setSelectType(type);
+  };
+
+  const requestCameraPermission = async () => {
     try {
-      ImagePicker.showImagePicker(
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
         {
-          noData: true,
-        },
-        (response) => {
-          if (!response.didCancel) {
-            console.log(response.data, 'response . data');
-            switch (type) {
-              case 'ON':
-                setPhotoOfOperationNotice(response);
-                break;
-              case 'LR':
-                console.log('LR case chala');
-                setPhotoIDLegalRepresentative(response);
-                break;
-              case 'LP':
-                setPhotoLogo(response);
-                break;
-              case 'BP':
-                setPhotoBusiness(response);
-                break;
-              case 'DS':
-                setPhotoDigitalSignature(response);
-                break;
-              default:
-                break;
-            }
-          }
-          // response && setImage(response);
+          title: 'App Camera Permission',
+          message: 'App needs access to your camera ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
         },
       );
-    } catch (error) {
-      console.log(error);
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        try {
+          ImagePicker.launchCamera(
+            {
+              noData: false,
+              mediaType: 'photo',
+              maxWidth: 500,
+            },
+            (response) => {
+              console.log(response);
+              setImage(response);
+            },
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const pickImage = (option) => {
+    switch (option) {
+      case 'camera':
+        try {
+          requestCameraPermission();
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      case 'gallery':
+        try {
+          ImagePicker.launchImageLibrary(
+            {
+              noData: false,
+              mediaType: 'photo',
+              maxWidth: 500,
+            },
+            (response) => {
+              console.log(response);
+              setImage(response);
+            },
+          );
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+    }
+  };
+
+  const setImage = (response) => {
+    if (!response.didCancel) {
+      switch (selectType) {
+        case 'ON':
+          console.log('ON case chala');
+          setPhotoOfOperationNotice(response);
+          break;
+        case 'LR':
+          console.log('LR case chala');
+          setPhotoIDLegalRepresentative(response);
+          break;
+        case 'LP':
+          console.log('LP case chala');
+          setPhotoLogo(response);
+          break;
+        case 'BP':
+          setPhotoBusiness(response);
+          break;
+        case 'DS':
+          setPhotoDigitalSignature(response);
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -306,6 +428,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
           }}
           style={styles.mVertical}
           placeHolder="Administrative Contact"
+          keyboardType="numeric"
         />
         <AppTextInput
           value={administrativePhone}
@@ -314,6 +437,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
           }}
           style={styles.mVertical}
           placeHolder="Administrative Phone"
+          keyboardType="numeric"
         />
 
         <AppTextInput
@@ -323,6 +447,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
           }}
           style={styles.mVertical}
           placeHolder="Technical Contact"
+          keyboardType="numeric"
         />
 
         <AppTextInput
@@ -332,47 +457,172 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
           }}
           style={styles.mVertical}
           placeHolder="Technical Phone"
+          keyboardType="numeric"
         />
-        <AppTextInput
-          value={whatsappLine}
-          onChangeText={(txt) => {
-            setWhatsappLine(txt);
-          }}
-          style={styles.mVertical}
-          placeHolder="Whatsapp line"
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{width: '25%'}}>
+            <AppPicker
+              selectedItem={countryCode}
+              onSelectItem={(item) =>
+                item && setCountryCode(item) && console.log('hello')
+              }
+              color={countryCode ? colors.black : colors.dark}
+              items={countryCodes}
+              style={styles.mVertical}
+              title="CC"
+            />
+          </View>
+          <View style={{paddingLeft: 10, width: '75%'}}>
+            <AppTextInput
+              value={whatsappLine}
+              onChangeText={(txt) => {
+                setWhatsappLine(txt);
+              }}
+              style={styles.mVertical}
+              placeHolder="Whatsapp line"
+              keyboardType="numeric"
+            />
+          </View>
+        </View>
+        {/* <View
+          style={[
+            styles.photoView,
+            {
+              backgroundColor: photoOfOperationNotice
+                ? colors.secondary
+                : 'white',
+            },
+          ]}>
+          <View style={styles.PhotocontentView}>
+            <Text style={styles.photoText}>Photo of operation notice</Text>
+          </View>
+
+          <View style={styles.IconStyle}>
+            <TouchableOpacity
+              onPress={() => {
+                handleImageUpload('ON');
+              }}>
+              <Icon
+                style={styles.icon}
+                name="md-images"
+                size={25}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View
+          style={[
+            styles.photoView,
+            {
+              backgroundColor: photoIDLegalRepresentative
+                ? colors.secondary
+                : 'white',
+            },
+          ]}>
+          <View style={styles.PhotocontentView}>
+            <Text style={styles.photoText}>
+              Photo of the ID of the Legal Representative
+            </Text>
+          </View>
+
+          <View style={styles.IconStyle}>
+            <TouchableOpacity
+              onPress={() => {
+                handleImageUpload('LR');
+              }}>
+              <Icon
+                style={styles.icon}
+                name="md-images"
+                size={25}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View
+          style={[
+            styles.photoView,
+            {backgroundColor: photoBusiness ? colors.secondary : 'white'},
+          ]}>
+          <View style={styles.PhotocontentView}>
+            <Text style={styles.photoText}>Business Photo</Text>
+          </View>
+
+          <View style={styles.IconStyle}>
+            <TouchableOpacity
+              onPress={() => {
+                handleImageUpload('BP');
+              }}>
+              <Icon
+                style={styles.icon}
+                name="md-images"
+                size={25}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+        </View> */}
+
+        <AppPhotoPicker
+          condition={photoOfOperationNotice}
+          placeHolder="Photo of operation notice"
+          onPress={() => handleImageUpload('ON')}
         />
-        <AppPhotoInput
-          style={styles.mVertical}
-          placeHolder="Photo of the Operation"
-          onPress={() => {
-            handleImageUpload('ON');
-          }}
-          choosen={photoOfOperationNotice && true}
-        />
-        <AppPhotoInput
-          style={styles.mVertical}
+
+        <AppPhotoPicker
+          condition={photoIDLegalRepresentative}
           placeHolder="Photo of the ID of the Legal Representative"
-          onPress={() => {
-            handleImageUpload('LR');
-          }}
-          choosen={photoIDLegalRepresentative && true}
+          onPress={() => handleImageUpload('LR')}
         />
-        <AppPhotoInput
-          style={styles.mVertical}
-          placeHolder="Business Photo"
-          onPress={() => {
-            handleImageUpload('BP');
-          }}
-          choosen={photoBusiness && true}
+
+        {/* <AppPhotoPicker
+          condition={photoLogo}
+          placeHolder="Logo Photo"
+          onPress={() => handleImageUpload('LP')}
+        /> */}
+
+        <AppPhotoPicker
+          condition={photoBusiness}
+          placeHolder="Photo of the ID of the Legal Representative"
+          onPress={() => handleImageUpload('BP')}
         />
-        <AppPhotoInput
-          style={styles.mVertical}
-          placeHolder="Digial Signature"
-          onPress={() => {
-            setShowModal(true);
-          }}
-          choosen={photoDigitalSignature && true}
-        />
+
+        <View
+          style={[
+            styles.photoView,
+            {
+              backgroundColor: photoDigitalSignature
+                ? colors.secondary
+                : 'white',
+            },
+          ]}>
+          <View style={styles.PhotocontentView}>
+            <Text style={styles.photoText}>Digital Signature</Text>
+          </View>
+          <View style={styles.IconStyle}>
+            <TouchableOpacity
+              onPress={() => {
+                // setShowTermsAndConditionModal(false);
+                setShowModal(true);
+              }}>
+              <Icon
+                style={styles.icon}
+                name="md-images"
+                size={18}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View>
           <View style={styles.imageContainer}>
             {photoDigitalSignature && (
@@ -448,22 +698,26 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
                   }}></View>
               </TouchableOpacity>
             )}
-            <Text style={styles}>
+            <Text style={{fontSize: 12}}>
               I have read and accept the terms and conditions{' '}
             </Text>
           </View>
         </View>
         <View style={styles.createBtnView}>
           <AppButton
-            // disabled={
-            //   !storeName ||
-            //   !location ||
-            //   !locationDetailsArray.length ||
-            //   !documentImage ||
-            //   !image
-            // }
+            disabled={
+              !administrativeContact ||
+              !administrativePhone ||
+              !termsAccepted ||
+              !technicalContact ||
+              !technicalPhone ||
+              !sign ||
+              !photoBusiness ||
+              !photoOfOperationNotice ||
+              !photoIDLegalRepresentative
+            }
             loading={loading}
-            style={[styles.btn, styles.mVertical]}
+            style={{...styles.btn, marginVertical: 10}}
             title="Create"
             color={colors.primary}
             onPress={createStore}
@@ -484,7 +738,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
         <View style={styles.modalBtnContainer}>
           <AppButton
             style={[styles.modalBtn, {backgroundColor: colors.white}]}
-            title="CLose"
+            title="Close"
             onPress={() => setShowModal(false)}
           />
           <AppButton
@@ -493,6 +747,60 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
             title="Done"
             onPress={saveSign}
           />
+        </View>
+      </Modal>
+
+      {/* Modal For Select gallery or camera */}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showCameraGalleryModal}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.openButton}
+              onPress={() => {
+                pickImage('camera');
+                setShowCameraGalleryModal(!showCameraGalleryModal);
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <Ionicons name="camera" size={22} color={colors.black} />
+                <Text style={styles.textStyle}>Launch Camera</Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                width: '100%',
+                height: 4,
+                borderBottomWidth: 2,
+                marginBottom: 10,
+                paddingBottom: 10,
+                borderBottomColor: colors.grey,
+              }}
+            />
+            <TouchableOpacity
+              style={styles.openButton}
+              onPress={() => {
+                pickImage('gallery');
+                setShowCameraGalleryModal(!showCameraGalleryModal);
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <FontAwesome name="photo" size={24} color={colors.black} />
+                <Text style={styles.textStyle}>Launch Gallery</Text>
+              </View>
+            </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+              <AppButton
+                style={{marginLeft: '65%', width: 100, height: 50}}
+                color={colors.primary}
+                title="Cancel"
+                onPress={() =>
+                  setShowCameraGalleryModal(!showCameraGalleryModal)
+                }
+              />
+            </View>
+          </View>
         </View>
       </Modal>
     </Screen>
@@ -566,5 +874,81 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
     marginVertical: 10,
+  },
+  PhotocontentView: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: '85%',
+  },
+  photoView: {
+    // borderWidth:2,
+    borderRadius: 25,
+    flexDirection: 'row',
+    width: '100%',
+    height: 45,
+    marginVertical: 10,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  photoText: {
+    color: 'grey',
+    padding: 10,
+    fontSize: 12,
+    // justifyContent:'center',
+    // alignSelf:'center'
+  },
+  IconStyle: {
+    backgroundColor: colors.secondary,
+    width: 40,
+    marginHorizontal: 5,
+    height: 40,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  DigitalSignatureView: {
+    justifyContent: 'center',
+    // alignSelf:'flex-start',
+    // flex:4,
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    width: '80%',
+    alignItems: 'center',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 100,
+  },
+  openButton: {
+    width: '100%',
+    padding: 10,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  textStyle: {
+    color: colors.black,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingLeft: 20,
   },
 });

@@ -11,11 +11,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
-const CreateStoreNavigation = ({changeFirstTime, goToStart}) => (
-  <Stack.Navigator screenOptions={{headerTitleAlign: 'center'}}>
+const CreateStoreNavigation = ({changeFirstTime, firstTime, goToStart}) => (
+  <Stack.Navigator
+    initialRouteName="welcome"
+    screenOptions={{headerTitleAlign: 'center'}}>
     <Stack.Screen
       name="ApplicationReview"
-      component={ApplicationReview}
+      initialParams={firstTime}
       options={(navigation) => ({
         title: '',
         headerRight: () => (
@@ -30,8 +32,11 @@ const CreateStoreNavigation = ({changeFirstTime, goToStart}) => (
         headerRightContainerStyle: {
           paddingRight: 15,
         },
-      })}
-    />
+      })}>
+      {(props) => (
+        <ApplicationReview {...props} changeFirstTime={changeFirstTime} />
+      )}
+    </Stack.Screen>
     <Stack.Screen
       name="welcome"
       component={Welcome}
@@ -62,7 +67,6 @@ const CreateStoreNavigation = ({changeFirstTime, goToStart}) => (
     />
     <Stack.Screen
       name="createStore"
-      component={(props) => <CreateStore {...props} />}
       options={({navigation}) => ({
         title: '',
         headerLeft: () => (
@@ -77,12 +81,12 @@ const CreateStoreNavigation = ({changeFirstTime, goToStart}) => (
         },
       })}
       //   initialParams={{changeFirstTime:changeFirstTime}}
-    />
+    >
+      {(props) => <CreateStore {...props} />}
+    </Stack.Screen>
+    <Stack.Screen name="CreateStore" component={CreateStore} />
     <Stack.Screen
       name="createStore2"
-      component={(props) => (
-        <CreateStore2 {...props} changeFirstTime={changeFirstTime} />
-      )}
       options={({navigation}) => ({
         title: '',
         headerLeft: () => (
@@ -97,7 +101,9 @@ const CreateStoreNavigation = ({changeFirstTime, goToStart}) => (
         },
       })}
       //   initialParams={{changeFirstTime:changeFirstTime}}
-    />
+    >
+      {(props) => <CreateStore2 {...props} changeFirstTime={changeFirstTime} />}
+    </Stack.Screen>
   </Stack.Navigator>
 );
 

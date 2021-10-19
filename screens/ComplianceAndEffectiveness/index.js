@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Modal,
@@ -16,91 +16,12 @@ import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
-const moreMessages = [
-  {
-    id: 1,
-    title: 'Product Name',
-    subTitle: 'Approved',
-
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 2,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 3,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 4,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 5,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 6,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 7,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 8,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 9,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 10,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 11,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 12,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-  {
-    id: 13,
-    title: 'Product Name',
-    subTitle: 'Approved',
-    image: require('../../assets/images/Spray.jpg'),
-  },
-];
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const index = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const [moreMessage, setMoreMessage] = useState(moreMessages);
+  const [moreMessage, setMoreMessage] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -123,15 +44,49 @@ const index = ({navigation}) => {
     }
   };
 
+  useEffect(() => {
+    getMyDealers();
+  }, []);
+
+  const getMyDealers = async () => {
+    setRefreshing(true);
+    const user = JSON.parse(await AsyncStorage.getItem('user'));
+    const promises = [];
+    const distributersArray = [];
+    console.log('hahahahahha', user);
+    const distributers = await firestore().collection('distributer').get();
+    if (distributers.size > 0) {
+      for (const distributer of distributers.docs) {
+        const {key} = distributer.data();
+        const vendors = await firestore()
+          .collection('distributer')
+          .doc(key)
+          .collection('vendors')
+          .where('key', '==', user.userId)
+          .get();
+        console.log(vendors.size, key, user.userId);
+        if (vendors.size > 0) {
+          distributersArray.push(distributer.data());
+        }
+      }
+    }
+    setMoreMessage(distributersArray);
+    setRefreshing(false);
+  };
+
   return (
     <Screen style={styles.container}>
       <FlatList
         data={moreMessage}
-        keyExtractor={(message) => message.id.toString()}
+        keyExtractor={(message) => message.key.toString()}
         renderItem={({item}) => (
           <AppChat
-            title={item.title}
-            image={item.image}
+            title={item.tradeName}
+            image={
+              item.photoLogoUrl !== undefined
+                ? {uri: item.photoLogoUrl}
+                : require('../../assets/images/placeholder.png')
+            }
             btnText="View"
             btnPress={() => navigation.navigate('Compliance view')}
             onPress={() => console.log('Message selected', item)}

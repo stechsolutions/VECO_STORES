@@ -23,7 +23,7 @@ import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, {Marker} from 'react-native-maps';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 

@@ -1,5 +1,8 @@
 {
   "name": "marketplace",
   "displayName": "Marketplace",
-  "platforms": ["ios", "android", "web"]
+  "platforms": ["ios", "android", "web"],
+  "android": {
+    "googleServicesFile": "./android/app/google-services.json"
+  }
 }

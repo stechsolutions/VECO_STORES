@@ -87,7 +87,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "359061727415-0hn788rdqe92eg690sk3k8utj73m13b2.apps.googleusercontent.com",
+          "client_id": "359061727415-kv7g6vajvqrait8obsdq1rghjms1j806.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.arrayybox.veco",
@@ -95,7 +95,7 @@
           }
         },
         {
-          "client_id": "359061727415-lb5s69rh186vjudoiuhi36n0nan926rl.apps.googleusercontent.com",
+          "client_id": "359061727415-qvi0rrhno3t8edit9vv2qqqhld2upc6b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.arrayybox.veco",
@@ -138,6 +138,66 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "359061727415-6a4salm0atf9f49r624n2lafj7tfqov7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marketplace",
+            "certificate_hash": "25b9e1859196272e5573283af9fd6d67a93c9f82"
+          }
+        },
+        {
+          "client_id": "359061727415-ua7do2pl0meohop9hkrbj51flbdjgftm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVGJV1VdtFE5JeMJDWuO5jra9KIdXPGR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359061727415-dk2kirca6gktchh2t0v933opvrgktj3n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "359061727415-3db4d18f3eioltkbjc3ab6fnbg8cl7jp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.junaidikhlaq.Veco"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359061727415:android:c9de50deb38d6993a00532",
+        "android_client_info": {
+          "package_name": "com.vecomarketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359061727415-9i2tebcg8ks9pfohhc0oormr6k6gfrtr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vecomarketplace",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "359061727415-kge9ho1dkp3r5jj94fjch86hkhjuoiar.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vecomarketplace",
+            "certificate_hash": "25b9e1859196272e5573283af9fd6d67a93c9f82"
+          }
+        },
         {
           "client_id": "359061727415-ua7do2pl0meohop9hkrbj51flbdjgftm.apps.googleusercontent.com",
           "client_type": 3

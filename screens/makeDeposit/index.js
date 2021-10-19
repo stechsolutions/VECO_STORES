@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import Screen from '../../Components/Screen';
 import AppTextInput from '../../Components/AppTextInput';
@@ -17,19 +18,24 @@ import LocationDetail from '../../Components/LocationDetail';
 import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ImagePicker from 'react-native-image-picker';
-import MapView, { Marker } from 'react-native-maps';
+import * as ImagePicker from 'react-native-image-picker';
+import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import storage from '@react-native-firebase/storage';
-import AppPicker from '../../Components/AppPicker'
+import AppPicker from '../../Components/AppPicker';
 // import { color } from 'react-native-reanimated';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Modal from '../../Components/Modal';
 
-export default function MakeDeposit({ navigation, route, changeFirstTime }) {
+export default function MakeDeposit({navigation, route, changeFirstTime}) {
   const [storeName, setStoreName] = useState('');
+  const [RUC, setRUC] = useState('');
+  const [DV, setDV] = useState('');
+  const [amount, setAmount] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+
   const [location, setLocation] = useState('');
   const [docImage, setDocImage] = useState('');
   const [image, setImage] = useState();
@@ -47,11 +53,23 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
   const [tempCoordinate, setTempCoordinate] = useState();
   const [locationToEdit, setLocationToEdit] = useState();
   const [locationDetailsArray, setLocationDetailsArray] = useState([]);
-  const [RUC, setRUC] = useState('');
-  const [DV, setDV] = useState('');
+
   const [modal, setModal] = useState(true);
+
   const next = async () => {
-    setModal(true);
+    if (
+      (amount !== '' || amount !== ' ') &&
+      (RUC !== '' || RUC !== ' ') &&
+      (DV !== '' || DV !== ' ') &&
+      (storeName !== '' || storeName !== ' ') &&
+      (cardNumber !== '' || cardNumber !== ' ') &&
+      (location !== '' || location !== ' ')
+    )
+      setModal(true);
+    else
+      Alert.alert('Error', 'Please fill all the fields', [{text: 'OK'}], {
+        cancelable: false,
+      });
     // navigation.navigate('createStore2')
   };
 
@@ -79,7 +97,7 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
       })
         .then((data) => {
           const getLoc = RNLocation.getLatestLocation();
-          getLoc.then(({ latitude, longitude }) => {
+          getLoc.then(({latitude, longitude}) => {
             console.log('Lat Long >>', latitude, longitude);
             setMarkerCoordinate({
               latitude,
@@ -148,7 +166,7 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
 
   const handleCoordinateSet = () => {
     setShowModal(false);
-    const temp = { location, coordinate: tempCoordinate };
+    const temp = {location, coordinate: tempCoordinate};
     const arr = [...locationDetailsArray];
     arr.push(temp);
     setLocation('');
@@ -177,8 +195,8 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
   };
 
   return (
-    <Screen style={{ backgroundColor: colors.light }}>
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+    <Screen style={{backgroundColor: colors.light}}>
+      <ScrollView style={{flex: 1, padding: 10}}>
         <AppPicker style={styles.mVertical} title="Select Dealer" />
         <AppPicker style={styles.mVertical} title="Select the Purchase Order" />
         <AppTextInput
@@ -188,16 +206,26 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
           onChangeText={(txt) => {
             // setLocation(txt);
           }}
-          style={[styles.mVertical, { backgroundColor: 'white', borderWidth: 0.3, borderRadius: 20, }]}
+          style={[
+            styles.mVertical,
+            {backgroundColor: 'white', borderWidth: 0.3, borderRadius: 20},
+          ]}
           placeHolder="Description of the deposit"
         />
-        <View style={{ borderBottomWidth: 0.5, marginVertical: 30, }} />
-        <View style={{ flex: 0.1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ paddingHorizontal: 10, color: colors.dark }}>Your Card Details</Text>
+        <View style={{borderBottomWidth: 0.5, marginVertical: 30}} />
+        <View
+          style={{
+            flex: 0.1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text style={{paddingHorizontal: 10, color: colors.dark}}>
+            Your Card Details
+          </Text>
           <View style={styles.iconsView}>
-            <FontAwesome style={styles.icons} name='cc-mastercard' size={30} />
-            <FontAwesome style={styles.icons} name='cc-visa' size={30} />
-
+            <FontAwesome style={styles.icons} name="cc-mastercard" size={30} />
+            <FontAwesome style={styles.icons} name="cc-visa" size={30} />
           </View>
         </View>
         <AppTextInput
@@ -209,9 +237,9 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
           placeHolder="Card Holder Name"
         />
         <AppTextInput
-          value={location}
+          value={cardNumber}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setCardNumber(txt);
           }}
           style={styles.mVertical}
           placeHolder="Card Number"
@@ -235,9 +263,9 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
           />
         </View>
         <AppTextInput
-          value={location}
+          value={amount}
           onChangeText={(txt) => {
-            setLocation(txt);
+            setAmount(txt);
           }}
           style={styles.mVertical}
           placeHolder="Amount"
@@ -252,15 +280,15 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
             //   !image
             // }
             loading={loading}
-            style={[styles.btn, styles.mVertical, { width: '90%' }]}
+            style={[styles.btn, styles.mVertical, {width: '90%'}]}
             title="Make Deposit"
             onPress={next}
           />
         </View>
       </ScrollView>
-      <Modal style={{ flex: 1 }} visible={showModal} animationType="slide">
+      <Modal style={{flex: 1}} visible={showModal} animationType="slide">
         <MapView
-          style={{ ...StyleSheet.absoluteFillObject }}
+          style={{...StyleSheet.absoluteFillObject}}
           showsMyLocationButton
           showsUserLocation
           // initialRegion={{
@@ -281,7 +309,7 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
         </MapView>
         <View style={styles.modalBtnContainer}>
           <AppButton
-            style={[styles.modalBtn, { backgroundColor: colors.white }]}
+            style={[styles.modalBtn, {backgroundColor: colors.white}]}
             title="CLose"
             onPress={() => setShowModal(false)}
           />
@@ -295,17 +323,20 @@ export default function MakeDeposit({ navigation, route, changeFirstTime }) {
           />
         </View>
       </Modal>
-      <Modal
-        onClose={() => setModal(false)}
-        visible={modal}>
+      <Modal onClose={() => setModal(false)} visible={modal}>
         <Text style={styles.modalHead}>Deposit Done!</Text>
-        <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 30, }}>
-          <AntDesign name='checkcircleo' color='#253370' size={100} />
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: 30,
+          }}>
+          <AntDesign name="checkcircleo" color="#253370" size={100} />
         </View>
-        <TouchableOpacity style={{ alignItems: 'center' }}>
+        <TouchableOpacity style={{alignItems: 'center'}}>
           <Text style={styles.link}>See Details</Text>
         </TouchableOpacity>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{alignItems: 'center'}}>
           <AppButton
             fontSize={14}
             onPress={() => navigation.navigate('PaymentMethods')}
@@ -370,25 +401,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   createBtnView: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   icons: {
     paddingHorizontal: 5,
   },
   iconsView: {
-    flex: 0.5, flexDirection: 'row', justifyContent: "center", alignItems: 'center'
+    flex: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   centered: {
-    justifyContent: 'center', alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   padding: {
     padding: 5,
   },
   modalHead: {
-    textAlign: 'center', fontSize: 20, color: '#666666'
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#666666',
   },
   link: {
     textDecorationLine: 'underline',
     fontSize: 18,
-  }
+  },
 });

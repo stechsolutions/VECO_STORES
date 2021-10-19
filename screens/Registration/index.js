@@ -18,21 +18,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import storage from '@react-native-firebase/storage';
 import AppPicker from '../../Components/AppPicker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {corregimientos, districts, provinces} from '../../config/data';
+import {
+  corregimientos,
+  countryCodes,
+  districts,
+  provinces,
+} from '../../config/data';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {CommonActions} from '@react-navigation/native';
 
 export default function CreateStore({navigation, route, changeFirstTime}) {
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [showTermsAndConditionModal, setShowTermsAndConditionModal] = useState(
-    false,
-  );
+  const [showTermsAndConditionModal, setShowTermsAndConditionModal] =
+    useState(false);
   const [fullName, setFullName] = useState('');
   const [cellNum, setCellNum] = useState('');
+  const [countryCode, setCountryCode] = useState('');
   const [province, setProvince] = useState('');
   const [district, setDistrict] = useState('');
   const [corregimiento, setCorregimiento] = useState('');
   const [fullAddress, setFullAddress] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordHideShow, setPasswordHideShow] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const createStoreFunc = async () => {
@@ -77,7 +85,7 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
                       .collection('store')
                       .add(store)
                       .then(async (storeData) => {
-                        console.log('store Created');
+                        console.log('store Created', storeData);
                         await AsyncStorage.setItem(
                           'store',
                           JSON.stringify({storeId: storeData.id, ...store}),
@@ -109,9 +117,10 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
 
   const signUp = () => {
     setLoading(true);
+    console.log(countryCode + cellNum, countryCode, cellNum);
     var user = {
       fullName,
-      cellNum,
+      cellNum: countryCode.value + cellNum,
       province: province.label,
       district: district.label,
       corregimiento: corregimiento.label,
@@ -122,17 +131,37 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
     authRes
       .then((res) => {
         var userId = res.user.uid;
-        return firestore()
-          .collection('vendors')
-          .doc(userId)
-          .set({...user, approved: 'Disapproved'});
+        const userObject = {
+          ...user,
+          approved: 'Pending',
+          key: userId,
+          read: false,
+          createdAt: Date.now(),
+        };
+        console.log('Line 132 : Registration/index.js : ', userObject);
+        return firestore().collection('vendors').doc(userId).set(userObject);
       })
       .then(() => {
         setLoading(false);
         Alert.alert(
           'Registered Sucessfully',
           'Your account has been created.',
-          [{text: 'OK', onPress: () => navigation.navigate('Login page')}],
+          [
+            {
+              text: 'OK',
+              onPress: () =>
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'Login page',
+                      },
+                    ],
+                  }),
+                ),
+            },
+          ],
           {cancelable: false},
         );
       })
@@ -153,17 +182,38 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
           style={styles.mVertical}
           placeHolder="Full Name"
         />
-        <AppTextInput
-          value={cellNum}
-          onChangeText={(txt) => {
-            setCellNum(txt);
-          }}
-          style={styles.mVertical}
-          placeHolder="Cell Number (Whatsapp)"
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <View style={{width: '25%'}}>
+            <AppPicker
+              selectedItem={countryCode}
+              onSelectItem={(item) =>
+                item && setCountryCode(item) && console.log('hello')
+              }
+              color={countryCode ? colors.black : colors.dark}
+              items={countryCodes}
+              style={styles.mVertical}
+              title="CC"
+            />
+          </View>
+          <View style={{paddingLeft: 10, width: '75%'}}>
+            <AppTextInput
+              value={cellNum}
+              onChangeText={(txt) => {
+                setCellNum(txt);
+              }}
+              style={styles.mVertical}
+              placeHolder="Cell Number (Whatsapp)"
+            />
+          </View>
+        </View>
         <AppPicker
           selectedItem={province}
-          onSelectItem={(item) => item && setProvince(item)}
+          onSelectItem={(item) =>
+            item && setProvince(item) && console.log('hello')
+          }
           color={province ? colors.black : colors.dark}
           items={provinces}
           style={styles.mVertical}
@@ -200,15 +250,38 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
           }}
           style={styles.mVertical}
           placeHolder="Email"
+          keyboardType="email-address"
         />
-        <AppTextInput
+        {/* <AppTextInput
           value={password}
           onChangeText={(txt) => {
             setPassword(txt);
           }}
           style={styles.mVertical}
           placeHolder="Password"
-        />
+        /> */}
+        <View style={{width: '100%'}}>
+          <AppTextInput
+            style={{marginVertical: 10}}
+            value={password}
+            onChangeText={(txt) => setPassword(txt)}
+            placeholder={'Password'}
+            textContentType="password"
+            secureTextEntry={passwordHideShow}
+          />
+          <Entypo
+            style={{
+              position: 'absolute',
+              right: 20,
+              top: '50%',
+              transform: [{translateY: -10}],
+            }}
+            name={passwordHideShow ? 'eye-with-line' : 'eye'}
+            size={20}
+            onPress={() => setPasswordHideShow(!passwordHideShow)}
+            color={colors.dark}
+          />
+        </View>
         <View
           style={{
             flexDirection: 'row',

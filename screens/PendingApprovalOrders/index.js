@@ -1,11 +1,10 @@
-import React, {useState , useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import firestore from '@react-native-firebase/firestore'
-
+import firestore from '@react-native-firebase/firestore';
 
 const initialMessages = [
   {
@@ -96,30 +95,30 @@ const index = () => {
 
   useEffect(() => {
     getOrders();
-  }, [])
+  }, []);
 
   const getOrders = async () => {
     try {
       var store = JSON.parse(await AsyncStorage.getItem('store'));
-      console.log(store,'store')
-      firestore().collection('purchaseOrder')
-      .where('storeId', '==', store.storeId)
-      .where('status','==','created')
-      .onSnapshot(res => {
+      console.log(store, 'store');
+      firestore()
+        .collection('purchaseOrder')
+        .where('storeId', '==', store.storeId)
+        .where('status', '==', 'created')
+        .onSnapshot((res) => {
           console.log(res, 'res');
           var orders = [];
           res.forEach((each) => {
-            console.log(each.data(),'each')
-            orders.push({ ...each.data(), orderId: each.ref.id });
-            setOrders(orders); 
-          })
-          console.log(orders, 'orders')
-        })
-    }
-    catch (e) {
+            console.log(each.data(), 'each');
+            orders.push({...each.data(), orderId: each.ref.id});
+            setOrders(orders);
+          });
+          console.log(orders, 'orders');
+        });
+    } catch (e) {
       console.log(e, 'err');
     }
-  }
+  };
 
   return (
     <Screen style={styles.container}>
@@ -130,7 +129,7 @@ const index = () => {
           <AppChat
             title={item.name}
             subtitle={item.status}
-            image={{uri:item.image}}
+            image={{uri: item.image}}
             btnText="Edit"
             variant="failure"
             btnPress={() => console.log('See Products >>> Button Text Press')}

@@ -1,4 +1,4 @@
-package com.marketplace;
+package com.vecomarketplace;
 
 import com.facebook.react.ReactActivity;
 

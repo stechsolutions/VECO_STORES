@@ -6,6 +6,7 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
+
 import colors from '../config/colors';
 
 const AppButton = ({
@@ -15,14 +16,20 @@ const AppButton = ({
   color = colors.black,
   loading = false,
   disabled = false,
-  fontSize=16
+  fontSize = 16,
 }) => {
   return (
     <TouchableOpacity
       style={[styles.btn, style, disabled && {backgroundColor: colors.medium}]}
       onPress={onPress}
       disabled={disabled}>
-      <Text style={{color: color, fontWeight: 'bold', fontSize: fontSize,textAlign:'center'}}>
+      <Text
+        style={{
+          color: color,
+          fontWeight: 'bold',
+          fontSize: fontSize,
+          textAlign: 'center',
+        }}>
         {title}
       </Text>
       {loading && (

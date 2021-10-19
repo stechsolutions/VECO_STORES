@@ -21,7 +21,7 @@ import AppAttachFileButton from '../../Components/AppAttachFileButton';
 import AppButton from '../../Components/AppButton';
 import AppMultiLineInput from '../../Components/AppMultiLineInput';
 import AppPhotoInput from '../../Components/AppPhotoInput';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import AppTextInput from '../../Components/AppTextInput';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
@@ -40,25 +40,20 @@ const Registration3 = ({navigation, route}) => {
   const [showModal, setShowModal] = useState(false);
   const [uploadingFile, setUploadingFile] = useState('');
   const [transferred, setTransferred] = useState('');
-  const [showTermsAndConditionModal, setShowTermsAndConditionModal] = useState(
-    false,
-  );
+  const [showTermsAndConditionModal, setShowTermsAndConditionModal] =
+    useState(false);
   const [showPrivacyPolicyModal, setShowPrivacyPolicyModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
   const [photoOfOperationNotice, setPhotoOfOperationNotice] = useState();
-  const [
-    photoIDLegalRepresentative,
-    setPhotoIDLegalRepresentative,
-  ] = useState();
+  const [photoIDLegalRepresentative, setPhotoIDLegalRepresentative] =
+    useState();
   const [photoLogo, setPhotoLogo] = useState();
   const [photoBusiness, setPhotoBusiness] = useState();
   const [photoDigitalSignature, setPhotoDigitalSignature] = useState();
   const [photoOfOperationNoticeUrl, setPhotoOfOperationNoticeUrl] = useState();
-  const [
-    photoIDLegalRepresentativeUrl,
-    setPhotoIDLegalRepresentativeUrl,
-  ] = useState();
+  const [photoIDLegalRepresentativeUrl, setPhotoIDLegalRepresentativeUrl] =
+    useState();
   const [photoLogoUrl, setPhotoLogoUrl] = useState();
   const [photoBusinessUrl, setPhotoBusinessUrl] = useState();
   const [photoDigitalSignatureUrl, setPhotoDigitalSignatureUrl] = useState();
@@ -196,7 +191,8 @@ const Registration3 = ({navigation, route}) => {
                                                             url,
                                                             'url',
                                                           );
-                                                          var photoBusinessUrl = url;
+                                                          var photoBusinessUrl =
+                                                            url;
                                                           setPhotoBusinessUrl(
                                                             url,
                                                           );
@@ -223,7 +219,8 @@ const Registration3 = ({navigation, route}) => {
                                                               ...reg2Data,
                                                               ...reg3Data,
                                                               firstTime: true,
-                                                              approved: true,
+                                                              approved:
+                                                                'Pending',
                                                             })
                                                             .then(() => {
                                                               setLoading(false);
@@ -241,10 +238,11 @@ const Registration3 = ({navigation, route}) => {
                                                                 [
                                                                   {
                                                                     text: 'OK',
-                                                                    onPress: () =>
-                                                                      console.log(
-                                                                        'OK Pressed',
-                                                                      ),
+                                                                    onPress:
+                                                                      () =>
+                                                                        console.log(
+                                                                          'OK Pressed',
+                                                                        ),
                                                                   },
                                                                 ],
                                                                 {
@@ -351,6 +349,8 @@ const Registration3 = ({navigation, route}) => {
       ImagePicker.launchImageLibrary(
         {
           noData: true,
+          maxWidth: 500,
+          mediaType: 'photo',
         },
         (response) => {
           if (response) {
@@ -449,7 +449,7 @@ const Registration3 = ({navigation, route}) => {
             <Text style={styles.title}>Registration</Text>
             <AppTextInput
               style={styles.mVertical}
-              placeHolder="WhatsApp Line"
+              placeHolder="WhatsApp Number"
               value={whatsAppLine}
               onChangeText={(txt) => {
                 setWhatsAppLine(txt);

@@ -18,7 +18,7 @@ import LocationDetail from '../../Components/LocationDetail';
 import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -30,13 +30,10 @@ export default function UpdateStore({navigation}) {
   const [storeName, setStoreName] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [location, setLocation] = useState('');
-  const [
-    nameOfTheLegalRepresentative,
-    setNameOfTheLegalRepresentative,
-  ] = useState('');
-  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] = useState(
-    '',
-  );
+  const [nameOfTheLegalRepresentative, setNameOfTheLegalRepresentative] =
+    useState('');
+  const [IDOfTheLegalRepresentative, setIDOfTheLegalRepresentative] =
+    useState('');
   const [province, setProvince] = useState('');
   const [district, setDistrict] = useState('');
   const [corregimiento, setCorregimiento] = useState('');
@@ -176,7 +173,7 @@ export default function UpdateStore({navigation}) {
     var arr = [];
     if (locationDetailsArray.length) arr = [...locationDetailsArray];
     arr.push(temp);
-    setLocation('');
+    // setLocation('');
     setLocationDetailsArray(arr);
   };
 
@@ -190,7 +187,7 @@ export default function UpdateStore({navigation}) {
     };
     setLocationDetailsArray(arr);
     setLocationToEdit(null);
-    setLocation('');
+    // setLocation('');
     setShowModal(false);
     console.log('AFTER UPDATE >>>', locationDetailsArray);
   };
@@ -199,8 +196,42 @@ export default function UpdateStore({navigation}) {
     console.log(index);
     const arr = [...locationDetailsArray];
     arr.splice(index, 1);
+
+    try {
+      arr.length >= 0
+        ? setLocation(arr[arr.length - 1]['location'])
+        : setLocation('');
+    } catch (e) {
+      console.log(e);
+      setLocation('');
+    }
+
     setLocationDetailsArray(arr);
   };
+
+  const getLocationCordinates = () => {
+    try {
+      return `${
+        locationDetailsArray[locationDetailsArray.length - 1]?.coordinate
+          .latitude
+      } ${
+        locationDetailsArray[locationDetailsArray.length - 1]?.coordinate
+          .longitude
+      }`;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getLocationName = () => {
+    try {
+      return locationDetailsArray[locationDetailsArray.length - 1]?.location;
+    } catch (error) {
+      console.log(error);
+    }
+    return 'Location';
+  };
+
   const getData = async () => {
     var store = JSON.parse(await AsyncStorage.getItem('store'));
     const {
@@ -316,12 +347,16 @@ export default function UpdateStore({navigation}) {
             setLocation(txt);
           }}
           style={styles.mVertical}
-          placeHolder="Location"
+          placeHolder={getLocationName() ? getLocationName() : 'Location'}
         />
         <AppPhotoInput
           style={styles.mVertical}
           add
-          placeHolder="Latitude Longitude"
+          placeHolder={
+            locationDetailsArray.length > 0
+              ? getLocationCordinates()
+              : 'Latitude Longitude'
+          }
           onPress={() => {
             checkPermission();
           }}
@@ -340,8 +375,8 @@ export default function UpdateStore({navigation}) {
                 <LocationDetail
                   title={`${
                     item.location
-                      ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.latitude}`
-                      : `${item.coordinate.latitude} ${item.coordinate.latitude}`
+                      ? `${item.location}\n${item.coordinate.latitude} ${item.coordinate.longitude}`
+                      : `${item.coordinate.latitude} ${item.coordinate.longitude}`
                   }`}
                   onPress={() => {
                     setShowModal(true);

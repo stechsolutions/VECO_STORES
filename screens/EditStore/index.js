@@ -19,7 +19,7 @@ import LocationDetail from '../../Components/LocationDetail';
 import AppImageUploadButton from '../../Components/AppImageUploadButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import MapView, {Marker} from 'react-native-maps';
 import storage from '@react-native-firebase/storage';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -390,7 +390,7 @@ export default function EditStore(props) {
     const temp = {location, coordinate: tempCoordinate};
     const arr = [...locationDetailsArray];
     arr.push(temp);
-    setLocation('');
+    // setLocation('');
     setLocationDetailsArray(arr);
   };
 
@@ -403,7 +403,7 @@ export default function EditStore(props) {
     };
     setLocationDetailsArray(arr);
     setLocationToEdit(null);
-    setLocation('');
+    // setLocation('');
     setShowModal(false);
     console.log('AFTER UPDATE >>>', locationDetailsArray);
   };
@@ -412,7 +412,31 @@ export default function EditStore(props) {
     console.log(index);
     const arr = [...locationDetailsArray];
     arr.splice(index, 1);
+
+    try {
+      arr.length >= 0
+        ? setLocation(arr[arr.length - 1]['location'])
+        : setLocation('');
+    } catch (e) {
+      console.log(e);
+      setLocation('');
+    }
+
     setLocationDetailsArray(arr);
+  };
+
+  const getLocationCordinates = () => {
+    try {
+      return `${
+        locationDetailsArray[locationDetailsArray.length - 1]?.coordinate
+          .latitude
+      } ${
+        locationDetailsArray[locationDetailsArray.length - 1]?.coordinate
+          .longitude
+      }`;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -437,7 +461,11 @@ export default function EditStore(props) {
         <AppPhotoInput
           style={styles.mVertical}
           add
-          placeHolder="Latitude Longitude"
+          placeHolder={
+            locationDetailsArray.length > 0
+              ? getLocationCordinates()
+              : 'Latitude Longitude'
+          }
           onPress={() => {
             checkPermission();
           }}
@@ -453,8 +481,8 @@ export default function EditStore(props) {
             <LocationDetail
               title={`${
                 item.location
-                  ? `${item.location}\n${item.coordinate.latitude}, ${item.coordinate.latitude}`
-                  : `${item.coordinate.latitude}, ${item.coordinate.latitude}`
+                  ? `${item.location}\n${item.coordinate.latitude}, ${item.coordinate.longitude}`
+                  : `${item.coordinate.latitude}, ${item.coordinate.longitude}`
               }`}
               onPress={() => {
                 setShowModal(true);

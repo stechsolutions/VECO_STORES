@@ -8,7 +8,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import colors from '../config/colors';
-import { color } from 'react-native-reanimated';
+import {color} from 'react-native-reanimated';
 
 const HomeCard = ({
   name,
@@ -20,29 +20,37 @@ const HomeCard = ({
   fa = false,
   mi = false,
   foundation = false,
-  fa5=false,
+  fa5 = false,
   order,
   onPress,
 }) => {
+  const size = 24;
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       {ii ? (
-        <IonIcons name={name} color={colors.primary} size={45} />
+        <IonIcons name={name} color={colors.primary} size={size} />
       ) : mci ? (
-        <MaterialCommunityIcons name={name} color={colors.primary} size={45} />
+        <MaterialCommunityIcons
+          name={name}
+          color={colors.primary}
+          size={size}
+        />
       ) : entypo ? (
-        <Entypo name={name} color={colors.primary} size={45} />
+        <Entypo name={name} color={colors.primary} size={size} />
       ) : fa ? (
-        <FontAwesome name={name} color={colors.primary} size={45} />
+        <FontAwesome name={name} color={colors.primary} size={size} />
       ) : mi ? (
-        <MaterialIcons name={name} color={colors.primary} size={45} />
+        <MaterialIcons name={name} color={colors.primary} size={size} />
       ) : foundation ? (
-        <Foundation name={name} color={colors.primary} size={45} />
+        <Foundation name={name} color={colors.primary} size={size} />
       ) : order ? (
-        <Image source={require('../assets/icons/order.png')} />
+        <Image
+          source={require('../assets/icons/order.png')}
+          style={{width: 25, height: 25}}
+        />
       ) : fa5 ? (
-          <FontAwesome5 name={name} color={colors.primary} size={45} />
-      ) : null} 
+        <FontAwesome5 name={name} color={colors.primary} size={size} />
+      ) : null}
       <Text style={styles.title}>{title}</Text>
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </TouchableOpacity>

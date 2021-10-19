@@ -22,7 +22,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { color } from 'react-native-reanimated';
 
-export default function ProductCard({ navigation,color ,onPress, label, image }) {
+export default function ProductCard({ navigation,color ,onPress, label, image, noOfProductAvailableOfType}) {
     const [selectedItem,setSelectedItem] = useState('Milks');
     return (
         <TouchableOpacity onPress={onPress} style={styles.productView}>
@@ -30,7 +30,7 @@ export default function ProductCard({ navigation,color ,onPress, label, image })
                 <Image style={styles.image} source={image ? {uri:image} : require('../assets/images/veg.jpg')}/>
                 <View style={[styles.detailView,color && {backgroundColor:color}]}>
                     <Text style={[styles.whiteText]}>{(label && label.length > 10 ? label.slice(0,10) : label) || 'Available'}</Text>
-                    <Text>385</Text>
+                   {noOfProductAvailableOfType && <Text>{noOfProductAvailableOfType}</Text>}
                 </View>
             </View>
         </TouchableOpacity>

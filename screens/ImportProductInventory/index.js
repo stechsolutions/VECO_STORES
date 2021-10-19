@@ -6,7 +6,7 @@ import colors from '../../config/colors';
 import AppAttachFileButton from '../../Components/AppAttachFileButton';
 import AppMultiLineInput from '../../Components/AppMultiLineInput';
 import AppButton from '../../Components/AppButton';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 
 const index = () => {
   const [image, setImage] = useState();

@@ -43,6 +43,7 @@ const LoginPage = ({route}) => {
             setLoading(false);
             route.params.onPress(user.data().firstTime);
           } else {
+            setLoading(false);
             return Alert.alert(
               'User Not Found',
               'User with this email was not found.',
@@ -66,6 +67,7 @@ const LoginPage = ({route}) => {
             e.message ===
             '[auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.'
           ) {
+            setLoading(false);
             Alert.alert(
               `User Not Found`,
               `User with this email was not found.`,
@@ -124,6 +126,7 @@ const LoginPage = ({route}) => {
             onChangeText={(txt) => setEmail(txt)}
             placeholder={'Email'}
             textContentType="emailAddress"
+            keyboardType="email-address"
           />
           <View style={{width: '100%'}}>
             <AppTextInput
