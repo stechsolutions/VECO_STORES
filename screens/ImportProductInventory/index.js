@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import Screen from '../../Components/Screen';
 import AppImageUploadButton from '../../Components/AppImageUploadButton';

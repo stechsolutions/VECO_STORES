@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../config/colors';
 
@@ -6,9 +7,9 @@ const AppOrderHeading = ({count, title, onPress}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.round}>
-        <Text style={styles.count}>{count}</Text>
+        <AppText style={styles.count}>{count}</AppText>
       </View>
-      <Text style={styles.title}>{title}</Text>
+      <AppText style={styles.title}>{title}</AppText>
     </TouchableOpacity>
   );
 };

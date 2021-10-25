@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Image, TouchableHighlight, Text,TouchableOpacity } from 'react-native';
+import AppText from './AppText';
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableHighlight,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,8 +26,10 @@ const AppChat = ({
   btnText,
   btnPress,
   approve = false,
-  tools, style,
-  onDelete,onEdit
+  tools,
+  style,
+  onDelete,
+  onEdit,
 }) => {
   return (
     <TouchableHighlight underlayColor={colors.white} onPress={onPress}>
@@ -37,12 +47,12 @@ const AppChat = ({
                   color: !variant
                     ? colors.dark
                     : variant === 'success'
-                      ? colors.success
-                      : variant === 'failure'
-                        ? colors.failure
-                        : variant === 'pending'
-                          ? colors.medium
-                          : colors.dark,
+                    ? colors.success
+                    : variant === 'failure'
+                    ? colors.failure
+                    : variant === 'pending'
+                    ? colors.medium
+                    : colors.dark,
                 },
               ]}
               numberOfLines={1}>
@@ -50,10 +60,11 @@ const AppChat = ({
             </Text>
           )}
         </View>
-        {
-          tools &&
+        {tools && (
           <View style={styles.iconContainer}>
-            <TouchableOpacity delayPressIn={'300ms'} onPress={onDelete ? onDelete : ()=>{}}>
+            <TouchableOpacity
+              delayPressIn={'300ms'}
+              onPress={onDelete ? onDelete : () => {}}>
               <MaterialIcons
                 color={'black'}
                 size={35}
@@ -62,23 +73,31 @@ const AppChat = ({
                 style={styles.crossIcon}
               />
             </TouchableOpacity>
-            <TouchableOpacity delayPressIn={'300ms'} onPress={onEdit ? onEdit : ()=>{} }>
+            <TouchableOpacity
+              delayPressIn={'300ms'}
+              onPress={onEdit ? onEdit : () => {}}>
               <SimpleLineIcons
                 onPress={approve.approve}
                 color={'black'}
                 size={25}
                 name="note"
-                style={[styles.checkIcon, { paddingLeft: 5 }]}
+                style={[styles.checkIcon, {paddingLeft: 5}]}
               />
             </TouchableOpacity>
           </View>
-        }
+        )}
         {count !== 0 && (
           <View style={styles.countContainer}>
-            <Text style={styles.countText}>{count}</Text>
+            <AppText style={styles.countText}>{count}</AppText>
           </View>
         )}
-        {btnText && <AppTextButton style={{ marginHorizontal: 10 }} title={btnText} onPress={btnPress} />}
+        {btnText && (
+          <AppTextButton
+            style={{marginHorizontal: 10}}
+            title={btnText}
+            onPress={btnPress}
+          />
+        )}
         {approve && (
           <View style={styles.iconContainer}>
             <Entypo
@@ -93,11 +112,10 @@ const AppChat = ({
               color={colors.success}
               size={30}
               name="checkcircle"
-              style={[styles.checkIcon, { paddingLeft: 5 }]}
+              style={[styles.checkIcon, {paddingLeft: 5}]}
             />
           </View>
         )}
-
       </View>
     </TouchableHighlight>
   );

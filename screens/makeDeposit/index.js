@@ -1,4 +1,5 @@
 import React, {Component, useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -54,7 +55,7 @@ export default function MakeDeposit({navigation, route, changeFirstTime}) {
   const [locationToEdit, setLocationToEdit] = useState();
   const [locationDetailsArray, setLocationDetailsArray] = useState([]);
 
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
 
   const next = async () => {
     if (
@@ -324,7 +325,7 @@ export default function MakeDeposit({navigation, route, changeFirstTime}) {
         </View>
       </Modal>
       <Modal onClose={() => setModal(false)} visible={modal}>
-        <Text style={styles.modalHead}>Deposit Done!</Text>
+        <AppText style={styles.modalHead}>Deposit Done!</AppText>
         <View
           style={{
             justifyContent: 'center',
@@ -334,7 +335,7 @@ export default function MakeDeposit({navigation, route, changeFirstTime}) {
           <AntDesign name="checkcircleo" color="#253370" size={100} />
         </View>
         <TouchableOpacity style={{alignItems: 'center'}}>
-          <Text style={styles.link}>See Details</Text>
+          <AppText style={styles.link}>See Details</AppText>
         </TouchableOpacity>
         <View style={{alignItems: 'center'}}>
           <AppButton

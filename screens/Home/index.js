@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   Image,
   ScrollView,
@@ -117,12 +118,16 @@ const index = ({navigation}) => {
           <ToggleBtn onPress={toggleBtn} toggle={toggle} />
           {toggle ? (
             <View style={styles.storeInfo}>
-              <Text style={styles.storeInfoHead}>Your Store is Open</Text>
-              <Text style={styles.storeInfoText}>you are connected now</Text>
+              <AppText style={styles.storeInfoHead}>Your Store is Open</AppText>
+              <AppText style={styles.storeInfoText}>
+                you are connected now
+              </AppText>
             </View>
           ) : (
             <View style={styles.storeInfo}>
-              <Text style={styles.storeInfoHead}>Your Store is Closed</Text>
+              <AppText style={styles.storeInfoHead}>
+                Your Store is Closed
+              </AppText>
               <Text style={styles.storeInfoText}>
                 Active now so that you can get connected
               </Text>

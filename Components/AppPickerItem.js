@@ -1,11 +1,12 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../config/colors';
 
 const AppPickerItem = ({title, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.txt}>{title}</Text>
+      <AppText style={styles.txt}>{title}</AppText>
     </TouchableOpacity>
   );
 };

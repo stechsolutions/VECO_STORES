@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   TextInput,
   View,
@@ -18,6 +19,7 @@ import AppTextInput from '../../Components/AppTextInput';
 import AppTextButton from '../../Components/AppTextButton';
 import AppButton from '../../Components/AppButton';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {IMLocalized} from '../../i18n/Localize';
 
 const {width: WIDTH} = Dimensions.get('window');
 const LoginPage = ({route}) => {
@@ -124,7 +126,7 @@ const LoginPage = ({route}) => {
             style={{marginVertical: 10}}
             value={email}
             onChangeText={(txt) => setEmail(txt)}
-            placeholder={'Email'}
+            placeholder={IMLocalized('Email')}
             textContentType="emailAddress"
             keyboardType="email-address"
           />
@@ -133,7 +135,7 @@ const LoginPage = ({route}) => {
               style={{marginVertical: 10}}
               value={password}
               onChangeText={(txt) => setPassword(txt)}
-              placeholder={'Password'}
+              placeholder={IMLocalized('Password')}
               textContentType="password"
               secureTextEntry={passwordHideShow}
             />
@@ -151,7 +153,9 @@ const LoginPage = ({route}) => {
             />
           </View>
 
-          <Text style={{paddingLeft: 200, fontSize: 12}}>Forgot Password?</Text>
+          <AppText style={{paddingLeft: 200, fontSize: 12}}>
+            Forgot Password?
+          </AppText>
 
           <AppButton
             loading={loading}

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   Dimensions,
   Modal,
@@ -18,7 +19,7 @@ import AppButton from '../../Components/AppButton';
 
 const screen = Dimensions.get('window');
 
-const index = ({ navigation }) => {
+const index = ({navigation}) => {
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -42,7 +43,7 @@ const index = ({ navigation }) => {
   };
   return (
     <Screen style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{flex: 1}}>
         <AppCard
           style={styles.shadowedView}
           title="Customers (Buyers)"
@@ -56,7 +57,7 @@ const index = ({ navigation }) => {
         <AppCard
           style={styles.shadowedView}
           title="My Dealers"
-        onPress={() => navigation.navigate('My Dealers')}
+          onPress={() => navigation.navigate('My Dealers')}
         />
         <AppCard
           style={styles.shadowedView}
@@ -76,8 +77,8 @@ const index = ({ navigation }) => {
                 <FontAwesome size={20} name="close" color={colors.white} />
               </View>
             </TouchableWithoutFeedback>
-            <Text style={styles.title}>Exporting Data</Text>
-            <Text style={styles.subTitle}>Select the date range</Text>
+            <AppText style={styles.title}>Exporting Data</AppText>
+            <AppText style={styles.subTitle}>Select the date range</AppText>
             {/* <View style={styles.timeContainer}> */}
             {/* <View style={styles.subContainer}> */}
             <AppTimePicker
@@ -87,7 +88,7 @@ const index = ({ navigation }) => {
                 setShowEndDatePicker(false);
               }}
             />
-            <Text style={[styles.text, { color: colors.dark }]}>to</Text>
+            <AppText style={[styles.text, {color: colors.dark}]}>to</AppText>
             <AppTimePicker
               date={endDate}
               onPress={() => {
@@ -178,6 +179,9 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   shadowedView: {
-    elevation: 5, borderRadius: 20, marginHorizontal: 20, marginVertical: 10,
-  }
+    elevation: 5,
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
 });

@@ -24,12 +24,14 @@ import {
 import PushNotification from 'react-native-push-notification';
 
 import colors from './config/colors';
+import {init} from './i18n/Localize';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     requestStoragePermission();
+    init();
   }, []);
 
   const requestStoragePermission = async () => {
@@ -53,7 +55,6 @@ const App = () => {
           'Please allow storage permission to continue.',
           [{text: 'OK', onPress: () => requestStoragePermission()}],
         );
-        
       }
     } catch (err) {
       console.warn(err);

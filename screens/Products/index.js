@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import AppMessage from '../../Components/AppMessage';
@@ -43,16 +44,16 @@ const index = () => {
       {console.log('tab>>>', tab)}
       <View style={styles.tabContainer}>
         <TouchableOpacity style={styles.tab} onPress={() => setTab('more')}>
-          <Text
+          <AppText
             style={[styles.text, tab === 'more' && {color: colors.primary}]}>
             Most Sold
-          </Text>
+          </AppText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={() => setTab('less')}>
-          <Text
+          <AppText
             style={[styles.text, tab === 'less' && {color: colors.primary}]}>
             Less Sold
-          </Text>
+          </AppText>
         </TouchableOpacity>
       </View>
       {tab === 'more' && (

@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../config/colors';
 
@@ -14,7 +15,7 @@ function AppPhotoPicker({condition, placeHolder, onPress}) {
         },
       ]}>
       <View style={styles.PhotocontentView}>
-        <Text style={styles.photoText}>{placeHolder}</Text>
+        <AppText style={styles.photoText}>{placeHolder}</AppText>
       </View>
 
       <TouchableOpacity onPress={onPress}>

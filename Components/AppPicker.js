@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from './AppText';
 import {
   Button,
   FlatList,
@@ -34,9 +35,9 @@ const AppPicker = ({
     <>
       <TouchableWithoutFeedback onPress={() => setShowModal(!showModal)}>
         <View style={[styles.container, style]}>
-          <Text style={[styles.title, {color: color}]}>
+          <AppText style={[styles.title, {color: color}]}>
             {selectedItem ? selectedItem.label : title}
-          </Text>
+          </AppText>
           <Entypo name="chevron-down" size={18} color={color} />
         </View>
       </TouchableWithoutFeedback>

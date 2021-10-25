@@ -1,11 +1,12 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, View} from 'react-native';
 
-const AppInfoCard = ({title, text,titleStyle,viewStyle}) => {
+const AppInfoCard = ({title, text, titleStyle, viewStyle}) => {
   return (
     <View style={viewStyle}>
-      <Text style={[styles.title,titleStyle]}>{title}</Text>
-      <Text style={styles.text}>{text}</Text>
+      <AppText style={[styles.title, titleStyle]}>{title}</AppText>
+      <AppText style={styles.text}>{text}</AppText>
     </View>
   );
 };

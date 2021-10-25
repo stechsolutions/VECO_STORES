@@ -1,16 +1,16 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../config/colors';
-import Fontisto from 'react-native-vector-icons/Fontisto'
-const ToggleBtn = ({title, onPress,toggle}) => {
+import Fontisto from 'react-native-vector-icons/Fontisto';
+const ToggleBtn = ({title, onPress, toggle}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-        {
-            toggle ? 
-            <Fontisto name='toggle-on' color={colors.secondary} size={70}/>:
-            <Fontisto name='toggle-off' color='#C5C5C5' size={70}/>
-
-        }
+      {toggle ? (
+        <Fontisto name="toggle-on" color={colors.secondary} size={70} />
+      ) : (
+        <Fontisto name="toggle-off" color="#C5C5C5" size={70} />
+      )}
     </TouchableOpacity>
   );
 };

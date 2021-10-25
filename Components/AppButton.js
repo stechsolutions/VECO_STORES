@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {
   StyleSheet,
   Text,
@@ -23,7 +24,7 @@ const AppButton = ({
       style={[styles.btn, style, disabled && {backgroundColor: colors.medium}]}
       onPress={onPress}
       disabled={disabled}>
-      <Text
+      <AppText
         style={{
           color: color,
           fontWeight: 'bold',
@@ -31,7 +32,7 @@ const AppButton = ({
           textAlign: 'center',
         }}>
         {title}
-      </Text>
+      </AppText>
       {loading && (
         <ActivityIndicator style={{paddingHorizontal: 10}} color={'black'} />
       )}

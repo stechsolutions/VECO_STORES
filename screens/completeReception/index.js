@@ -1,4 +1,5 @@
 import React, {Component, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -23,6 +24,7 @@ import Modal from '../../Components/Modal';
 import StarRating from 'react-native-star-rating';
 import AppPhotoInput from '../../Components/AppPhotoInput';
 import * as ImagePicker from 'react-native-image-picker';
+import {IMLocalized} from '../../i18n/Localize';
 
 export default function CompleteReception({navigation}) {
   const [count, setCount] = useState(3);
@@ -54,17 +56,23 @@ export default function CompleteReception({navigation}) {
         <View style={styles.statusView}>
           <View style={styles.status}>
             <View style={styles.circle} />
-            <Text style={styles.statusText}>Order Created (26/Feb/2021)</Text>
+            <AppText style={styles.statusText}>
+              Order Created (26/Feb/2021)
+            </AppText>
           </View>
           <View style={styles.yellowBar} />
           <View style={styles.status}>
             <View style={styles.circle} />
-            <Text style={styles.statusText}>Paid Order (26/Feb/2021)</Text>
+            <AppText style={styles.statusText}>
+              Paid Order (26/Feb/2021)
+            </AppText>
           </View>
           <View style={styles.yellowBar} />
           <View style={styles.status}>
             <View style={styles.circle} />
-            <Text style={styles.statusText}>Approved Dealer (26/Feb/2021)</Text>
+            <AppText style={styles.statusText}>
+              Approved Dealer (26/Feb/2021)
+            </AppText>
           </View>
           <View style={styles.yellowBar} />
           <View style={styles.status}>
@@ -112,7 +120,7 @@ export default function CompleteReception({navigation}) {
           </Text>
         </View>
         <View style={styles.ratingView}>
-          <Text style={styles.ratingLabel}>Punctuality</Text>
+          <AppText style={styles.ratingLabel}>Punctuality</AppText>
           <View style={{flex: 0.5}}>
             <StarRating
               emptyStarColor={'gray'}
@@ -126,7 +134,7 @@ export default function CompleteReception({navigation}) {
           </View>
         </View>
         <View style={styles.ratingView}>
-          <Text style={styles.ratingLabel}>Condition of Products</Text>
+          <AppText style={styles.ratingLabel}>Condition of Products</AppText>
           <View style={{flex: 0.5}}>
             <StarRating
               emptyStarColor={'gray'}
@@ -140,7 +148,7 @@ export default function CompleteReception({navigation}) {
           </View>
         </View>
         <View style={styles.ratingView}>
-          <Text style={styles.ratingLabel}>Communication</Text>
+          <AppText style={styles.ratingLabel}>Communication</AppText>
           <View style={{flex: 0.5}}>
             <StarRating
               emptyStarColor={'gray'}
@@ -154,7 +162,7 @@ export default function CompleteReception({navigation}) {
           </View>
         </View>
         <View style={styles.ratingView}>
-          <Text style={styles.ratingLabel}>Cordiality</Text>
+          <AppText style={styles.ratingLabel}>Cordiality</AppText>
           <View style={{flex: 0.5}}>
             <StarRating
               emptyStarColor={'gray'}
@@ -168,7 +176,7 @@ export default function CompleteReception({navigation}) {
           </View>
         </View>
         <View style={styles.ratingView}>
-          <Text style={styles.ratingLabel}>Clothing</Text>
+          <AppText style={styles.ratingLabel}>Clothing</AppText>
           <View style={{flex: 0.5}}>
             <StarRating
               emptyStarColor={'gray'}
@@ -188,7 +196,7 @@ export default function CompleteReception({navigation}) {
         />
         <View>
           <TextInput
-            placeholder={'Write your comments'}
+            placeholder={IMLocalized('Write your comments')}
             multiline
             numberOfLines={7}
             style={{
@@ -236,7 +244,9 @@ export default function CompleteReception({navigation}) {
         </View>
       </ScrollView>
       <Modal onClose={() => setClaimModal(false)} visible={claimModal}>
-        <Text style={styles.modalHead}>Your Claim has been submitted</Text>
+        <AppText style={styles.modalHead}>
+          Your Claim has been submitted
+        </AppText>
         <View
           style={{
             justifyContent: 'center',
@@ -246,7 +256,7 @@ export default function CompleteReception({navigation}) {
           <AntDesign name="checkcircleo" color="#253370" size={100} />
         </View>
         <TouchableOpacity style={{alignItems: 'center'}}>
-          <Text style={styles.link}>See Details</Text>
+          <AppText style={styles.link}>See Details</AppText>
         </TouchableOpacity>
         <View style={{alignItems: 'center'}}>
           <AppButton
@@ -263,7 +273,7 @@ export default function CompleteReception({navigation}) {
         </View>
       </Modal>
       <Modal onClose={() => setConfirmModal(false)} visible={confirmModal}>
-        <Text style={styles.modalHead}>Delivery Completed !</Text>
+        <AppText style={styles.modalHead}>Delivery Completed !</AppText>
         <View
           style={{
             justifyContent: 'center',
@@ -273,7 +283,7 @@ export default function CompleteReception({navigation}) {
           <AntDesign name="checkcircleo" color="#253370" size={100} />
         </View>
         <TouchableOpacity style={{alignItems: 'center'}}>
-          <Text style={styles.link}>See Details</Text>
+          <AppText style={styles.link}>See Details</AppText>
         </TouchableOpacity>
         <View style={{alignItems: 'center'}}>
           <AppButton

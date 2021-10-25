@@ -1,117 +1,112 @@
-
-import React, { Component, useEffect, useState, useRef } from 'react';
-import { ScrollView, View, Text, Image, Dimensions, Alert } from 'react-native';
+import React, {Component, useEffect, useState, useRef} from 'react';
+import AppText from '../../Components/AppText';
+import {ScrollView, View, Text, Image, Dimensions, Alert} from 'react-native';
 import AppButton from '../../Components/AppButton';
 import colors from '../../config/colors';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { styles } from '../purchaseOrders/style';
-import { LoginManager, LoginButton, AccessToken } from "react-native-fbsdk";
+import {styles} from '../purchaseOrders/style';
+import {LoginManager, LoginButton, AccessToken} from 'react-native-fbsdk';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
-const { width: WIDTH } = Dimensions.get('window');
-const LoginPage = ({ navigation, route }) => {
+const {width: WIDTH} = Dimensions.get('window');
+const LoginPage = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [email, setemail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
 
   const fbBtn = () => {
-    LoginManager.logInWithPermissions(["public_profile", "email"]).then(
+    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
-          console.log("Login cancelled");
+          console.log('Login cancelled');
         } else {
           console.log(
-            "Login success with permissions: " +
-            result.grantedPermissions.toString()
+            'Login success with permissions: ' +
+              result.grantedPermissions.toString(),
           );
-          AccessToken.getCurrentAccessToken().then(
-            async (data) => {
-              console.log("fghfgh", data.accessToken.toString())
-              // await auth().setPersistence(auth.Auth.Persistence.LOCAL);
-              const credential = await auth.FacebookAuthProvider.credential(data.accessToken.toString());
-              console.log(credential)
-              // auth().signInWithCredential(facebookCredential);
-              const facebookProfileData = await auth().signInWithCredential(credential);
-              console.log({ facebookProfileData })
-              await auth().onAuthStateChanged(user => {
-                if (user != null) {
-                  console.log(user, "jjjjjj");
-                  AsyncStorage.setItem(
-                    'user',
-                    JSON.stringify(user),
-                  );
-                  // setemail(user.email)
-                  // setFullName(user.fullName)
+          AccessToken.getCurrentAccessToken().then(async (data) => {
+            console.log('fghfgh', data.accessToken.toString());
+            // await auth().setPersistence(auth.Auth.Persistence.LOCAL);
+            const credential = await auth.FacebookAuthProvider.credential(
+              data.accessToken.toString(),
+            );
+            console.log(credential);
+            // auth().signInWithCredential(facebookCredential);
+            const facebookProfileData = await auth().signInWithCredential(
+              credential,
+            );
+            console.log({facebookProfileData});
+            await auth().onAuthStateChanged((user) => {
+              if (user != null) {
+                console.log(user, 'jjjjjj');
+                AsyncStorage.setItem('user', JSON.stringify(user));
+                // setemail(user.email)
+                // setFullName(user.fullName)
 
-                  navigation.navigate("FacebookLogin")
-                }
-                // const facebookData={
-                //   email,
-                //   fullName
-                // }
-                //  setLoading(true)
-                // setLoading(false)
-                // alert(user)
-              })
-            })
-
-
+                navigation.navigate('FacebookLogin');
+              }
+              // const facebookData={
+              //   email,
+              //   fullName
+              // }
+              //  setLoading(true)
+              // setLoading(false)
+              // alert(user)
+            });
+          });
         }
       },
       function (error) {
-        console.log("Login fail with error: " + error);
-      }
+        console.log('Login fail with error: ' + error);
+      },
     );
-  }
+  };
   const logout = async () => {
-    await LoginManager.logOut()
-    console.log("logout")
-  }
+    await LoginManager.logOut();
+    console.log('logout');
+  };
   const configureGoogleAuth = () => {
-    console.log("configureGoogleAuth Called")
+    console.log('configureGoogleAuth Called');
     try {
-      return GoogleSignin.configure(
-        {
-          webClientId: '359061727415-ua7do2pl0meohop9hkrbj51flbdjgftm.apps.googleusercontent.com',
-          // iosClientId: '593273188834-ju3ipe1u3frjdaqdjt9lirano643g6pv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-          offlineAccess: false
-        });
+      return GoogleSignin.configure({
+        webClientId:
+          '359061727415-ua7do2pl0meohop9hkrbj51flbdjgftm.apps.googleusercontent.com',
+        // iosClientId: '593273188834-ju3ipe1u3frjdaqdjt9lirano643g6pv.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+        offlineAccess: false,
+      });
     } catch (error) {
-      console.log("configureGoogleAuth catch", error)
+      console.log('configureGoogleAuth catch', error);
     }
-  }
+  };
 
   const onGoogleButtonPress = async () => {
     try {
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
-        autoResolve: true
+        autoResolve: true,
       });
       await configureGoogleAuth();
 
-      const { idToken } = await GoogleSignin.signIn();
+      const {idToken} = await GoogleSignin.signIn();
       console.log('idToken', idToken);
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       // const userInfo = await GoogleSignin.signIn();
       console.log('idToken', googleCredential);
       auth().signInWithCredential(googleCredential);
-      await auth().onAuthStateChanged(user => {
-        console.log("onAuthStateChanged", user)
+      await auth().onAuthStateChanged((user) => {
+        console.log('onAuthStateChanged', user);
         if (user != null) {
-          console.log(user, "jjjjjj");
-          AsyncStorage.setItem(
-            'user',
-            JSON.stringify(user),
-          );
+          console.log(user, 'jjjjjj');
+          AsyncStorage.setItem('user', JSON.stringify(user));
           // setemail(user.email)
           // setFullName(user.fullName)
-          navigation.navigate("GoogleLogin")
+          navigation.navigate('GoogleLogin');
         }
         // const facebookData={
         //   email,
@@ -120,17 +115,16 @@ const LoginPage = ({ navigation, route }) => {
         //  setLoading(true)
         // setLoading(false)
         // alert(user)
-      })
-
+      });
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log("1", error)
+        console.log('1', error);
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log("2", error)
+        console.log('2', error);
         // operation (e.g. sign in) is in progress already
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log("3", error)
+        console.log('3', error);
         // play services not available or outdated
       } else {
         Alert.alert('Something went wrong', error.toString());
@@ -177,15 +171,15 @@ const LoginPage = ({ navigation, route }) => {
     //     // });
     //     // this.props.navigation.navigate("Google")
     //   });
-  }
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.white }}>
+    <View style={{flex: 1, backgroundColor: colors.white}}>
       {/* <View> */}
       <ScrollView>
         <Image
           source={require('../../assets/icons/background.png')}
-          style={{ width: '100%', flex: 1 }}
+          style={{width: '100%', flex: 1}}
           resizeMode="stretch"
         />
 
@@ -207,9 +201,12 @@ const LoginPage = ({ navigation, route }) => {
             resizeMode="cover"
           />
         </View>
-        <View style={{ alignSelf: 'center', marginTop: 10 }}>
-          <Text style={{ color: colors.primary }}>Welcome to the </Text>
-          <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.primary }}>Market Seller</Text>
+        <View style={{alignSelf: 'center', marginTop: 10}}>
+          <AppText style={{color: colors.primary}}>Welcome to the </AppText>
+          <AppText
+            style={{fontSize: 18, fontWeight: 'bold', color: colors.primary}}>
+            Marketplace
+          </AppText>
         </View>
         <View
           style={{
@@ -231,9 +228,9 @@ const LoginPage = ({ navigation, route }) => {
             }}
           />
 
-          <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 15, }}>
+          <AppText style={{fontSize: 16, fontWeight: 'bold', marginTop: 15}}>
             Already a Member?
-          </Text>
+          </AppText>
 
           <AppButton
             onPress={() => navigation.navigate('Login page')}
@@ -301,7 +298,6 @@ const LoginPage = ({ navigation, route }) => {
           }
           onLogoutFinished={() => console.log("logout.")}/> */}
           </View>
-
         </View>
         {/* </View> */}
       </ScrollView>

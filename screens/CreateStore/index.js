@@ -1,4 +1,5 @@
 import React, {Component, useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -379,13 +380,21 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
 
         <View style={styles.createBtnView}>
           <AppButton
-            // disabled={
-            //   !storeName ||
-            //   !location ||
-            //   !locationDetailsArray.length ||
-            //   !documentImage ||
-            //   !image
-            // }
+            disabled={
+              !fullAddress ||
+              !noOfBranches ||
+              !fullAddress ||
+              !location ||
+              !corregimiento ||
+              !district ||
+              !province ||
+              !IDOfTheLegalRepresentative ||
+              !nameOfTheLegalRepresentative ||
+              !DV ||
+              !RUC ||
+              !tradeName ||
+              !businessName
+            }
             loading={loading}
             style={[styles.btn, styles.mVertical, {width: '30%'}]}
             title="NEXT"

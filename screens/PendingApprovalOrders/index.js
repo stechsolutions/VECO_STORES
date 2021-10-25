@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import Screen from '../../Components/Screen';

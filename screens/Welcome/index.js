@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from '../../Components/AppText';
 import {
   SafeAreaView,
   StyleSheet,
@@ -41,12 +42,14 @@ const LoginPage = ({navigation, changeFirstTime}) => {
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <View style={{marginVertical: 150}}>
-            <Text style={styles.title}>Welcome!</Text>
-            <Text style={styles.title}>to the VECO family</Text>
-            <Text style={styles.subTitle}>Create your dealer store now</Text>
+            <AppText style={styles.title}>Welcome!</AppText>
+            <AppText style={styles.title}>to the VECO family</AppText>
+            <AppText style={styles.subTitle}>
+              Create your dealer store now
+            </AppText>
             <AppButton
               style={[styles.btn, styles.mVertical]}
-              title="Create Online Store"
+              title="Create Store"
               onPress={goToCreateStore}
             />
           </View>

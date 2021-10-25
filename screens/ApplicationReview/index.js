@@ -1,4 +1,5 @@
 import React, {createRef, useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   SafeAreaView,
   StyleSheet,
@@ -20,6 +21,7 @@ import colors from '../../config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import {Notifi} from '../../Components/pushNotification';
+import {IMLocalized} from '../../i18n/Localize';
 
 const {width: WIDTH} = Dimensions.get('window');
 const shown = createRef();
@@ -198,11 +200,12 @@ const LoginPage = ({navigation, changeFirstTime, route}) => {
           <View
             style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <View style={{width: 200, marginVertical: 150}}>
-              <Text style={styles.title}>Hello Store!</Text>
-              <Text style={styles.subTitle}>
-                Your Information is being reviewed, you will be notify soon when
-                it is approved!
-              </Text>
+              <AppText style={styles.title}>Hello Store!</AppText>
+              <AppText style={styles.subTitle}>
+                {IMLocalized(
+                  'Your Information Is Being Reviewed You Will Be Notify Soon When It Is Approved',
+                )}
+              </AppText>
             </View>
           </View>
         </ScrollView>
@@ -230,14 +233,16 @@ const LoginPage = ({navigation, changeFirstTime, route}) => {
           <View
             style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <View style={{width: 200, marginVertical: 150}}>
-              <Text style={styles.title}>Welcome!</Text>
-              <Text style={styles.subTitle}>Create your dealer store now</Text>
+              <AppText style={styles.title}>Welcome!</AppText>
+              <AppText style={styles.subTitle}>
+                Create your dealer store now
+              </AppText>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('createStore', {changeFirstTime})
                 }>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>Create Store</Text>
+                  <AppText style={styles.btnText}>Create Store</AppText>
                 </View>
               </TouchableOpacity>
             </View>
@@ -266,11 +271,10 @@ const LoginPage = ({navigation, changeFirstTime, route}) => {
           <View
             style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <View style={{width: 200, marginVertical: 150}}>
-              <Text style={styles.title}>Hello Store!</Text>
-              <Text style={styles.subTitle}>
-                Your Information is being reviewed, you will be notify soon when
-                it is approved!
-              </Text>
+              <AppText style={styles.title}>Hello Store!</AppText>
+              <AppText style={styles.subTitle}>
+                Your Account Have been Disapproved By The Admin
+              </AppText>
             </View>
           </View>
         </ScrollView>
@@ -298,10 +302,10 @@ const LoginPage = ({navigation, changeFirstTime, route}) => {
           <View
             style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <View style={{width: 200, marginVertical: 150}}>
-              <Text style={styles.title}>Hello Store!</Text>
-              <Text style={styles.subTitle}>
+              <AppText style={styles.title}>Hello Store!</AppText>
+              <AppText style={styles.subTitle}>
                 Your Information is being reviewed, you are blocked by admin
-              </Text>
+              </AppText>
             </View>
           </View>
         </ScrollView>

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import AppText from '../../Components/AppText';
 import {View, ScrollView, StyleSheet} from 'react-native';
 // import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';

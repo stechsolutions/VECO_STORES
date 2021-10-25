@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {View, ScrollView, StyleSheet, Text} from 'react-native';
 // import {styles} from './style';
 import Screen from '../../Components/Screen';
@@ -37,11 +38,11 @@ export default function AssignDispatcher() {
           subTitle="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab necessitatibus incidunt in debitis, nostrum doloremque quae nemo eius dolor sit temporibus aperiam commodi fugit possimus sunt consectetur similique explicabo maiores."
         />
         <View style={styles.subContainer}>
-          <Text style={styles.title}>Assign Route</Text>
+          <AppText style={styles.title}>Assign Route</AppText>
           <AppPicker title="" />
         </View>
         <View style={styles.subContainer}>
-          <Text style={styles.title}>Assign Payment Type</Text>
+          <AppText style={styles.title}>Assign Payment Type</AppText>
           <View style={styles.radionButtonContainer}>
             <AppRadioButton
               title="Debit / Credi Card"
@@ -64,7 +65,7 @@ export default function AssignDispatcher() {
           />
         </View>
         {/* <View style={styles.assignRouteView}>
-          <Text style={styles.assignRouteText}>Assign Payment type</Text>
+          <AppText style={styles.assignRouteText}>Assign Payment type</AppText>
 
           <View style={[styles.scrollInnerView, {width: '100%'}]}>
             <Item style={styles.item} rounded>
@@ -73,7 +74,7 @@ export default function AssignDispatcher() {
           </View>
         </View> */}
         <View>
-          <Text style={styles.title}>Assign Purchase Volume</Text>
+          <AppText style={styles.title}>Assign Purchase Volume</AppText>
 
           <AppTextInput placeHolder="Enter volume here" />
         </View>

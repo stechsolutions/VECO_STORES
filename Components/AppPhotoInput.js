@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 // import {TouchableOpacity} from 'react-native-gesture-handler';
 import {color} from 'react-native-reanimated';
@@ -21,9 +22,9 @@ const AppPhotoInput = ({
       delayLongPress={'300ms'}
       style={[styles.container, style]}
       onPress={onPress}>
-      <Text style={[styles.text, choosen && {color: colors.black}]}>
+      <AppText style={[styles.text, choosen && {color: colors.black}]}>
         {placeHolder}
-      </Text>
+      </AppText>
       <View style={styles.icon}>
         {!map && !add && !calendar && (
           <FontAwesome style={{padding: 10}} name="photo" size={20} />

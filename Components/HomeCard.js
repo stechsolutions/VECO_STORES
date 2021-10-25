@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -51,8 +52,8 @@ const HomeCard = ({
       ) : fa5 ? (
         <FontAwesome5 name={name} color={colors.primary} size={size} />
       ) : null}
-      <Text style={styles.title}>{title}</Text>
-      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+      <AppText style={styles.title}>{title}</AppText>
+      {subtitle && <AppText style={styles.subtitle}>{subtitle}</AppText>}
     </TouchableOpacity>
   );
 };

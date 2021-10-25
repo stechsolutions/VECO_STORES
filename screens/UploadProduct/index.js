@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   ScrollView,
   StyleSheet,
@@ -30,6 +31,7 @@ import AppLoader from '../../Components/AppLoader';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {IMLocalized} from '../../i18n/Localize';
 
 // const productTypes = [{label: 'Type 1'}, {label: 'Type 2'}];
 
@@ -485,7 +487,7 @@ const index = ({navigation}) => {
           }}
         />
         <View style={styles.subContainer}>
-          <Text style={styles.title}>Set Expiry Date</Text>
+          <AppText style={styles.title}>Set Expiry Date</AppText>
           <View style={styles.timeContainer}>
             <AppTimePicker
               date={startDate ? startDate : new Date()}
@@ -612,7 +614,7 @@ const index = ({navigation}) => {
             <AntDesign size={30} name="close" />
           </TouchableOpacity>
           <TouchableOpacity onPress={pickImageHandler} style={styles.modalItem}>
-            <Text style={styles.modalItemText}> From Phone </Text>
+            <AppText style={styles.modalItemText}> From Phone </AppText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -630,7 +632,7 @@ const index = ({navigation}) => {
       </Modal> */}
       <Modal style={styles.modal} visible={showGallery} animationType="slide">
         <View style={styles.galleryHead}>
-          <Text style={styles.galleryHeadText}>Select Photo</Text>
+          <AppText style={styles.galleryHeadText}>Select Photo</AppText>
           <View style={{marginHorizontal: 20, paddingTop: 20}}>
             <View style={[styles.searchBarView]}>
               <FontAwesome
@@ -641,7 +643,7 @@ const index = ({navigation}) => {
               />
               <TextInput
                 style={styles.input}
-                placeholder="Search Distributer, products"
+                placeholder={IMLocalized('Search Distributer, products')}
                 onChangeText={(text) => {
                   setSearchtext(text.toLowerCase());
                   handleSearch();
@@ -764,7 +766,7 @@ const index = ({navigation}) => {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <Ionicons name="camera" size={24} color={colors.black} />
-                <Text style={styles.textStyle}>Launch Camera</Text>
+                <AppText style={styles.textStyle}>Launch Camera</AppText>
               </View>
             </TouchableOpacity>
             <View
@@ -785,7 +787,7 @@ const index = ({navigation}) => {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <FontAwesome name="photo" size={24} color={colors.black} />
-                <Text style={styles.textStyle}>Launch Gallery</Text>
+                <AppText style={styles.textStyle}>Launch Gallery</AppText>
               </View>
             </TouchableOpacity>
 
@@ -807,7 +809,9 @@ const index = ({navigation}) => {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <FontAwesome name="photo" size={24} color={colors.black} />
-                <Text style={styles.textStyle}>From Distributor's Gallery</Text>
+                <AppText style={styles.textStyle}>
+                  From Distributor's Gallery
+                </AppText>
               </View>
             </TouchableOpacity>
             <View style={{flexDirection: 'row'}}>

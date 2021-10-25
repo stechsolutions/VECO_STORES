@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,

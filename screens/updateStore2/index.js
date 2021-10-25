@@ -1,4 +1,5 @@
 import React, {Component, useEffect, useState, useRef} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -570,7 +571,7 @@ export default function UpdateStore2({navigation, route, changeFirstTime}) {
               />
             )}
           </View>
-          <Text style={styles.termsHead}>Terms and Conditions</Text>
+          <AppText style={styles.termsHead}>Terms and Conditions</AppText>
           <Text style={styles.termsText}>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
@@ -677,7 +678,7 @@ export default function UpdateStore2({navigation, route, changeFirstTime}) {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <Ionicons name="camera" size={22} color={colors.black} />
-                <Text style={styles.textStyle}>Launch Camera</Text>
+                <AppText style={styles.textStyle}>Launch Camera</AppText>
               </View>
             </TouchableOpacity>
             <View
@@ -698,7 +699,7 @@ export default function UpdateStore2({navigation, route, changeFirstTime}) {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <FontAwesome name="photo" size={24} color={colors.black} />
-                <Text style={styles.textStyle}>Launch Gallery</Text>
+                <AppText style={styles.textStyle}>Launch Gallery</AppText>
               </View>
             </TouchableOpacity>
             <View style={{flexDirection: 'row'}}>

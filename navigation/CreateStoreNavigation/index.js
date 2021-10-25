@@ -8,6 +8,7 @@ import CreateStore from '../../screens/CreateStore';
 import CreateStore2 from '../../screens/createStore2';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {IMLocalized} from '../../i18n/Localize';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,7 @@ const CreateStoreNavigation = ({changeFirstTime, firstTime, goToStart}) => (
       name="ApplicationReview"
       initialParams={firstTime}
       options={(navigation) => ({
-        title: '',
+        title: IMLocalized('Application Review'),
         headerRight: () => (
           <AntDesign
             name="poweroff"
@@ -41,7 +42,7 @@ const CreateStoreNavigation = ({changeFirstTime, firstTime, goToStart}) => (
       name="welcome"
       component={Welcome}
       options={(navigation) => ({
-        title: '',
+        title: IMLocalized('Welcome'),
         headerRight: () => (
           <AntDesign
             name="poweroff"
@@ -68,7 +69,7 @@ const CreateStoreNavigation = ({changeFirstTime, firstTime, goToStart}) => (
     <Stack.Screen
       name="createStore"
       options={({navigation}) => ({
-        title: '',
+        title: IMLocalized('Create Store'),
         headerLeft: () => (
           <Entypo
             name="chevron-thin-left"
@@ -84,11 +85,15 @@ const CreateStoreNavigation = ({changeFirstTime, firstTime, goToStart}) => (
     >
       {(props) => <CreateStore {...props} />}
     </Stack.Screen>
-    <Stack.Screen name="CreateStore" component={CreateStore} />
+    <Stack.Screen
+      name="CreateStore"
+      component={CreateStore}
+      options={{title: IMLocalized('Create Store')}}
+    />
     <Stack.Screen
       name="createStore2"
       options={({navigation}) => ({
-        title: '',
+        title: IMLocalized('Create Store'),
         headerLeft: () => (
           <Entypo
             name="chevron-thin-left"

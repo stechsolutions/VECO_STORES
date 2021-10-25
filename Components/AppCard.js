@@ -1,12 +1,15 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '../config/colors';
 
-const AppCard = ({title, onPress,style, Icon}) => {
+const AppCard = ({title, onPress, style, Icon}) => {
   return (
-    <TouchableOpacity style={[styles.container,style]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
       {Icon && <Icon />}
-      <Text style={[styles.title,!Icon && {textAlign:'center'} ]}>{title}</Text>
+      <AppText style={[styles.title, !Icon && {textAlign: 'center'}]}>
+        {title}
+      </AppText>
     </TouchableOpacity>
   );
 };
@@ -21,13 +24,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 10,
-    flex:1,flexDirection:'row',
-  //  borderWidth:1,
+    flex: 1,
+    flexDirection: 'row',
+    //  borderWidth:1,
   },
   title: {
     fontSize: 20,
     color: colors.primary,
-    flex:1,
+    flex: 1,
     // borderWidth:1,
   },
 });

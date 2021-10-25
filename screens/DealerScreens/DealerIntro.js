@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from '../../Components/AppText';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,31 +9,44 @@ import {
   StatusBar,
 } from 'react-native';
 
-
 const DealerIntro = () => {
-
-    return(
+  return (
     <>
-        <SafeAreaView>
-            <View style={{flex : 1 ,justifyContent : 'center' , alignItems : 'center' , backgroundColor : 'white'}}>
+      <SafeAreaView>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white',
+          }}>
+          <View style={{marginVertical: 100}}>
+            <AppText
+              style={{fontSize: 40, fontWeight: 'bold', color: '#FFD700'}}>
+              LOGO
+            </AppText>
+          </View>
 
-                <View style={{marginVertical : 100}}>
-                    <Text style={{fontSize : 40 , fontWeight : "bold" , color : '#FFD700'}}>LOGO</Text>
-                </View>
+          <View style={{marginVertical: 20}}>
+            <AppText style={{fontSize: 26}}> Hello Dealer </AppText>
+          </View>
 
-                <View style={{marginVertical : 20}}>
-                    <Text style={{fontSize : 26}}> Hello Dealer </Text>
-                </View>
-
-                <View style={{marginVertical : 30 , paddingHorizontal : 50 , alignContent : 'center'}}>
-                    <Text style={{fontSize : 18 , textAlign : 'center'}}> Your information is being reviwed, you will be notiy soon when it is approved </Text>
-                </View>
-
-            </View>
-        </SafeAreaView>
+          <View
+            style={{
+              marginVertical: 30,
+              paddingHorizontal: 50,
+              alignContent: 'center',
+            }}>
+            <AppText style={{fontSize: 18, textAlign: 'center'}}>
+              {' '}
+              Your information is being reviwed, you will be notiy soon when it
+              is approved{' '}
+            </AppText>
+          </View>
+        </View>
+      </SafeAreaView>
     </>
-    )
-    
-}
+  );
+};
 
 export default DealerIntro;

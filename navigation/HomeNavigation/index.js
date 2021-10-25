@@ -83,6 +83,7 @@ import CreditNotes from '../../screens/creditNotes';
 import CreditNoteDetail from '../../screens/creditNoteDetail';
 
 import LoginNavigation from '../LoginNavigation/index';
+import {IMLocalized} from '../../i18n/Localize';
 
 const Stack = createStackNavigator();
 
@@ -92,7 +93,7 @@ const CreateStoreNavigation = () => (
       name="ApplicationReview"
       component={ApplicationReview}
       options={(navigation) => ({
-        // title: 'Dashboard',
+        title: IMLocalized('Application Review'),
         headerRight: () => (
           <AntDesign
             name="poweroff"
@@ -120,7 +121,7 @@ const CreateStoreNavigation = () => (
       name="Welcome"
       component={Welcome}
       options={({navigation, goToStart}) => ({
-        // title: 'Dashboard',
+        title: 'Welcome',
         headerRight: () => (
           <AntDesign
             name="poweroff"
@@ -158,7 +159,11 @@ const CreateStoreNavigation = () => (
         },
       })}
     />
-    <Stack.Screen name="Admin Approval" component={ApplicationReview} />
+    <Stack.Screen
+      name="Admin Approval"
+      component={ApplicationReview}
+      options={{title: IMLocalized('Admin Approval')}}
+    />
   </Stack.Navigator>
 );
 const MailStack = () => (
@@ -167,6 +172,7 @@ const MailStack = () => (
       name="Mailbox"
       component={MailBox}
       options={({navigation}) => ({
+        title: IMLocalized('Mailbox'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -175,7 +181,11 @@ const MailStack = () => (
         },
       })}
     />
-    <Stack.Screen name="Mail Open" component={MailOpen} />
+    <Stack.Screen
+      name="Mail Open"
+      component={MailOpen}
+      options={{title: IMLocalized('Mail Open')}}
+    />
   </Stack.Navigator>
 );
 const DashboardStack = () => (
@@ -184,6 +194,7 @@ const DashboardStack = () => (
       name="Dashboard"
       component={Dashboard}
       options={({navigation}) => ({
+        title: IMLocalized('Dashboard'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -195,17 +206,27 @@ const DashboardStack = () => (
     <Stack.Screen
       name="Vehicle in circulation"
       component={VehicleInCirculation}
+      options={{title: IMLocalized('Vehicle in circulation')}}
     />
     <Stack.Screen
       name="Order in circulation"
       component={VehicleInCirculation}
+      options={{title: IMLocalized('Order in circulation')}}
     />
-    <Stack.Screen name="Pending Deliveries" component={VehicleInCirculation} />
-    <Stack.Screen name="Orders on the way" component={OrdersOnTheWay} />
+    <Stack.Screen
+      name="Pending Deliveries"
+      component={VehicleInCirculation}
+      options={{title: IMLocalized('Pending Deliveries')}}
+    />
+    <Stack.Screen
+      name="Orders on the way"
+      component={OrdersOnTheWay}
+      options={{title: IMLocalized('Orders on the way')}}
+    />
     <Stack.Screen
       name="recycle"
       component={Recycle}
-      options={{title: 'Recycling'}}
+      options={{title: IMLocalized('Recycling')}}
     />
   </Stack.Navigator>
 );
@@ -214,36 +235,32 @@ const UpdateStoreStack = () => (
     <Stack.Screen
       name="UpdateStore1"
       component={UpdateStore}
-      options={
-        (({navigation}) => ({
-          headerLeft: () => (
-            <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
-          ),
-          headerLeftContainerStyle: {
-            paddingLeft: 15,
-          },
-        }),
-        {title: 'Update Store'})
-      }
+      options={({navigation}) => ({
+        title: IMLocalized('Update Store'),
+        headerLeft: () => (
+          <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
+        ),
+        headerLeftContainerStyle: {
+          paddingLeft: 15,
+        },
+      })}
     />
     <Stack.Screen
       name="UpdateStore2"
       component={UpdateStore2}
-      options={
-        (({navigation}) => ({
-          headerLeft: () => (
-            <Ionicons
-              name="arrow-back-outline"
-              size={25}
-              onPress={() => navigation.goBack()}
-            />
-          ),
-          headerLeftContainerStyle: {
-            paddingLeft: 15,
-          },
-        }),
-        {title: 'Update Store'})
-      }
+      options={({navigation}) => ({
+        title: IMLocalized('Update Store'),
+        headerLeft: () => (
+          <Ionicons
+            name="arrow-back-outline"
+            size={25}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+        headerLeftContainerStyle: {
+          paddingLeft: 15,
+        },
+      })}
     />
   </Stack.Navigator>
 );
@@ -253,6 +270,7 @@ const CreateStack = () => (
       name="Dashboard"
       component={createDashboard}
       options={({navigation}) => ({
+        title: IMLocalized('Dashboard'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -264,17 +282,17 @@ const CreateStack = () => (
     <Stack.Screen
       name="createSalesMan"
       component={CreateSalesMan}
-      options={{title: 'Create Sales Man'}}
+      options={{title: IMLocalized('Create SalesMan')}}
     />
     <Stack.Screen
       name="createSubAdmin"
       component={CreateSubAdmin}
-      options={{title: 'Create Sub Admin'}}
+      options={{title: IMLocalized('Create SubAdmin')}}
     />
     <Stack.Screen
       name="createDispatcher"
       component={CreateDispatcher}
-      options={{title: 'Create Dispatcher'}}
+      options={{title: IMLocalized('Create Dispatcher')}}
     />
   </Stack.Navigator>
 );
@@ -284,6 +302,7 @@ const CreatePromotionsStack = () => (
       name="Promotion and offers"
       component={PromotionAndOffer}
       options={({navigation}) => ({
+        title: IMLocalized('Promotion and offers'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -292,9 +311,21 @@ const CreatePromotionsStack = () => (
         },
       })}
     />
-    <Stack.Screen name="Create promotions" component={CreatePromotions} />
-    <Stack.Screen name="Created promotions" component={CreatedPromotions} />
-    <Stack.Screen name="Edit promotion" component={PromotionEditDelete} />
+    <Stack.Screen
+      name="Create promotions"
+      component={CreatePromotions}
+      options={{title: IMLocalized('Create promotions')}}
+    />
+    <Stack.Screen
+      name="Created promotions"
+      component={CreatedPromotions}
+      options={{title: IMLocalized('Created promotions')}}
+    />
+    <Stack.Screen
+      name="Edit promotion"
+      component={PromotionEditDelete}
+      options={{title: IMLocalized('Edit promotion')}}
+    />
   </Stack.Navigator>
 );
 const ProductServicesStack = () => (
@@ -302,20 +333,26 @@ const ProductServicesStack = () => (
     <Stack.Screen
       name="ProductAddUpdate"
       component={ProductAddUpdate}
-      options={
-        (({navigation}) => ({
-          headerLeft: () => (
-            <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
-          ),
-          headerLeftContainerStyle: {
-            paddingLeft: 15,
-          },
-        }),
-        {title: 'Products'})
-      }
+      options={({navigation}) => ({
+        title: IMLocalized('Products'),
+        headerLeft: () => (
+          <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
+        ),
+        headerLeftContainerStyle: {
+          paddingLeft: 15,
+        },
+      })}
     />
-    <Stack.Screen name="uploadProduct" component={UploadProduct} />
-    <Stack.Screen name="editProduct" component={EditProduct} />
+    <Stack.Screen
+      name="uploadProduct"
+      component={UploadProduct}
+      options={{title: IMLocalized('Upload Product')}}
+    />
+    <Stack.Screen
+      name="editProduct"
+      component={EditProduct}
+      options={{title: IMLocalized('Edit Product')}}
+    />
   </Stack.Navigator>
 );
 const OrdersStack = () => (
@@ -324,6 +361,7 @@ const OrdersStack = () => (
       name="Orders"
       component={Orders}
       options={({navigation}) => ({
+        title: IMLocalized('Orders'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -335,34 +373,74 @@ const OrdersStack = () => (
     <Stack.Screen
       name="Pending approval orders"
       component={PendingApprovalOrders}
+      options={{title: IMLocalized('Pending approval orders')}}
     />
-    <Stack.Screen name="Approved orders" component={ApprovedOrders} />
-    <Stack.Screen name="Paid orders" component={PaidOrders} />
-    <Stack.Screen name="Pending deliveries" component={PendingDeliveries} />
-    <Stack.Screen name="Delivered orders" component={DeliveredOrders} />
-    <Stack.Screen name="Returned or rejected" component={ReturnOrRejected} />
+    <Stack.Screen
+      name="Approved orders"
+      component={ApprovedOrders}
+      options={{title: IMLocalized('Approved orders')}}
+    />
+    <Stack.Screen
+      name="Paid orders"
+      component={PaidOrders}
+      options={{title: IMLocalized('Paid orders')}}
+    />
+    <Stack.Screen
+      name="Pending deliveries"
+      component={PendingDeliveries}
+      options={{title: IMLocalized('Pending deliveries')}}
+    />
+    <Stack.Screen
+      name="Delivered orders"
+      component={DeliveredOrders}
+      options={{title: IMLocalized('Delivered orders')}}
+    />
+    <Stack.Screen
+      name="Returned or rejected"
+      component={ReturnOrRejected}
+      options={{title: IMLocalized('Returned or rejected')}}
+    />
   </Stack.Navigator>
 );
 const NewStoreStack = () => (
   <Stack.Navigator screenOptions={{headerTitleAlign: 'center'}}>
-    <Stack.Screen name="New store / customers" component={NewStores} />
+    <Stack.Screen
+      name="New store / customers"
+      component={NewStores}
+      options={{title: IMLocalized('New store / customers')}}
+    />
     <Stack.Screen
       name="Assign dispatcher"
       component={AssignDispatcher}
-      options={{title: 'New store / customers'}}
+      options={{title: IMLocalized('New store / customers')}}
+      options={{title: IMLocalized('Assign dispatcher')}}
     />
-    <Stack.Screen name="Block or delete stores" component={BlockStores} />
-    <Stack.Screen name="Update / delete store" component={UpdateDeleteStore} />
+    <Stack.Screen
+      name="Block or delete stores"
+      component={BlockStores}
+      options={{title: IMLocalized('Block or delete stores')}}
+    />
+    <Stack.Screen
+      name="Update / delete store"
+      component={UpdateDeleteStore}
+      options={{title: IMLocalized('Update / delete store')}}
+    />
     <Stack.Screen
       name="Listing and documentation"
       component={ListingAndDocumentation}
+      options={{title: IMLocalized('Listing and documentation')}}
     />
     <Stack.Screen
       name="Documentation"
       component={Documentation}
-      options={{title: 'Name of documentation'}}
+      // options={{title: IMLocalized('Name of documentation')}}
+      options={{title: IMLocalized('Documentation')}}
     />
-    <Stack.Screen name="Store location" component={StoreLocation} />
+    <Stack.Screen
+      name="Store location"
+      component={StoreLocation}
+      options={{title: IMLocalized('Store location')}}
+    />
   </Stack.Navigator>
 );
 const PurchaseOrdersStack = () => {
@@ -393,6 +471,7 @@ const PurchaseOrdersStack = () => {
         name="Purchase orders"
         component={PurchaseOrders}
         options={({navigation}) => ({
+          title: IMLocalized('Purchase Orders'),
           headerLeft: () => (
             <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
           ),
@@ -411,46 +490,56 @@ const PurchaseOrdersStack = () => {
         )}
       </Stack.Screen>
       <Stack.Screen
-        options={{title: 'Pending Orders'}}
+        options={{title: IMLocalized('Pending Orders')}}
         name="pendingOrders"
         component={PendingOrders}
       />
       <Stack.Screen
-        options={{title: 'Order Status'}}
+        options={{title: IMLocalized('Order Status')}}
         name="pendingOrderDetail"
         component={PendingOrderDetail}
       />
       <Stack.Screen
-        options={{title: 'Complete Reception'}}
+        options={{title: IMLocalized('Complete Reception')}}
         name="completeReception"
         component={CompleteReception}
       />
       <Stack.Screen
-        options={{title: 'Credit Notes'}}
+        options={{title: IMLocalized('Credit Notes')}}
         name="creditNotes"
         component={CreditNotes}
       />
       <Stack.Screen
-        options={{title: 'Credit Note Details'}}
+        options={{title: IMLocalized('Credit Note Details')}}
         name="creditNoteDetail"
         component={CreditNoteDetail}
       />
 
       <Stack.Screen
-        options={{title: 'Make Deposit'}}
         name="makeDeposit"
         component={MakeDeposit}
+        options={{title: IMLocalized('Make Deposit')}}
       />
       <Stack.Screen
         name="Create purchase orders"
         component={CreatePurchaseOrders}
+        options={{title: IMLocalized('Create purchase orders')}}
       />
       <Stack.Screen
         name="Assign / edit product delivery date"
         component={AssignProductDate}
+        options={{title: IMLocalized('Assign / edit product delivery date')}}
       />
-      <Stack.Screen name="Paid orders" component={PaidOrders} />
-      <Stack.Screen name="Create notes" component={CreateNotes} />
+      <Stack.Screen
+        name="Paid orders"
+        component={PaidOrders}
+        options={{title: IMLocalized('Paid orders')}}
+      />
+      <Stack.Screen
+        name="Create notes"
+        component={CreateNotes}
+        options={{title: IMLocalized('Create notes')}}
+      />
     </Stack.Navigator>
   );
 };
@@ -460,6 +549,7 @@ const StatStack = () => (
       name="Statistics"
       component={Stat}
       options={({navigation}) => ({
+        title: IMLocalized('Statistics'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -468,15 +558,31 @@ const StatStack = () => (
         },
       })}
     />
-    <Stack.Screen name="Customers" component={Customers} />
-    <Stack.Screen name="Products" component={Products} />
+    <Stack.Screen
+      name="Customers"
+      component={Customers}
+      options={{title: IMLocalized('Customers')}}
+    />
+    <Stack.Screen
+      name="Products"
+      component={Products}
+      options={{title: IMLocalized('Products')}}
+    />
     <Stack.Screen
       name="StoreAndDetails"
       component={StoreAndDetails}
-      options={{title: 'Store And Details'}}
+      options={{title: IMLocalized('Store And Details')}}
     />
-    <Stack.Screen name="My Dealers" component={ComplianceAndEffectiveness} />
-    <Stack.Screen name="Compliance view" component={ComplianceView} />
+    <Stack.Screen
+      name="My Dealers"
+      component={ComplianceAndEffectiveness}
+      options={{title: IMLocalized('My Dealers')}}
+    />
+    <Stack.Screen
+      name="Compliance view"
+      component={ComplianceView}
+      options={{title: IMLocalized('Compliance view')}}
+    />
   </Stack.Navigator>
 );
 const TasksStack = () => (
@@ -485,6 +591,7 @@ const TasksStack = () => (
       name="Tasks"
       component={Tasks}
       options={({navigation}) => ({
+        title: IMLocalized('Tasks'),
         headerLeft: () => (
           <Entypo name="home" size={25} onPress={() => navigation.goBack()} />
         ),
@@ -493,8 +600,16 @@ const TasksStack = () => (
         },
       })}
     />
-    <Stack.Screen name="Assign tasks" component={AssignTasks} />
-    <Stack.Screen name="Assigned tasks" component={AssignedTasks} />
+    <Stack.Screen
+      name="Assign tasks"
+      component={AssignTasks}
+      options={{title: IMLocalized('Assign tasks')}}
+    />
+    <Stack.Screen
+      name="Assigned tasks"
+      component={AssignedTasks}
+      options={{title: IMLocalized('Assigned tasks')}}
+    />
   </Stack.Navigator>
 );
 const SearchProductsStack = ({count, setCount}) => (
@@ -503,7 +618,7 @@ const SearchProductsStack = ({count, setCount}) => (
       name="SearchProductStack"
       // component={SearchProducts}
       options={({navigation}) => ({
-        title: 'Search Products',
+        title: IMLocalized('Search Products'),
         headerLeft: () => (
           <Ionicons
             name="arrow-back-outline"
@@ -532,7 +647,7 @@ const SearchProductsStack = ({count, setCount}) => (
       name="SearchedProducts"
       component={SearchedProducts}
       options={({navigation}) => ({
-        title: 'Searched Products',
+        title: IMLocalized('Searched Products'),
         headerLeft: () => (
           <Ionicons
             name="arrow-back-outline"
@@ -558,7 +673,7 @@ const SearchProductsStack = ({count, setCount}) => (
       name="ProductDetail"
       // component={ProductDetail}
       options={({navigation}) => ({
-        title: 'Product Detail',
+        title: IMLocalized('Product Detail'),
         headerLeft: () => (
           <Ionicons
             name="arrow-back-outline"
@@ -586,20 +701,16 @@ const SearchProductsStack = ({count, setCount}) => (
     <Stack.Screen
       name="CheckOut"
       // component={CheckOut}
-      options={
-        (({navigation}) => ({
-          headerLeft: () => (
-            <Ionicons
-              name="arrow-back-outline"
-              size={25}
-              onPress={() => navigation.goBack()}
-            />
-          ),
-        }),
-        {
-          title: 'Order Summary',
-        })
-      }>
+      options={({navigation}) => ({
+        title: IMLocalized('Order Summary'),
+        headerLeft: () => (
+          <Ionicons
+            name="arrow-back-outline"
+            size={25}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      })}>
       {(props) => (
         <CheckOut {...props} cartCount={count} setCartCount={setCount} />
       )}
@@ -607,38 +718,30 @@ const SearchProductsStack = ({count, setCount}) => (
     <Stack.Screen
       name="PaymentMethods"
       component={PaymentMethods}
-      options={
-        (({navigation}) => ({
-          headerLeft: () => (
-            <Ionicons
-              name="arrow-back-outline"
-              size={25}
-              onPress={() => navigation.goBack()}
-            />
-          ),
-        }),
-        {
-          title: 'Payment Methods',
-        })
-      }
+      options={({navigation}) => ({
+        title: IMLocalized('Payment Methods'),
+        headerLeft: () => (
+          <Ionicons
+            name="arrow-back-outline"
+            size={25}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      })}
     />
     <Stack.Screen
       name="OrderCompletion"
       // component={OrderCompletion}
-      options={
-        (({navigation}) => ({
-          headerLeft: () => (
-            <Ionicons
-              name="arrow-back-outline"
-              size={25}
-              onPress={() => navigation.navigate('SearchProductStack')}
-            />
-          ),
-        }),
-        {
-          title: 'Order Completed',
-        })
-      }>
+      options={({navigation}) => ({
+        title: IMLocalized('Order Completed'),
+        headerLeft: () => (
+          <Ionicons
+            name="arrow-back-outline"
+            size={25}
+            onPress={() => navigation.navigate('SearchProductStack')}
+          />
+        ),
+      })}>
       {(props) => (
         <OrderCompletion {...props} cartCount={count} setCartCount={setCount} />
       )}
@@ -673,7 +776,7 @@ const index = ({goToStart}) => {
         name="ApplicationReview"
         component={ApplicationReview}
         options={(navigation) => ({
-          title: '',
+          title: IMLocalized('Application Review'),
           headerRight: () => (
             <AntDesign
               name="poweroff"
@@ -698,7 +801,7 @@ const index = ({goToStart}) => {
         name="Home"
         component={Home}
         options={(navigation) => ({
-          title: 'Dashboard',
+          title: IMLocalized('Dashboard'),
           headerRight: () => (
             <AntDesign
               name="poweroff"

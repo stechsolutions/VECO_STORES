@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import AppMessage from '../../Components/AppMessage';
@@ -96,35 +97,37 @@ const index = ({navigation}) => {
   };
   return (
     <Screen style={styles.container}>
-      <View style={styles.mailHeading}>
-        <Text>Mails</Text>
-        {true && <Text>{chats?.length}</Text>}
-      </View>
-      {empty && (
-        <Text style={{marginTop: 200, fontSize: 16, textAlign: 'center'}}>
-          No Messages
-        </Text>
-      )}
-      <FlatList
-        data={chats}
-        // data={initialMessages}
-        keyExtractor={(message) => message.chatId.toString()}
-        renderItem={({item}) => (
-          <AppChat
-            title={item.user.businessName}
-            // title={item.title}
-            subtitle={item.lastMessage}
-            image={{uri: item.user.photoLogoUrl}}
-            style={{marginHorizontal: 0}}
-            // count={item.count}
-            onPress={() => navigation.navigate('Mail Open', {chatData: item})}
-          />
+      <View style={{marginHorizontal: 20, marginVertical: 10}}>
+        <View style={styles.mailHeading}>
+          <AppText>Mails</AppText>
+          {true && <Text>{chats?.length}</Text>}
+        </View>
+        {empty && (
+          <AppText style={{marginTop: 200, fontSize: 16, textAlign: 'center'}}>
+            No Messages
+          </AppText>
         )}
-        refreshing={refreshing}
-        onRefresh={() => {
-          console.log('Refreshing');
-        }}
-      />
+        <FlatList
+          data={chats}
+          // data={initialMessages}
+          keyExtractor={(message) => message.chatId.toString()}
+          renderItem={({item}) => (
+            <AppChat
+              title={item.user.businessName}
+              // title={item.title}
+              subtitle={item.lastMessage}
+              image={{uri: item.user.photoLogoUrl}}
+              style={{marginHorizontal: 0}}
+              // count={item.count}
+              onPress={() => navigation.navigate('Mail Open', {chatData: item})}
+            />
+          )}
+          refreshing={refreshing}
+          onRefresh={() => {
+            console.log('Refreshing');
+          }}
+        />
+      </View>
     </Screen>
   );
 };

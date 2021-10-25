@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from './AppText';
 import {
   View,
   StyleSheet,
@@ -29,7 +30,7 @@ const AppNotesCard = ({
           {edit ? (
             <TextInput value={note} onChangeText={(txt) => setNote(txt)} />
           ) : (
-            <Text style={styles.title}>{title}</Text>
+            <AppText style={styles.title}>{title}</AppText>
           )}
         </View>
 

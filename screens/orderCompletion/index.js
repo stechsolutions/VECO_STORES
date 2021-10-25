@@ -1,4 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -395,7 +396,7 @@ export default function OrderCompletion({navigation, route, setCartCount}) {
     <Screen style={{backgroundColor: colors.light}}>
       <ScrollView style={{flex: 1}}>
         <View style={{flex: 1}}>
-          <Text style={styles.orderDetailText}>Order Details</Text>
+          <AppText style={styles.orderDetailText}>Order Details</AppText>
         </View>
         {cart &&
           myStore &&
@@ -457,31 +458,35 @@ export default function OrderCompletion({navigation, route, setCartCount}) {
           })}
 
         <View style={styles.subTotalView}>
-          <Text style={styles.greyText}>Subtotal</Text>
+          <AppText style={styles.greyText}>Subtotal</AppText>
           <Text style={styles.greyText}>${subTotal}</Text>
         </View>
         <View style={{flex: 1}}>
-          <Text style={styles.orderDetailText}>Delivery Details</Text>
+          <AppText style={styles.orderDetailText}>Delivery Details</AppText>
         </View>
         {myStore && (
           <View style={{margin: 10}}>
-            <Text style={styles.padding}>Store Name : {myStore.name}</Text>
-            <Text style={styles.padding}>Address: {myStore.fullAddress}</Text>
             <Text style={styles.padding}>
-              Deadline: {new Date().toString().slice(0, 16)}
+              <AppText>Store Name</AppText> : {myStore.name}
+            </Text>
+            <Text style={styles.padding}>
+              <AppText>Address</AppText>: {myStore.fullAddress}
+            </Text>
+            <Text style={styles.padding}>
+              <AppText>Deadline</AppText>: {new Date().toString().slice(0, 16)}
             </Text>
           </View>
         )}
         <View style={{flex: 1}}>
-          <Text style={styles.orderDetailText}>Payment Details</Text>
+          <AppText style={styles.orderDetailText}>Payment Details</AppText>
         </View>
         <View style={{margin: 10}}>
           <Text style={styles.padding}>
-            Payment Method : {route.params.paymentMethod}
+            <AppText>Payment Methods</AppText> : {route.params.paymentMethod}
           </Text>
         </View>
         <View style={{flex: 1}}>
-          <Text style={styles.orderDetailText}>Delivery Comments</Text>
+          <AppText style={styles.orderDetailText}>Delivery Comments</AppText>
         </View>
         <View>
           <TextInput
@@ -521,7 +526,7 @@ export default function OrderCompletion({navigation, route, setCartCount}) {
         </View>
       </ScrollView>
       <Modal onClose={() => setModal(false)} visible={modal}>
-        <Text style={styles.modalHead}>Order Sent!</Text>
+        <AppText style={styles.modalHead}>Order Sent!</AppText>
         <View
           style={{
             justifyContent: 'center',
@@ -531,7 +536,7 @@ export default function OrderCompletion({navigation, route, setCartCount}) {
           <AntDesign name="checkcircleo" color="#253370" size={100} />
         </View>
         <TouchableOpacity style={{alignItems: 'center'}}>
-          <Text style={styles.link}>See Details</Text>
+          <AppText style={styles.link}>See Details</AppText>
         </TouchableOpacity>
         <View style={{alignItems: 'center'}}>
           <AppButton

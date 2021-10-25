@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import AppMessage from '../../Components/AppMessage';
 import AppMessageInput from '../../Components/AppMessageInput';

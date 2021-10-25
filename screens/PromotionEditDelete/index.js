@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   ScrollView,
   StyleSheet,
@@ -265,7 +266,7 @@ const index = (props) => {
             title={type ? type : 'Promotion Type'}
           />
           <View style={styles.timeContainer}>
-            <Text style={styles.title}>Start and end date</Text>
+            <AppText style={styles.title}>Start and end date</AppText>
             <View style={styles.subContainer}>
               {startDate && (
                 <AppTimePicker
@@ -276,7 +277,7 @@ const index = (props) => {
                   }}
                 />
               )}
-              <Text style={[styles.text, {color: colors.dark}]}>to</Text>
+              <AppText style={[styles.text, {color: colors.dark}]}>to</AppText>
               {endDate && (
                 <AppTimePicker
                   date={endDate}

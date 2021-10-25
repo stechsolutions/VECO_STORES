@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   ScrollView,
   StyleSheet,
@@ -175,7 +176,9 @@ const index = () => {
           style={styles.mVertical}
           onPress={getFile}
         />
-        <Text style={[styles.title, styles.mVertical]}>Assign Seller</Text>
+        <AppText style={[styles.title, styles.mVertical]}>
+          Assign Seller
+        </AppText>
         {/* <AppTextInput placeHolder="Search" /> */}
         <AppPicker
           onSelectItem={(txt) => {
@@ -187,7 +190,7 @@ const index = () => {
           style={styles.mVertical}
           title={sellerName ? sellerName : 'Search'}
         />
-        <Text style={[styles.title, styles.mVertical]}>Assign Store</Text>
+        <AppText style={[styles.title, styles.mVertical]}>Assign Store</AppText>
         {/* <AppTextInput placeHolder="Search" /> */}
         <AppPicker
           onSelectItem={(txt) => {
@@ -210,7 +213,9 @@ const index = () => {
           style={styles.mVertical}
           title={'Search'}
         />
-        <Text style={styles.subTitle}>{taskArray.length} Store Assigned</Text>
+        <AppText style={styles.subTitle}>
+          {taskArray.length} Store Assigned
+        </AppText>
         <View style={styles.storeDetailContainer}>
           {taskArray.map((e, i) => {
             return (
@@ -231,7 +236,7 @@ const index = () => {
           </Text>
           <View style={styles.subContainer}>
             <View>
-              <Text style={styles.dateTime}>Select Date</Text>
+              <AppText style={styles.dateTime}>Select Date</AppText>
               <AppTimePicker
                 date={
                   taskArray[index] && taskArray[index].startDate
@@ -245,7 +250,7 @@ const index = () => {
               />
             </View>
             <View>
-              <Text style={styles.dateTime}>Select Time</Text>
+              <AppText style={styles.dateTime}>Select Time</AppText>
               <AppTimePicker
                 time
                 date={

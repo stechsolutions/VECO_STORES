@@ -1,4 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -38,6 +39,7 @@ import MapView, {Marker} from 'react-native-maps';
 import RNLocation from 'react-native-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import AppButton from '../../Components/AppButton';
+import {IMLocalized} from '../../i18n/Localize';
 
 export default function SearchedProducts({navigation, route}) {
   const changeCatogery = (val) => {
@@ -189,7 +191,7 @@ export default function SearchedProducts({navigation, route}) {
               handleSearchProduct(text);
               setQueryString(text);
             }}
-            placeholder="Search Products"
+            placeholder={IMLocalized('Search Products')}
           />
           {/* <TouchableOpacity onPress={() => setShowModal(true)}>
             <Ionicons
@@ -207,7 +209,9 @@ export default function SearchedProducts({navigation, route}) {
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.bold}>Result Found ({products.length})</Text>
+          <AppText style={styles.bold}>
+            Result Found ({products.length})
+          </AppText>
           <TouchableOpacity delayPressIn="300ms" onPress={openFilterModal}>
             <Ionicons name="md-filter-sharp" size={30} color={'black'} />
           </TouchableOpacity>

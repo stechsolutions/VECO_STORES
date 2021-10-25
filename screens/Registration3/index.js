@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import AppText from '../../Components/AppText';
 import {
   SafeAreaView,
   StyleSheet,
@@ -446,7 +447,7 @@ const Registration3 = ({navigation, route}) => {
             overflow: 'hidden',
           }}>
           <ScrollView style={{paddingHorizontal: 10}}>
-            <Text style={styles.title}>Registration</Text>
+            <AppText style={styles.title}>Registration</AppText>
             <AppTextInput
               style={styles.mVertical}
               placeHolder="WhatsApp Number"

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   FlatList,
   StyleSheet,
@@ -360,16 +361,16 @@ const index = ({navigation}) => {
     <Screen style={styles.container}>
       <View style={styles.tabContainer}>
         <TouchableOpacity style={styles.tab} onPress={() => setTab('more')}>
-          <Text
+          <AppText
             style={[styles.text, tab === 'more' && {color: colors.primary}]}>
             Create
-          </Text>
+          </AppText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={() => setTab('less')}>
-          <Text
+          <AppText
             style={[styles.text, tab === 'less' && {color: colors.primary}]}>
             View and Edit
-          </Text>
+          </AppText>
         </TouchableOpacity>
       </View>
       {/* create sales man section */}
@@ -439,7 +440,7 @@ const index = ({navigation}) => {
             />
           </View>
           <View>
-            <Text style={styles.termsHead}>Terms and Conditions</Text>
+            <AppText style={styles.termsHead}>Terms and Conditions</AppText>
             <Text style={styles.termsText}>
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's standard dummy text
@@ -479,9 +480,9 @@ const index = ({navigation}) => {
                     }}></View>
                 </TouchableOpacity>
               )}
-              <Text style={styles}>
-                I have read and accept the terms and conditions{' '}
-              </Text>
+              <AppText style={{fontSize: 14, color: colors.black}}>
+                I have read and accept the terms and conditions
+              </AppText>
             </View>
           </View>
 

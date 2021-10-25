@@ -1,4 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -198,7 +199,8 @@ export default function ProductDetail({
                       <Counter count={count} setCount={setCount} />
                     </View>
                     <Text style={styles.buyText} numberOfLines={1}>
-                      Buy: ${parseFloat(product.productPrice) * count}
+                      <AppText>Buy</AppText>: $
+                      {parseFloat(product.productPrice) * count}
                     </Text>
                   </View>
                   <TouchableOpacity
@@ -207,7 +209,7 @@ export default function ProductDetail({
                       ...styles.addToCardBtn,
                       backgroundColor: colors.white,
                     }}>
-                    <Text style={styles.addText}>Add</Text>
+                    <AppText style={styles.addText}>Add</AppText>
                     <Feather
                       name="shopping-cart"
                       size={20}
@@ -220,44 +222,44 @@ export default function ProductDetail({
           </View>
         </View>
         <View style={styles.productDes}>
-          <Text style={styles.desHead}>Short Product Description</Text>
+          <AppText style={styles.desHead}>Short Product Description</AppText>
           <Text style={styles.desText}>
             {product.shortDescription || 'No Description Available'}
           </Text>
         </View>
         <View style={[styles.productDes, {borderBottomWidth: 0}]}>
-          <Text style={styles.desHead}>Product Size and Feature</Text>
+          <AppText style={styles.desHead}>Product Size and Feature</AppText>
 
           <Text style={styles.blueText}>
-            Size:{' '}
+            <AppText>Size</AppText>:{' '}
             <Text style={styles.featureItems}>
               {product.size || 'Not Defined'}
             </Text>
           </Text>
 
           <Text style={styles.blueText}>
-            Available Color:{' '}
+            <AppText>Available Color</AppText>:{' '}
             <Text style={styles.featureItems}>
               {product.color || 'Not Defined'}
             </Text>
           </Text>
 
           <Text style={styles.blueText}>
-            Product Type:{' '}
+            <AppText>Product Type</AppText>:{' '}
             <Text style={styles.featureItems}>
               {product.productType || 'Not Defined'}
             </Text>
           </Text>
         </View>
         <View style={styles.productDes}>
-          <Text style={styles.desHead}>Long Product Description</Text>
-          <Text style={styles.desText}>
+          <AppText style={styles.desHead}>Long Product Description</AppText>
+          <AppText style={styles.desText}>
             {product.longDescription || 'No Description Available'}
-          </Text>
+          </AppText>
         </View>
         <View style={[styles.productDes, {marginBottom: 20}]}>
-          {/* <Text style={styles.desHead}>Delivery Details</Text>
-          <Text style={styles.desText}></Text> */}
+          {/* <AppText style={styles.desHead}>Delivery Details</AppText>
+          <AppText style={styles.desText}></AppText> */}
         </View>
         <View style={styles.addToCardView}>
           <View style={styles.bottomCounterView}>
@@ -265,11 +267,12 @@ export default function ProductDetail({
               <Counter count={count} setCount={setCount} />
             </View>
             <Text style={[styles.buyText]}>
-              Buy: ${parseFloat(product.productPrice) * count}
+              <AppText>Buy</AppText>: $
+              {parseFloat(product.productPrice) * count}
             </Text>
           </View>
           <TouchableOpacity onPress={addItem} style={styles.addToCardBtn}>
-            <Text style={styles.addText}>Add</Text>
+            <AppText style={styles.addText}>Add</AppText>
             <Feather name="shopping-cart" size={20} color={colors.secondary} />
           </TouchableOpacity>
         </View>

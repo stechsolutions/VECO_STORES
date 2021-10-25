@@ -1,18 +1,20 @@
 import React from 'react';
-import {Button, StyleSheet, Text, View,Image} from 'react-native';
+import AppText from './AppText';
+import {Button, StyleSheet, Text, View, Image} from 'react-native';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import colors from '../config/colors';
 import AppButton from './AppButton';
 
-const HomeCardMain = ({name, title, subtitle, buttonTitle, onPress,image}) => {
+const HomeCardMain = ({name, title, subtitle, buttonTitle, onPress, image}) => {
   return (
     <View style={styles.homeCard}>
-      {image ? 
-        <Image style={styles.image} source = {{uri:image}} />
-      :<EvilIcon name={name} size={16} color={colors.medium} />
-    }
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subTitle}>{subtitle}</Text>
+      {image ? (
+        <Image style={styles.image} source={{uri: image}} />
+      ) : (
+        <EvilIcon name={name} size={16} color={colors.medium} />
+      )}
+      <AppText style={styles.title}>{title}</AppText>
+      <AppText style={styles.subTitle}>{subtitle}</AppText>
       <AppButton title={buttonTitle} onPress={onPress} />
     </View>
   );

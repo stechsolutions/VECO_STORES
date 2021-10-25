@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -15,8 +16,8 @@ const AppImageTitleView = ({image, title, subTitle, onPress}) => {
           <Image style={styles.image} source={{uri: image}} />
         </TouchableOpacity>
       )}
-      <Text style={styles.title}>{title}</Text>
-      {subTitle && <Text style={styles.subTitle}>{subTitle}</Text>}
+      <AppText style={styles.title}>{title}</AppText>
+      {subTitle && <AppText style={styles.subTitle}>{subTitle}</AppText>}
     </View>
   );
 };

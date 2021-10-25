@@ -1,4 +1,5 @@
 import React, {Component, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {View, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
 // import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';

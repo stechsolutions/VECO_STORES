@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -18,7 +19,7 @@ const AppImageUploadButton = ({
         <MaterialIcon name="attach-file" size={35} color={colors.dark} />
       )}
 
-      <Text style={styles.title}>{title}</Text>
+      <AppText style={styles.title}>{title}</AppText>
     </TouchableOpacity>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {
   ActivityIndicator,
   Dimensions,

@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import AppText from '../../Components/AppText';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import AppCard from '../../Components/AppCard';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 
-const index = ({ navigation }) => {
+const index = ({navigation}) => {
   return (
     <Screen style={styles.container}>
       <ScrollView>
@@ -27,9 +28,12 @@ export default index;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.light
+    backgroundColor: colors.light,
   },
   shadowedView: {
-    elevation: 5, borderRadius: 20,marginHorizontal:20,marginVertical:10,
-  }
+    elevation: 5,
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
@@ -9,7 +10,7 @@ const AppRadioButton = ({title, onPress, checked}) => {
         style={styles.radioButton}
         name={checked ? 'radio-btn-active' : 'radio-btn-passive'}
       />
-      <Text style={styles.radioText}>{title}</Text>
+      <AppText style={styles.radioText}>{title}</AppText>
     </TouchableOpacity>
   );
 };

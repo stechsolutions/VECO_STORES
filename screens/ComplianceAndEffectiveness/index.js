@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   FlatList,
   Modal,
@@ -114,8 +115,8 @@ const index = ({navigation}) => {
                 <FontAwsome size={20} name="close" color={colors.white} />
               </View>
             </TouchableWithoutFeedback>
-            <Text style={styles.title}>Exporting Data</Text>
-            <Text style={styles.subTitle}>Select the date range</Text>
+            <AppText style={styles.title}>Exporting Data</AppText>
+            <AppText style={styles.subTitle}>Select the date range</AppText>
             {/* <View style={styles.timeContainer}> */}
             {/* <View style={styles.subContainer}> */}
             <AppTimePicker
@@ -125,7 +126,7 @@ const index = ({navigation}) => {
                 setShowEndDatePicker(false);
               }}
             />
-            <Text style={[styles.text, {color: colors.dark}]}>to</Text>
+            <AppText style={[styles.text, {color: colors.dark}]}>to</AppText>
             <AppTimePicker
               date={endDate}
               onPress={() => {

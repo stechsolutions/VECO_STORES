@@ -1,4 +1,5 @@
 import React, {Component, useState} from 'react';
+import AppText from './AppText';
 import {
   View,
   ScrollView,
@@ -50,7 +51,7 @@ export default function ProductCard2({
               <AntDesign color="#289EC2" name="hearto" size={15} />
             </View>
             <View style={[styles.iconView, styles.purchaseView]}>
-              <Text style={styles.buyText}>${price}</Text>
+              <AppText style={styles.buyText}>${price}</AppText>
               <Entypo name="lock" color={'#289EC2'} size={20} />
             </View>
           </View>

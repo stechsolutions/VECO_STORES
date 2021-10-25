@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from '../../Components/AppText';
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {IMLocalized} from '../../i18n/Localize';
 
 const {width: WIDTH} = Dimensions.get('window');
 const StoreResgistrations = () => {
@@ -25,7 +27,7 @@ const StoreResgistrations = () => {
           }}>
           <View style={{marginTop: 60}}>
             <TextInput
-              placeholder={'Store Name'}
+              placeholder={IMLocalized('Store Name')}
               placeholderTextColor={'black'}
               style={{
                 width: WIDTH - 55,
@@ -39,7 +41,7 @@ const StoreResgistrations = () => {
           </View>
           <View style={{marginTop: 30}}>
             <TextInput
-              placeholder={'Location'}
+              placeholder={IMLocalized('Location')}
               placeholderTextColor={'black'}
               style={{
                 width: WIDTH - 55,
@@ -53,7 +55,7 @@ const StoreResgistrations = () => {
           </View>
           <View style={{marginTop: 30}}>
             <TextInput
-              placeholder={'+ Latitute and Longitude '}
+              placeholder={IMLocalized('Latitute / Longitude')}
               placeholderTextColor={'black'}
               style={{
                 width: WIDTH - 55,
@@ -68,7 +70,7 @@ const StoreResgistrations = () => {
 
           <View style={{marginTop: 30}}>
             <TextInput
-              placeholder={'+ Document Image'}
+              placeholder={IMLocalized('Document Image')}
               placeholderTextColor={'black'}
               style={{
                 width: WIDTH - 55,
@@ -83,7 +85,7 @@ const StoreResgistrations = () => {
 
           <View style={{marginTop: 50}}>
             <TextInput
-              placeholder={' + Add Store Image'}
+              placeholder={IMLocalized('Add Store Image')}
               placeholderTextColor={'black'}
               style={{
                 width: WIDTH - 75,

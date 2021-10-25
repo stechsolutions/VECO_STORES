@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   StyleSheet,
   Text,
@@ -90,16 +91,16 @@ const index = () => {
       {console.log('tab>>>', tab)}
       <View style={styles.tabContainer}>
         <TouchableOpacity style={styles.tab} onPress={() => setTab('more')}>
-          <Text
+          <AppText
             style={[styles.text, tab === 'more' && {color: colors.primary}]}>
             Recycle
-          </Text>
+          </AppText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={() => setTab('less')}>
-          <Text
+          <AppText
             style={[styles.text, tab === 'less' && {color: colors.primary}]}>
             Recycled Items
-          </Text>
+          </AppText>
         </TouchableOpacity>
       </View>
       {tab === 'more' && (
@@ -113,7 +114,7 @@ const index = () => {
           <AppTextInput style={styles.mVertical} placeHolder="Contact" />
           <AppTextInput
             style={styles.mVertical}
-            placeHolder="Contact Phone (Whatsapp)"
+            placeHolder="Phone (Whatsapp)"
           />
           <AppPhotoInput
             style={styles.mVertical}
@@ -156,7 +157,9 @@ const index = () => {
       {tab === 'less' && (
         <ScrollView>
           <View style={styles.recycledItemView}>
-            <Text style={styles.itemHead}>Status of recycled material</Text>
+            <AppText style={styles.itemHead}>
+              Status of recycled material
+            </AppText>
             <View style={styles.recycledItems}>
               <AppChat
                 style={{marginHorizontal: 0, marginBottom: 5}}

@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import AppText from '../../Components/AppText';
+import {View, ScrollView, StyleSheet} from 'react-native';
 import AppCard from '../../Components/AppCard';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 
-function CreateDashboard({ navigation }) {
+function CreateDashboard({navigation}) {
   return (
     <Screen style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{flex: 1}}>
         <AppCard
           style={styles.shadowedView}
           title="Create SalesMan"
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
   },
   shadowedView: {
-    elevation: 5, borderRadius: 20,
-  }
+    elevation: 5,
+    borderRadius: 20,
+  },
 });

@@ -1,10 +1,11 @@
-import React, {useState , useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import AppMessage from '../../Components/AppMessage';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 
 const initialMessages = [
@@ -81,22 +82,26 @@ const index = ({navigation}) => {
   const [messages, setMessages] = useState(initialMessages);
   const [products, setProducts] = useState([]);
 
+  useEffect(() => {
+    displayProducts();
+  }, []);
 
-  useEffect(()=>{displayProducts(); },[])
-
-  const displayProducts = async ()=>{
-    
+  const displayProducts = async () => {
     var store = JSON.parse(await AsyncStorage.getItem('store'));
-    console.log("This is the store : " , store);
-    firestore().collection('store').doc(store.storeId).collection('product').onSnapshot(res=>{
-      var productArr = []
-      res.forEach((each) => {
-        console.log("EACH DATA : " , each.data());
-        productArr.push({...each.data() , productId : each.ref.id})
-      })
+    console.log('This is the store : ', store);
+    firestore()
+      .collection('store')
+      .doc(store.storeId)
+      .collection('product')
+      .onSnapshot((res) => {
+        var productArr = [];
+        res.forEach((each) => {
+          console.log('EACH DATA : ', each.data());
+          productArr.push({...each.data(), productId: each.ref.id});
+        });
 
-      setProducts(productArr)
-    })
+        setProducts(productArr);
+      });
     // .catch(e=>{
     //   Alert.alert(
     //     "Something Went Wrong",
@@ -107,7 +112,7 @@ const index = ({navigation}) => {
     //     { cancelable: false }
     //   );
     // })
-  }
+  };
 
   return (
     <Screen style={styles.container}>
@@ -118,9 +123,17 @@ const index = ({navigation}) => {
           <AppChat
             title={item.productName}
             subtitle={item.shortDescription}
-            image= {item.image ? {uri:item.image} : require('../../assets/images/Spray.jpg')}
+            image={
+              item.image
+                ? {uri: item.image}
+                : require('../../assets/images/Spray.jpg')
+            }
             btnText="EDIT"
-            btnPress={() => navigation.navigate('Update delete product' , {productId : item.productId})}
+            btnPress={() =>
+              navigation.navigate('Update delete product', {
+                productId: item.productId,
+              })
+            }
             onPress={() => console.log('Message selected', item)}
           />
         )}

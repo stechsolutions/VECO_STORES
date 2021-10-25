@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from '../../Components/AppText';
 import {
   SafeAreaView,
   StyleSheet,
@@ -21,7 +22,10 @@ const CreateStore = () => {
           </View>
 
           <View style={{marginVertical: 20}}>
-            <Text style={{fontSize: 26, textAlign: 'center'}}> Welcome!</Text>
+            <AppText style={{fontSize: 26, textAlign: 'center'}}>
+              {' '}
+              Welcome!
+            </AppText>
             <Text style={{fontSize: 16, textAlign: 'center', paddingTop: 10}}>
               Create your dealer store now
             </Text>

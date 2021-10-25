@@ -1,4 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -42,6 +43,7 @@ import AppButton from '../../Components/AppButton';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppTextInput from '../../Components/AppTextInput';
+import { IMLocalized } from '../../i18n/Localize';
 
 export default function PurchaseOrders({navigation}) {
   const changeCatogery = async (val) => {
@@ -434,7 +436,7 @@ export default function PurchaseOrders({navigation}) {
           </TouchableOpacity>
           <TextInput
             style={styles.input}
-            placeholder="Search Products"
+            placeholder={IMLocalized("Search Products")}
             onChangeText={(text) => setQueryString(text)}
           />
           {/* <TouchableOpacity onPress={() => setShowModal(true)}>
@@ -453,7 +455,7 @@ export default function PurchaseOrders({navigation}) {
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.bold}>Featured brands and products</Text>
+          <AppText style={styles.bold}>Featured brands and products</AppText>
           <TouchableOpacity onPress={() => setShowFilterModal(true)}>
             <Ionicons name="md-filter-sharp" size={30} color={'black'} />
           </TouchableOpacity>
@@ -504,7 +506,7 @@ export default function PurchaseOrders({navigation}) {
         />
         {/* )} */}
         <View style={{marginHorizontal: 20}}>
-          <Text style={[styles.bold, {fontSize: 20}]}>Dealers</Text>
+          <AppText style={[styles.bold, {fontSize: 20}]}>Dealers</AppText>
         </View>
         {loadingBrands && (
           <ActivityIndicator style={{paddingHorizontal: 10}} color={'black'} />
@@ -551,9 +553,9 @@ export default function PurchaseOrders({navigation}) {
           </ScrollView>
         )}
         <View style={{marginHorizontal: 20, marginTop: 20}}>
-          <Text style={[styles.bold, {fontSize: 20}]}>
+          <AppText style={[styles.bold, {fontSize: 20}]}>
             Available Promotions
-          </Text>
+          </AppText>
         </View>
         {loadingPromotions && (
           <ActivityIndicator style={{paddingHorizontal: 10}} color={'black'} />
@@ -580,7 +582,9 @@ export default function PurchaseOrders({navigation}) {
           </ScrollView>
         )}
         <View style={{marginHorizontal: 20, marginTop: 20}}>
-          <Text style={[styles.bold, {fontSize: 20}]}>Featured Products</Text>
+          <AppText style={[styles.bold, {fontSize: 20}]}>
+            Featured Products
+          </AppText>
         </View>
         {loadingFeaturedProducts && (
           <ActivityIndicator style={{paddingHorizontal: 10}} color={'black'} />

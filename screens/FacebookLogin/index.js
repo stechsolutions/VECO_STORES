@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -19,13 +20,12 @@ import storage from '@react-native-firebase/storage';
 import AppPicker from '../../Components/AppPicker';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { corregimientos, districts, provinces } from '../../config/data';
+import {corregimientos, districts, provinces} from '../../config/data';
 
-export default function FacebookLogin({ navigation, route, changeFirstTime }) {
+export default function FacebookLogin({navigation, route, changeFirstTime}) {
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [showTermsAndConditionModal, setShowTermsAndConditionModal] = useState(
-    false,
-  );
+  const [showTermsAndConditionModal, setShowTermsAndConditionModal] =
+    useState(false);
   const [fullName, setFullName] = useState('');
   const [cellNum, setCellNum] = useState('');
   const [province, setProvince] = useState('');
@@ -50,8 +50,8 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
       .put(profileBlob)
       .on(
         'state_changed',
-        () => { },
-        () => { },
+        () => {},
+        () => {},
         (imgResponse) =>
           imgResponse.ref.getDownloadURL().then((url) => {
             imageUrl = url;
@@ -60,8 +60,8 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
               .put(documentBlob)
               .on(
                 'state_changed',
-                () => { },
-                () => { },
+                () => {},
+                () => {},
                 (imgResponse) =>
                   imgResponse.ref.getDownloadURL().then((url) => {
                     documentUrl = url;
@@ -81,12 +81,12 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
                         console.log('store Created', storeData);
                         await AsyncStorage.setItem(
                           'store',
-                          JSON.stringify({ storeId: storeData.id, ...store }),
+                          JSON.stringify({storeId: storeData.id, ...store}),
                         );
                         await firestore()
                           .collection('distributer')
                           .doc(user.userId)
-                          .update({ firstTime: false });
+                          .update({firstTime: false});
                         changeFirstTime();
                         user.firstTime = false;
                         AsyncStorage.setItem(
@@ -126,35 +126,47 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
     var user = JSON.parse(await AsyncStorage.getItem('user'));
 
     console.log('user updated', user);
-    var userId = user.uid
+    var userId = user.uid;
     return firestore()
       .collection('vendors')
       .doc(userId)
-      .set({ approved: 'Pending', key: userId, read: false, email: user.email, fullName: user.displayName, ...users, })
+      .set({
+        approved: 'Pending',
+        key: userId,
+        read: false,
+        email: user.email,
+        fullName: user.displayName,
+        ...users,
+      })
       .then(() =>
-        firestore().collection('vendors').doc(userId).get()
+        firestore()
+          .collection('vendors')
+          .doc(userId)
+          .get()
           .then((user) => {
-            console.log(user.data(), "lllll")
+            console.log(user.data(), 'lllll');
             AsyncStorage.setItem(
               'user',
-              JSON.stringify({ userId: user.ref.id, ...user.data() }),
+              JSON.stringify({userId: user.ref.id, ...user.data()}),
             );
             Alert.alert(
               'Registered Sucessfully',
               'Your account has been created.',
-              [{ text: 'OK', onPress: () => navigation.navigate('ApplicationReview') }],
-              { cancelable: false },
-            )
-          }
-          )
-
-
-      )
-  }
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('ApplicationReview'),
+                },
+              ],
+              {cancelable: false},
+            );
+          }),
+      );
+  };
 
   return (
-    <Screen style={{ backgroundColor: colors.light }}>
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+    <Screen style={{backgroundColor: colors.light}}>
+      <ScrollView style={{flex: 1, padding: 10}}>
         {/* <AppTextInput
           value={fullName}
           onChangeText={(txt) => {
@@ -234,7 +246,7 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
               color={colors.primary}
               size={20}
               name="checkcircle"
-              style={{ paddingRight: 5 }}
+              style={{paddingRight: 5}}
             />
           ) : (
             <TouchableOpacity
@@ -289,8 +301,8 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
         </View>
       </ScrollView>
       <Modal visible={showTermsAndConditionModal} animationType="slide">
-        <View style={{ flex: 1 }}>
-          <ScrollView style={{ padding: 10 }}>
+        <View style={{flex: 1}}>
+          <ScrollView style={{padding: 10}}>
             <Text
               style={{
                 color: colors.primary,
@@ -636,7 +648,7 @@ export default function FacebookLogin({ navigation, route, changeFirstTime }) {
               <AppButton
                 style={[
                   styles.modalTermsBtn,
-                  { backgroundColor: colors.white, borderWidth: 1 },
+                  {backgroundColor: colors.white, borderWidth: 1},
                 ]}
                 title="Reject"
                 onPress={() => {

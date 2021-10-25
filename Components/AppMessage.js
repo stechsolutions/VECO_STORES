@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, View} from 'react-native';
 import colors from '../config/colors';
 
@@ -13,7 +14,7 @@ const AppMessage = ({message, time, user = false}) => {
           ]}>
           <Text>{message}</Text>
         </View>
-        <Text style={styles.time}>{time}</Text>
+        <AppText style={styles.time}>{time}</AppText>
       </View>
     </View>
   );

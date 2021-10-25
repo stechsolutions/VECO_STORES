@@ -1,4 +1,5 @@
 import React, {Children} from 'react';
+import AppText from './AppText';
 import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 import colors from '../config/colors';
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, TextInput} from 'react-native';
 import colors from '../config/colors';
 

@@ -1,13 +1,15 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import colors from '../config/colors';
+import {IMLocalized} from '../i18n/Localize';
 
-const AppTextInput = ({style, placeHolder, ...otherProps}) => {
+const AppTextInput = ({style, placeHolder, placeholder, ...otherProps}) => {
   return (
     <TextInput
       style={[styles.title, style]}
       placeHolderTextColor={colors.dark}
-      placeholder={placeHolder}
+      placeholder={IMLocalized(placeHolder || placeholder)}
       {...otherProps}
     />
   );

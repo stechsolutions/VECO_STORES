@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {
   StyleSheet,
   Text,
@@ -9,6 +10,7 @@ import {
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../config/colors';
+import {IMLocalized} from '../i18n/Localize';
 
 const AppMessageInput = ({value, onChange, onSend, onOption}) => {
   return (
@@ -17,7 +19,7 @@ const AppMessageInput = ({value, onChange, onSend, onOption}) => {
         style={styles.inputBox}
         value={value}
         onChangeText={(text) => onChange(text)}
-        placeholder="Type your message here"
+        placeholder={IMLocalized('Type your message here')}
       />
       <MaterialIcon
         name="more-vert"

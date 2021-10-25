@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from '../../Components/AppText';
 import {View} from 'react-native';
 import {styles} from './style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';

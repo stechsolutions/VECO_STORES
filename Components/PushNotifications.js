@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, {useState, useEffect, useRef, useContext} from 'react';
+import AppText from './AppText';
 import {Text, View, Button, Platform, Alert} from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';

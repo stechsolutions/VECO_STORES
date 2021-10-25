@@ -17,6 +17,7 @@ import {LoginManager, LoginButton, AccessToken} from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Home from '../HomeNavigation/index';
+import {IMLocalized} from '../../i18n/Localize';
 
 const Stack = createStackNavigator();
 function FacebookScreen() {
@@ -25,7 +26,7 @@ function FacebookScreen() {
       <Stack.Screen
         name="FacebookLogin"
         component={FacebookLogin}
-        // initialParams={{ onPress: onPress }}
+        options={{title: IMLocalized('Facebook Login')}}
       />
       <Stack.Screen name="ApplicationReview" component={Home} />
     </Stack.Navigator>
@@ -38,7 +39,7 @@ function GoogleScreen() {
       <Stack.Screen
         name="GoogleLogin"
         component={GoogleLogin}
-        // initialParams={{ onPress: onPress }}
+        options={{title: IMLocalized('Google Login')}}
       />
       <Stack.Screen name="ApplicationReview" component={Home} />
     </Stack.Navigator>
@@ -101,13 +102,17 @@ const index = ({onPress, changeFirstTime}) => {
         },
       })}
     /> */}
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{title: IMLocalized('Dashboard')}}
+      />
       <Stack.Screen
         name="Registration"
         component={Registration}
         initialParams={{onPress: onPress}}
         options={({navigation}) => ({
-          title: 'Creating Account',
+          title: IMLocalized('Creating Account'),
           headerLeft: () => (
             <AntDesign
               name="arrowleft"
@@ -125,15 +130,18 @@ const index = ({onPress, changeFirstTime}) => {
         name="Registration2"
         component={Registration2}
         initialParams={{onPress: onPress}}
+        options={{title: IMLocalized('Registration')}}
       />
       <Stack.Screen
         name="FacebookLogin"
         component={FacebookScreen}
         initialParams={{onPress: onPress}}
+        options={{title: IMLocalized('Facebook Login')}}
       />
       <Stack.Screen
         name="GoogleLogin"
         component={GoogleScreen}
+        options={{title: IMLocalized('Google Login')}}
         // initialParams={{ onPress: onPress }}
       />
       {/* <Stack.Screen
@@ -159,16 +167,13 @@ const index = ({onPress, changeFirstTime}) => {
         name="Registration3"
         component={Registration3}
         initialParams={{onPress: onPress}}
-      />
-      <Stack.Screen
-        name="CreateStore"
-        component={CreateStore}
-        initialParams={{onPress: onPress}}
+        options={{title: IMLocalized('Registration')}}
       />
       <Stack.Screen
         name="createStore"
         component={CreateStore}
         initialParams={{onPress: onPress}}
+        options={{title: IMLocalized('Create Store')}}
       />
     </Stack.Navigator>
   );

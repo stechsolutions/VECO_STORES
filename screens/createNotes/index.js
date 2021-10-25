@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {Text, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
@@ -77,7 +78,7 @@ export default function CreateNotes() {
   return (
     <Screen style={{backgroundColor: colors.light}}>
       <ScrollView style={{flex: 1, padding: 10}}>
-        <Text style={styles.title}>Write Note</Text>
+        <AppText style={styles.title}>Write Note</AppText>
         <TextInput
           multiline
           value={note}
@@ -91,7 +92,7 @@ export default function CreateNotes() {
           }}
         />
         <AppButton onPress={createNotes} style={styles.btn} title="CREATE" />
-        <Text style={styles.title}>Created Notes</Text>
+        <AppText style={styles.title}>Created Notes</AppText>
         {notes.length ? (
           notes.map((e, i) => {
             return (
@@ -107,7 +108,7 @@ export default function CreateNotes() {
           })
         ) : (
           <View style={styles.noOrderView}>
-            <Text style={styles.noOrderText}>No Notes Right Now!</Text>
+            <AppText style={styles.noOrderText}>No Notes Right Now!</AppText>
           </View>
         )}
       </ScrollView>

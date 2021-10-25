@@ -1,4 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -83,7 +84,9 @@ export default function CheckOut({navigation, setCartCount}) {
                   </View>
                   <View style={styles.distDetailView}>
                     <View style={styles.distNameView}>
-                      <Text style={styles.distName}>{store.storeName}</Text>
+                      <AppText style={styles.distName}>
+                        {store.storeName}
+                      </AppText>
                       <Entypo name="eye" size={25} />
                     </View>
                     <Text style={styles.distInfo}>
@@ -115,7 +118,7 @@ export default function CheckOut({navigation, setCartCount}) {
           })}
 
         <View style={styles.subTotalView}>
-          <Text style={styles.greyText}>Subtotal</Text>
+          <AppText style={styles.greyText}>Subtotal</AppText>
           <Text style={styles.greyText}>$ {subTotal}</Text>
         </View>
         <View style={styles.centered}>

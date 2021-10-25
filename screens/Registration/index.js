@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -26,6 +27,7 @@ import {
 } from '../../config/data';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {CommonActions} from '@react-navigation/native';
+import {IMLocalized} from '../../i18n/Localize';
 
 export default function CreateStore({navigation, route, changeFirstTime}) {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -205,7 +207,7 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
                 setCellNum(txt);
               }}
               style={styles.mVertical}
-              placeHolder="Cell Number (Whatsapp)"
+              placeHolder="Phone (Whatsapp)"
             />
           </View>
         </View>
@@ -241,7 +243,7 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
             setFullAddress(txt);
           }}
           style={styles.mVertical}
-          placeHolder="Full Address (Barrio, calle, Edificio)"
+          placeHolder="Full Address"
         />
         <AppTextInput
           value={email}
@@ -265,7 +267,7 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
             style={{marginVertical: 10}}
             value={password}
             onChangeText={(txt) => setPassword(txt)}
-            placeholder={'Password'}
+            placeholder={IMLocalized('Password')}
             textContentType="password"
             secureTextEntry={passwordHideShow}
           />
@@ -316,19 +318,19 @@ export default function CreateStore({navigation, route, changeFirstTime}) {
                 }}></View>
             </TouchableOpacity>
           )}
-          <Text>I have read and accept the </Text>
+          <AppText>I have read and accept the </AppText>
           <TouchableOpacity
             onPress={() => {
               setShowTermsAndConditionModal(true);
             }}>
-            <Text
+            <AppText
               style={{
                 color: colors.primary,
                 borderBottomColor: colors.primary,
                 borderBottomWidth: 1,
               }}>
               terms and conditions
-            </Text>
+            </AppText>
           </TouchableOpacity>
         </View>
         <View style={styles.createBtnView}>

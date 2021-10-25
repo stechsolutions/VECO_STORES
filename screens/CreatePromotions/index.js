@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {Image, ScrollView, StyleSheet, Text, View, Alert} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AppButton from '../../Components/AppButton';
@@ -203,7 +204,7 @@ const index = ({navigation}) => {
           title={type ? type : 'Promotion Type'}
         />
         <View style={styles.timeContainer}>
-          <Text style={styles.title}>Start and end date</Text>
+          <AppText style={styles.title}>Start and end date</AppText>
           <View style={styles.subContainer}>
             <AppTimePicker
               date={startDate}
@@ -212,7 +213,7 @@ const index = ({navigation}) => {
                 setShowEndDatePicker(false);
               }}
             />
-            <Text style={[styles.text, {color: colors.dark}]}>to</Text>
+            <AppText style={[styles.text, {color: colors.dark}]}>to</AppText>
             <AppTimePicker
               date={endDate}
               onPress={() => {

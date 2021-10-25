@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AppText from '../../Components/AppText';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
@@ -13,9 +14,9 @@ const index = () => {
               style={styles.image}
               source={require('../../assets/images/mosh.jpg')}
             />
-            <Text style={styles.title}>Ashhar Imam</Text>
+            <AppText style={styles.title}>Ashhar Imam</AppText>
           </View>
-          <Text style={styles.issueTitle}>Issue</Text>
+          <AppText style={styles.issueTitle}>Issue</AppText>
           <Text style={styles.paragraph}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima
             repellat molestias obcaecati. Explicabo numquam est cumque error

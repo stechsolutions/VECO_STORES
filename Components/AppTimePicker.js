@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from './AppText';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 
 import colors from '../config/colors';
@@ -24,9 +25,9 @@ const AppTimePicker = ({date, onPress, time}) => {
       <View style={styles.subContainer}>
         {!time && (
           <>
-            <Text style={styles.text}>{date.getDate()}</Text>
-            <Text style={styles.text}>{months[date.getMonth()]}</Text>
-            <Text style={styles.text}>{date.getFullYear()}</Text>
+            <AppText style={styles.text}>{date.getDate()}</AppText>
+            <AppText style={styles.text}>{months[date.getMonth()]}</AppText>
+            <AppText style={styles.text}>{date.getFullYear()}</AppText>
           </>
         )}
 

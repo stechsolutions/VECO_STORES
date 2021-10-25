@@ -1,11 +1,12 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+import AppText from '../../Components/AppText';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import AppChat from '../../Components/AppChat';
 import AppMessage from '../../Components/AppMessage';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import firestore from '@react-native-firebase/firestore'
+import firestore from '@react-native-firebase/firestore';
 
 const initialMessages = [
   {
@@ -79,33 +80,33 @@ const initialMessages = [
 const index = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
-  const [orders , setOrders] = useState([]);
-  
+  const [orders, setOrders] = useState([]);
+
   useEffect(() => {
     getOrders();
-  }, [])
+  }, []);
   const getOrders = async () => {
     try {
       var store = JSON.parse(await AsyncStorage.getItem('store'));
-      console.log(store, 'store')
-      firestore().collection('purchaseOrder')
+      console.log(store, 'store');
+      firestore()
+        .collection('purchaseOrder')
         .where('storeId', '==', store.storeId)
         .where('status', '==', 'paid')
-        .onSnapshot(res => {
+        .onSnapshot((res) => {
           console.log(res, 'res');
           var orders = [];
           res.forEach((each) => {
-            console.log(each.data(), 'each')
-            orders.push({ ...each.data(), orderId: each.ref.id });
+            console.log(each.data(), 'each');
+            orders.push({...each.data(), orderId: each.ref.id});
             setOrders(orders);
-          })
-          console.log(orders, 'orders')
-        })
-    }
-    catch (e) {
+          });
+          console.log(orders, 'orders');
+        });
+    } catch (e) {
       console.log(e, 'err');
     }
-  }
+  };
 
   return (
     <Screen style={styles.container}>

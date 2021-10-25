@@ -1,4 +1,5 @@
 import React from 'react';
+import AppText from '../../Components/AppText';
 import {View, ScrollView, StyleSheet} from 'react-native';
 import Screen from '../../Components/Screen';
 import colors from '../../config/colors';

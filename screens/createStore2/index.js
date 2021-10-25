@@ -1,4 +1,5 @@
 import React, {Component, useEffect, useState, useRef} from 'react';
+import AppText from '../../Components/AppText';
 import {
   View,
   ScrollView,
@@ -499,7 +500,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
             },
           ]}>
           <View style={styles.PhotocontentView}>
-            <Text style={styles.photoText}>Photo of operation notice</Text>
+            <AppText style={styles.photoText}>Photo of operation notice</AppText>
           </View>
 
           <View style={styles.IconStyle}>
@@ -553,7 +554,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
             {backgroundColor: photoBusiness ? colors.secondary : 'white'},
           ]}>
           <View style={styles.PhotocontentView}>
-            <Text style={styles.photoText}>Business Photo</Text>
+            <AppText style={styles.photoText}>Business Photo</AppText>
           </View>
 
           <View style={styles.IconStyle}>
@@ -605,7 +606,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
             },
           ]}>
           <View style={styles.PhotocontentView}>
-            <Text style={styles.photoText}>Digital Signature</Text>
+            <AppText style={styles.photoText}>Digital Signature</AppText>
           </View>
           <View style={styles.IconStyle}>
             <TouchableOpacity
@@ -658,7 +659,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
               />
             )}
           </View>
-          <Text style={styles.termsHead}>Terms and Conditions</Text>
+          <AppText style={styles.termsHead}>Terms and Conditions</AppText>
           <Text style={styles.termsText}>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
@@ -766,7 +767,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <Ionicons name="camera" size={22} color={colors.black} />
-                <Text style={styles.textStyle}>Launch Camera</Text>
+                <AppText style={styles.textStyle}>Launch Camera</AppText>
               </View>
             </TouchableOpacity>
             <View
@@ -787,7 +788,7 @@ export default function CreateStore2({navigation, route, changeFirstTime}) {
               }}>
               <View style={{flexDirection: 'row'}}>
                 <FontAwesome name="photo" size={24} color={colors.black} />
-                <Text style={styles.textStyle}>Launch Gallery</Text>
+                <AppText style={styles.textStyle}>Launch Gallery</AppText>
               </View>
             </TouchableOpacity>
             <View style={{flexDirection: 'row'}}>
